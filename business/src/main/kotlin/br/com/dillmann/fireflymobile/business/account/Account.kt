@@ -1,0 +1,25 @@
+package br.com.dillmann.fireflymobile.business.account
+
+import java.math.BigDecimal
+
+data class Account(
+    val id: String,
+    val active: Boolean,
+    val name: String,
+    val openingBalance: BigDecimal,
+    val currentBalance: BigDecimal,
+    val type: Type,
+    val includeInNetWorth: Boolean,
+) {
+    enum class Type {
+        ASSET,
+        EXPENSE,
+        IMPORT,
+        REVENUE,
+        CASH,
+        LIABILITY,
+        LIABILITIES,
+        INITIAL_MINUS_BALANCE,
+        RECONCILIATION,
+    }
+}

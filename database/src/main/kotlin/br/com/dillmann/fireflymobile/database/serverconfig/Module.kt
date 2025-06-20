@@ -5,5 +5,5 @@ import org.koin.dsl.module
 
 internal val ServerConfigModule =
     module {
-        factory<ServerConfigRepository> { ServerConfigSecureStoreRepository(get()) }
+        single<ServerConfigRepository> { ServerConfigPreferencesRepository(get()) }
     }

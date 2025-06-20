@@ -24,6 +24,7 @@ include(
     ":core",
     ":app",
     ":business",
+    ":firefly-api",
     ":third-party",
     ":database",
 )

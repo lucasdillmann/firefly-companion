@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.konan.properties.loadProperties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -34,6 +36,10 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val localProperties = loadProperties("local.properties")
+        buildConfigField("String", "FIREFLY_URL", "\"${localProperties.getProperty("fireflyUrl")}\"")
+        buildConfigField("String", "FIREFLY_ACCESS_TOKEN", "\"${localProperties.getProperty("fireflyAccessToken")}\"")
     }
 
     buildTypes {
@@ -44,16 +50,17 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_21.majorVersion
+        jvmTarget = JavaVersion.VERSION_17.majorVersion
     }
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

@@ -15,19 +15,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import br.com.dillmann.fireflymobile.business.BusinessModule
 import br.com.dillmann.fireflymobile.core.CoreModule
 import br.com.dillmann.fireflymobile.database.DatabaseModule
+import br.com.dillmann.fireflymobile.firefly.FireflyModule
 import br.com.dillmann.fireflymobile.thirdparty.ThirdPartyModule
 import br.com.dillmann.fireflymobile.ui.theme.FireflyMobileTheme
+import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
 class MainActivity : ComponentActivity() {
     init {
         startKoin {
-            module {
-                factory<Context> { this@MainActivity }
-            }
+            loadKoinModules(module {
+                single<Context> { this@MainActivity }
+            })
 
-            modules(CoreModule, BusinessModule, DatabaseModule, ThirdPartyModule)
+            modules(CoreModule, BusinessModule, DatabaseModule, FireflyModule, ThirdPartyModule)
         }
     }
 
@@ -38,8 +40,7 @@ class MainActivity : ComponentActivity() {
             FireflyMobileTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                        name = "Android", modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
@@ -50,8 +51,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name!",
-        modifier = modifier
+        text = "Hello $name!", modifier = modifier
     )
 }
 

@@ -5,7 +5,7 @@ import androidx.core.content.edit
 import br.com.dillmann.fireflymobile.business.serverconfig.ServerConfig
 import br.com.dillmann.fireflymobile.business.serverconfig.ServerConfigRepository
 
-class ServerConfigSecureStoreRepository(private val context: Context) : ServerConfigRepository {
+internal class ServerConfigPreferencesRepository(private val context: Context) : ServerConfigRepository {
     companion object {
         private const val PREFERENCES_NAME = "server_config_preferences"
         private const val KEY_URL = "server_url"
