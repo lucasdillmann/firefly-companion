@@ -1,11 +1,21 @@
 package br.com.dillmann.fireflymobile.core.validation
 
-data class ValidationOutcome(
-    val success: Boolean,
-    val violations: List<Violation>,
-) {
+class ValidationOutcome {
     data class Violation(
         val property: String?,
         val message: String,
     )
+
+    var success = true
+        private set
+    var violations = emptyList<Violation>()
+        private set
+
+    fun addViolation(property: String, message: String) {
+        violations += Violation(property, message)
+        success = false
+    }
+
+    fun throwExceptionIfNeeded() =
+        if (!success) throw ConsistencyException(this) else Unit
 }

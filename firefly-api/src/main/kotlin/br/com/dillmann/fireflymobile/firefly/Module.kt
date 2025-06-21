@@ -1,6 +1,6 @@
 package br.com.dillmann.fireflymobile.firefly
 
-import br.com.dillmann.fireflymobile.business.serverconfig.ServerConfigCommands
+import br.com.dillmann.fireflymobile.business.serverconfig.usecase.GetConfigUseCase
 import br.com.dillmann.fireflymobile.firefly.apis.AccountsApi
 import okhttp3.Call
 import okhttp3.OkHttpClient
@@ -13,7 +13,7 @@ private const val TOKEN = "firefly.accessToken"
 val FireflyModule =
     module {
         single(qualifier(URL)) {
-            val host = get<ServerConfigCommands>().getConfig()?.url ?: ""
+            val host = get<GetConfigUseCase>().getConfig()?.url ?: ""
             "$host/api"
         }
         single { FireflyAuthenticator(get()) }

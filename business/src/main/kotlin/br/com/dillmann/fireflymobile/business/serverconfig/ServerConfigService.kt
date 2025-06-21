@@ -1,14 +1,18 @@
 package br.com.dillmann.fireflymobile.business.serverconfig
 
+import br.com.dillmann.fireflymobile.business.serverconfig.usecase.GetConfigUseCase
+import br.com.dillmann.fireflymobile.business.serverconfig.usecase.SaveConfigUseCase
+
 internal class ServerConfigService(
     private val repository: ServerConfigRepository,
     private val validator: ServerConfigValidator,
-) : ServerConfigCommands {
+) : GetConfigUseCase, SaveConfigUseCase {
     override fun getConfig(): ServerConfig? {
         return repository.getConfig()
     }
 
     override fun saveConfig(serverConfig: ServerConfig) {
+        validator.validate(serverConfig)
         repository.saveConfig(serverConfig)
     }
 }
