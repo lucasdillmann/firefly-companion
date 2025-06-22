@@ -11,20 +11,22 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
+
     repositories {
         google()
         mavenCentral()
     }
 }
 
-rootProject.name = "Firefly Mobile"
+rootProject.name = "firefly-companion"
+
 include(
     ":core",
     ":app",
     ":business",
-    ":firefly-api",
     ":third-party",
     ":database",
 )

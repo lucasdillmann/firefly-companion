@@ -26,11 +26,11 @@ dependencies {
 }
 
 android {
-    namespace = "br.com.dillmann.fireflymobile"
+    namespace = "br.com.dillmann.fireflycompanion.android"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "br.com.dillmann.fireflymobile"
+        applicationId = "br.com.dillmann.fireflycompanion"
         minSdk = 35
         targetSdk = 35
         versionCode = 1

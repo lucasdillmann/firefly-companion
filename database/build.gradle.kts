@@ -12,7 +12,7 @@ dependencies {
 }
 
 android {
-    namespace = "br.com.dillmann.fireflymobile.database"
+    namespace = "br.com.dillmann.fireflycompanion.database"
     compileSdk = 35
 
     defaultConfig {
