@@ -25,7 +25,7 @@ rootProject.name = "firefly-companion"
 
 include(
     ":core",
-    ":app",
+    ":android",
     ":business",
     ":third-party",
     ":database",
