@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
-
 dependencies {
     implementation(project(":database"))
     implementation(project(":third-party"))

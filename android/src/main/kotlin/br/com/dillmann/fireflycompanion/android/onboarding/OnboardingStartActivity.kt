@@ -42,7 +42,7 @@ class OnboardingStartActivity : PreconfiguredActivity() {
             )
 
             Button(
-                onClick = { start<OnboardingFormActivity>() },
+                onClick = { start<OnboardingServerFormActivity>() },
             ) {
                 Text(text = "Continue")
             }

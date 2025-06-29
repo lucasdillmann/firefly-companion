@@ -5,6 +5,6 @@ import br.com.dillmann.fireflycompanion.core.pagination.Page
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
 
 internal class AccountService(private val repository: AccountRepository) : GetAccountsUseCase {
-    override fun getAccounts(page: PageRequest): Page<Account> =
+    override suspend fun getAccounts(page: PageRequest): Page<Account> =
         repository.findAccounts(page)
 }

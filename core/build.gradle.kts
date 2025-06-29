@@ -7,6 +7,7 @@ plugins {
 
 dependencies {
     api(libs.koin.core)
+    api(libs.kotlin.coroutines)
 }
 
 java {

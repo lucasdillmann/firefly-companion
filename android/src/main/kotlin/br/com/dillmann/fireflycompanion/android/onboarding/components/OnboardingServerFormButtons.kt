@@ -50,7 +50,7 @@ fun OnboardingFormButtons(onContinue: () -> Unit) {
 
                     Text(
                         text = """
-                            After that, change to the "OAuth" page and generate a new personal access token using the 
+                            After that, change to the "OAuth" tab and generate a new personal access token using the 
                             button located at the last section of the page.
                         """.noLineBreaks(),
                     )

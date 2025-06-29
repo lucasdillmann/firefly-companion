@@ -2,7 +2,7 @@ package br.com.dillmann.fireflycompanion.core.validation
 
 class ValidationOutcome {
     data class Violation(
-        val property: String?,
+        val property: String,
         val message: String,
     )
 
@@ -18,4 +18,11 @@ class ValidationOutcome {
 
     fun throwExceptionIfNeeded() =
         if (!success) throw ConsistencyException(this) else Unit
+
+    fun messageFor(property: String): String? =
+        violations
+            .filter { it.property == property }
+            .map { it.message }
+            .takeIf { it.isNotEmpty() }
+            ?.joinToString(separator = "; ")
 }

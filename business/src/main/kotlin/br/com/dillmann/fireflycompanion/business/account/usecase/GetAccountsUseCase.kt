@@ -5,5 +5,5 @@ import br.com.dillmann.fireflycompanion.core.pagination.Page
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
 
 fun interface GetAccountsUseCase {
-    fun getAccounts(page: PageRequest): Page<Account>
+    suspend fun getAccounts(page: PageRequest): Page<Account>
 }

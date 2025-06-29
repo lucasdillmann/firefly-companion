@@ -7,11 +7,11 @@ internal class ServerConfigService(
     private val repository: ServerConfigRepository,
     private val validator: ServerConfigValidator,
 ) : GetConfigUseCase, SaveConfigUseCase {
-    override fun getConfig(): ServerConfig? {
+    override suspend fun getConfig(): ServerConfig? {
         return repository.getConfig()
     }
 
-    override fun saveConfig(serverConfig: ServerConfig) {
+    override suspend fun saveConfig(serverConfig: ServerConfig) {
         validator.validate(serverConfig)
         repository.saveConfig(serverConfig)
     }

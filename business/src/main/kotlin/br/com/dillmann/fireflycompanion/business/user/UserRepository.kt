@@ -1,5 +1,5 @@
 package br.com.dillmann.fireflycompanion.business.user
 
-interface UserRepository {
-    fun getCurrent(): User
+fun interface UserRepository {
+    suspend fun getCurrent(): User
 }

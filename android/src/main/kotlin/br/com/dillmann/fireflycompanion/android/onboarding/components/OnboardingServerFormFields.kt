@@ -12,15 +12,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import br.com.dillmann.fireflycompanion.core.validation.ValidationOutcome
 
 @Composable
 fun OnboardingFormFields(
     scrollState: ScrollState,
     serverUrl: MutableState<TextFieldValue>,
     accessToken: MutableState<TextFieldValue>,
+    validationOutcome: ValidationOutcome?,
 ) {
     val serverUrlFocusRequester = remember { FocusRequester() }
     val accessTokenFocusRequester = remember { FocusRequester() }
@@ -45,8 +48,18 @@ fun OnboardingFormFields(
             .onFocusChanged { serverUrlFocused.value = it.isFocused }
             .fillMaxWidth(),
         textStyle = MaterialTheme.typography.bodyLarge,
-
-        )
+        isError = validationOutcome?.messageFor("url") != null,
+        supportingText = {
+            val message = validationOutcome?.messageFor("url")
+            if (message != null) {
+                Text(
+                    text = message,
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
+        }
+    )
 
     OutlinedTextField(
         value = accessToken.value,
@@ -62,5 +75,16 @@ fun OnboardingFormFields(
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = androidx.compose.ui.text.input.KeyboardType.Password,
         ),
+        isError = validationOutcome?.messageFor("token") != null,
+        supportingText = {
+            val message = validationOutcome?.messageFor("token")
+            if (message != null) {
+                Text(
+                    text = message,
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
+        }
     )
 }

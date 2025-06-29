@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".home.HomeActivity"/>
-        <activity android:name=".onboarding.OnboardingFormActivity"/>
+        <activity android:name=".onboarding.OnboardingServerFormActivity"/>
         <activity android:name=".onboarding.OnboardingStartActivity"/>
+        <activity android:name=".onboarding.OnboardingPreferencesFormActivity"/>
     </application>
 </manifest>

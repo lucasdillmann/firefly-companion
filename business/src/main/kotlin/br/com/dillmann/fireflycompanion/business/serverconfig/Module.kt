@@ -7,7 +7,7 @@ import org.koin.dsl.module
 
 internal val ServerConfigModule =
     module {
-        single { ServerConfigValidator() }
+        single { ServerConfigValidator(get()) }
         single { ServerConfigService(get(), get()) } binds arrayOf(
             GetConfigUseCase::class,
             SaveConfigUseCase::class,

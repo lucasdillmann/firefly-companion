@@ -9,7 +9,7 @@ import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.AccountRead
 import br.com.dillmann.fireflycompanion.thirdparty.core.toPage
 
 internal class AccountHttpRepository(private val api: AccountsApi) : AccountRepository {
-    override fun findAccounts(page: PageRequest): Page<Account> {
+    override suspend fun findAccounts(page: PageRequest): Page<Account> {
         val response = api.listAccount(
             page = page.number,
             limit = page.size,

@@ -5,6 +5,6 @@ import br.com.dillmann.fireflycompanion.business.user.UserRepository
 import br.com.dillmann.fireflycompanion.thirdparty.firefly.apis.AboutApi
 
 internal class UserHttpRepository(private val aboutApi: AboutApi) : UserRepository {
-    override fun getCurrent(): User =
+    override suspend fun getCurrent(): User =
         aboutApi.getCurrentUser().toUser()
 }

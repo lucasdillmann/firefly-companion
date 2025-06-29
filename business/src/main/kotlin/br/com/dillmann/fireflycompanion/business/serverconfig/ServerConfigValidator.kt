@@ -1,11 +1,12 @@
 package br.com.dillmann.fireflycompanion.business.serverconfig
 
+import br.com.dillmann.fireflycompanion.business.connectiontest.ConnectionTestService
+import br.com.dillmann.fireflycompanion.core.validation.MessageException
 import br.com.dillmann.fireflycompanion.core.validation.ValidationOutcome
 import java.net.URI
-import java.util.*
 
-internal class ServerConfigValidator {
-    fun validate(serverConfig: ServerConfig) {
+internal class ServerConfigValidator(private val connectionTestService: ConnectionTestService) {
+    suspend fun validate(serverConfig: ServerConfig) {
         val outcome = ValidationOutcome()
 
         validateUrlNotBlank(serverConfig.url, outcome)
@@ -15,6 +16,8 @@ internal class ServerConfigValidator {
         validateTokenIsValidJwt(serverConfig.token, outcome)
 
         outcome.throwExceptionIfNeeded()
+
+        validateServerReachable(serverConfig)
     }
 
     private fun validateUrlNotBlank(url: String, outcome: ValidationOutcome) {
@@ -50,24 +53,15 @@ internal class ServerConfigValidator {
 
     private fun isValidJwt(token: String): Boolean {
         val parts = token.split(".")
-        if (parts.size != 3)
-            return false
-
-        return try {
-            parts.forEach { Base64.getDecoder().decode(it.padBase64()) }
-            true
-        } catch (_: Exception) {
-            false
-        }
+        return parts.size == 3 && parts.all { it.isNotEmpty() }
     }
 
-    private fun String.padBase64(): String {
-        val padding = when (length % 4) {
-            0 -> 0
-            1 -> 3
-            2 -> 2
-            else -> 1
-        }
-        return this + "=".repeat(padding)
+    private suspend fun validateServerReachable(config: ServerConfig) {
+        val reachable = connectionTestService.isServerReachable(config.url, config.token)
+        if (!reachable)
+            throw MessageException(
+                "Server is not reachable",
+                "We're unable to connect to the server with the given URL and token. Please check that everything is correct.",
+            )
     }
 }
