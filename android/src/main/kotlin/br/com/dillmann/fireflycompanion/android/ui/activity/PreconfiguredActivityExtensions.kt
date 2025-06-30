@@ -6,12 +6,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.concurrent.thread
 
-fun PreconfiguredActivity.async(action: suspend () -> Unit) {
-    thread(start = true) {
+fun PreconfiguredActivity.async(
+    wait: Boolean = false,
+    action: suspend () -> Unit,
+) {
+    val thread = thread(start = true) {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 action()
             }
         }
     }
+
+    if (wait)
+        thread.join()
 }

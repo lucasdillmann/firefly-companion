@@ -9,6 +9,10 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import br.com.dillmann.fireflycompanion.business.preferences.Preferences
+import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
+import kotlinx.coroutines.runBlocking
+import org.koin.java.KoinJavaComponent.getKoin
 
 private val DarkColorScheme =
     darkColorScheme(
@@ -25,19 +29,17 @@ private val LightColorScheme =
     )
 
 @Composable
-fun AppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
-) {
-    val colorScheme = when {
-        dynamicColor -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+fun AppTheme(content: @Composable () -> Unit) {
+    val getPreferences = getKoin().get<GetPreferencesUseCase>()
+    val preferences = runBlocking { getPreferences.getPreferences() }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    val colorScheme = when(preferences.theme) {
+        Preferences.Theme.AUTO ->
+            if (isSystemInDarkTheme()) dynamicDarkColorScheme(LocalContext.current)
+            else dynamicLightColorScheme(LocalContext.current)
+
+        Preferences.Theme.LIGHT -> LightColorScheme
+        Preferences.Theme.DARK -> DarkColorScheme
     }
 
     MaterialTheme(

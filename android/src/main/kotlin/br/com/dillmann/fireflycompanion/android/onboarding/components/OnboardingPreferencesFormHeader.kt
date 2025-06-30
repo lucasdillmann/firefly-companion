@@ -10,9 +10,9 @@ import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.ui.extensions.noLineBreaks
 
 @Composable
-fun OnboardingServerFormHeader() {
+fun OnboardingPreferencesHeader() {
     Text(
-        text = "Let's get connected",
+        text = "What suits you best?",
         style = MaterialTheme.typography.headlineMedium,
         textAlign = TextAlign.Left,
         modifier = Modifier.padding(top = 64.dp, bottom = 16.dp)
@@ -20,7 +20,8 @@ fun OnboardingServerFormHeader() {
 
     Text(
         text = """
-            Please input your Firefly III server URL and personal access token.
+            To finish things up select what you prefer. You can always change these options later in the settings
+            page of the app.
         """.noLineBreaks(),
         style = MaterialTheme.typography.bodyLarge,
         modifier = Modifier.padding(top = 0.dp, bottom = 32.dp)

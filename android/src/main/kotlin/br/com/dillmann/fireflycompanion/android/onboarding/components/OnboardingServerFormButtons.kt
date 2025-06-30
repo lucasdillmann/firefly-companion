@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.ui.extensions.noLineBreaks
 
 @Composable
-fun OnboardingFormButtons(onContinue: () -> Unit) {
+fun OnboardingServerFormButtons(onContinue: () -> Unit) {
     val showDialog = remember { mutableStateOf(false) }
 
     Row(

@@ -16,9 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingFormButtons
-import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingFormFields
-import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingFormHeader
+import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingServerFormButtons
+import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingServerFormFields
+import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingServerFormHeader
 import br.com.dillmann.fireflycompanion.android.ui.activity.PreconfiguredActivity
 import br.com.dillmann.fireflycompanion.android.ui.activity.async
 import br.com.dillmann.fireflycompanion.android.ui.activity.start
@@ -48,9 +48,9 @@ class OnboardingServerFormActivity : PreconfiguredActivity() {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start,
         ) {
-            OnboardingFormHeader()
-            OnboardingFormFields(scrollState, serverUrl, accessToken, validationOutcome.value)
-            OnboardingFormButtons {
+            OnboardingServerFormHeader()
+            OnboardingServerFormFields(scrollState, serverUrl, accessToken, validationOutcome.value)
+            OnboardingServerFormButtons {
                 handleSubmit(
                     serverUrl.value.text,
                     accessToken.value.text,

@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.core.validation.ValidationOutcome
 
 @Composable
-fun OnboardingFormFields(
+fun OnboardingServerFormFields(
     scrollState: ScrollState,
     serverUrl: MutableState<TextFieldValue>,
     accessToken: MutableState<TextFieldValue>,
