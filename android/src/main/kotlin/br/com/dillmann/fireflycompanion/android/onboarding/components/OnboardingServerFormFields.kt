@@ -43,7 +43,7 @@ fun OnboardingServerFormFields(
         onValueChange = { serverUrl.value = it },
         label = { Text(text = "Server URL") },
         modifier = Modifier
-            .padding(top = 32.dp, bottom = 8.dp)
+            .padding(top = 32.dp, bottom = 0.dp)
             .focusRequester(serverUrlFocusRequester)
             .onFocusChanged { serverUrlFocused.value = it.isFocused }
             .fillMaxWidth(),
@@ -66,7 +66,7 @@ fun OnboardingServerFormFields(
         onValueChange = { accessToken.value = it },
         label = { Text(text = "Personal access token") },
         modifier = Modifier
-            .padding(top = 8.dp, bottom = 32.dp)
+            .padding(top = 0.dp, bottom = 32.dp)
             .focusRequester(accessTokenFocusRequester)
             .onFocusChanged { accessTokenFocused.value = it.isFocused }
             .fillMaxWidth(),

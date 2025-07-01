@@ -60,6 +60,6 @@ class OnboardingPreferencesFormActivity : PreconfiguredActivity() {
         val savePreferences = getKoin().get<SavePreferencesUseCase>()
         val preferences = Preferences(requireBiometricLogin, theme)
 
-        async(wait = true) { savePreferences.savePreferences(preferences) }
+        async { savePreferences.savePreferences(preferences) }.join()
     }
 }

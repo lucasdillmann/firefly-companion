@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.lifecycleScope
 import br.com.dillmann.fireflycompanion.android.home.HomeActivity
 import br.com.dillmann.fireflycompanion.android.onboarding.OnboardingStartActivity
 import br.com.dillmann.fireflycompanion.android.ui.activity.PreconfiguredActivity
@@ -23,14 +24,19 @@ class MainActivity : PreconfiguredActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         startKoinIfNeeded()
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         async {
             val serverConfig = getKoin().get<GetConfigUseCase>().getConfig()
-            if (serverConfig == null)
+            if (serverConfig == null) {
                 start<OnboardingStartActivity>()
-            else
-                start<HomeActivity>()
+                return@async
+            }
 
+            start<HomeActivity>()
             finish()
         }
     }

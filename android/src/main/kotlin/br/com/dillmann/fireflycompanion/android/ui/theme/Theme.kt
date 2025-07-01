@@ -29,10 +29,7 @@ private val LightColorScheme =
     )
 
 @Composable
-fun AppTheme(content: @Composable () -> Unit) {
-    val getPreferences = getKoin().get<GetPreferencesUseCase>()
-    val preferences = runBlocking { getPreferences.getPreferences() }
-
+fun AppTheme(preferences: Preferences, content: @Composable () -> Unit) {
     val colorScheme = when(preferences.theme) {
         Preferences.Theme.AUTO ->
             if (isSystemInDarkTheme()) dynamicDarkColorScheme(LocalContext.current)
