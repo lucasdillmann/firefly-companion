@@ -106,6 +106,7 @@ class OnboardingServerFormActivity : PreconfiguredActivity() {
             try {
                 saveAction.saveConfig(config)
                 start<OnboardingPreferencesFormActivity>()
+                finish()
             } catch (ex: MessageException) {
                 errorDialog.value = ex
             } catch (ex: ConsistencyException) {

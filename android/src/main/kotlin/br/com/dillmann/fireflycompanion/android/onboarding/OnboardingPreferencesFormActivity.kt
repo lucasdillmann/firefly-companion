@@ -12,7 +12,6 @@ import br.com.dillmann.fireflycompanion.android.onboarding.components.Onboarding
 import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingPreferencesFormFields
 import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingPreferencesHeader
 import br.com.dillmann.fireflycompanion.android.ui.activity.PreconfiguredActivity
-import br.com.dillmann.fireflycompanion.android.ui.activity.async
 import br.com.dillmann.fireflycompanion.android.ui.activity.start
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
@@ -49,6 +48,7 @@ class OnboardingPreferencesFormActivity : PreconfiguredActivity() {
             OnboardingPreferencesFormButtons {
                 submitPreferences(requireBiometricLogin.value, theme.value)
                 start<HomeActivity>()
+                finish()
             }
         }
     }
@@ -60,6 +60,6 @@ class OnboardingPreferencesFormActivity : PreconfiguredActivity() {
         val savePreferences = getKoin().get<SavePreferencesUseCase>()
         val preferences = Preferences(requireBiometricLogin, theme)
 
-        async { savePreferences.savePreferences(preferences) }.join()
+        runBlocking { savePreferences.savePreferences(preferences) }
     }
 }

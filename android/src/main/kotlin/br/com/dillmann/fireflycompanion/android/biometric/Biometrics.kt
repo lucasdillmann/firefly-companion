@@ -10,7 +10,7 @@ object Biometrics {
     enum class Outcome {
         SUCCESS,
         ERROR,
-        STILL_LOCKED,
+        KEPT_LOCKED,
     }
 
     var locked = true
@@ -26,23 +26,35 @@ object Biometrics {
             return
         }
 
+        prompt(context) {
+            if (it == Outcome.SUCCESS)
+                locked = false
+
+            callback(it)
+        }
+     }
+
+    fun test(context: Context, callback: (Outcome) -> Unit) {
+        prompt(context, callback)
+    }
+
+    private fun prompt(context: Context, callback: (Outcome) -> Unit) {
         val executor = Executors.newSingleThreadExecutor()
         val prompt = BiometricPrompt
             .Builder(context)
             .setTitle("App locked")
             .setSubtitle("Use your biometric credentials to unlock and continue")
-            .setNegativeButton("Cancel", executor) { _, _ -> callback(Outcome.STILL_LOCKED) }
-            .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+            .setNegativeButton("Cancel", executor) { _, _ -> callback(Outcome.KEPT_LOCKED) }
+            .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
             .build()
 
         val biometricCallback = object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult?) {
-                locked = false
                 callback(Outcome.SUCCESS)
             }
 
             override fun onAuthenticationFailed() {
-                callback(Outcome.STILL_LOCKED)
+                callback(Outcome.KEPT_LOCKED)
             }
 
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {

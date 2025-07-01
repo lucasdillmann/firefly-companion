@@ -5,7 +5,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import br.com.dillmann.fireflycompanion.android.biometric.Biometrics
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
 
 @Composable
@@ -14,7 +16,19 @@ fun OnboardingPreferencesFormFields(
     theme: MutableState<Preferences.Theme>,
     onThemeChanged: (Preferences.Theme) -> Unit = {}
 ) {
+    val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
+    var biometricsNotSupportedWarningVisible by remember { mutableStateOf(false) }
+
+    fun testBiometrics() {
+        Biometrics.test(context) {
+            if (it == Biometrics.Outcome.ERROR)
+                biometricsNotSupportedWarningVisible = true
+
+            if (it == Biometrics.Outcome.SUCCESS)
+                requireBiometricLogin.value = true
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -32,7 +46,10 @@ fun OnboardingPreferencesFormFields(
             )
             Switch(
                 checked = requireBiometricLogin.value,
-                onCheckedChange = { requireBiometricLogin.value = it }
+                onCheckedChange = {
+                    if (it) testBiometrics()
+                    else requireBiometricLogin.value = false
+                },
             )
         }
 
@@ -75,5 +92,18 @@ fun OnboardingPreferencesFormFields(
                 }
             }
         }
+    }
+
+    if (biometricsNotSupportedWarningVisible) {
+        AlertDialog(
+            onDismissRequest = { requireBiometricLogin.value = false },
+            title = { Text(text = "Not supported") },
+            text = { Text(text = "Sorry, but your device doesn't supports unlocking the app using your biometrics") },
+            confirmButton = {
+                TextButton(onClick = { biometricsNotSupportedWarningVisible = false }) {
+                    Text("Got it")
+                }
+            }
+        )
     }
 }
