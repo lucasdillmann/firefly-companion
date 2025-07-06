@@ -15,6 +15,7 @@ import br.com.dillmann.fireflycompanion.android.biometric.Biometrics
 import br.com.dillmann.fireflycompanion.android.core.context.AppContext
 import br.com.dillmann.fireflycompanion.android.core.theme.AppTheme
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.theme.AppThemeContext
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
 import java.util.concurrent.CompletableFuture
@@ -30,6 +31,7 @@ abstract class PreconfiguredActivity(
 
         restoreState().whenComplete { _, _ ->
             AppContext.reconfigure(preferences)
+            AppThemeContext.reconfigure(preferences)
 
             if (preferences.requireBiometricLogin && !allowAnonymous) {
                 window?.setFlags(
@@ -40,7 +42,7 @@ abstract class PreconfiguredActivity(
 
             enableEdgeToEdge()
             setContent {
-                AppTheme(preferences) {
+                AppTheme {
                     Scaffold(modifier = Modifier.fillMaxSize()) {
                         Content(it)
                     }

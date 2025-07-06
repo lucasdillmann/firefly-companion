@@ -12,6 +12,7 @@ import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActiv
 import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.context.AppContext
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.theme.AppThemeContext
 import br.com.dillmann.fireflycompanion.android.home.HomeActivity
 import br.com.dillmann.fireflycompanion.android.preferences.components.PreferencesFormButtons
 import br.com.dillmann.fireflycompanion.android.preferences.components.PreferencesFormFields
@@ -41,10 +42,7 @@ class PreferencesActivity : PreconfiguredActivity() {
             PreferencesHeader()
             PreferencesFormFields(
                 state = state,
-                onChange = {
-                    submitPreferences(state.value)
-                    recreate()
-                }
+                onChange = { submitPreferences(state.value) }
             )
             PreferencesFormButtons {
                 submitPreferences(state.value)
@@ -62,6 +60,7 @@ class PreferencesActivity : PreconfiguredActivity() {
         runBlocking {
             savePreferences.savePreferences(preferences)
             AppContext.reconfigure(preferences)
+            AppThemeContext.reconfigure(preferences)
         }
     }
 }
