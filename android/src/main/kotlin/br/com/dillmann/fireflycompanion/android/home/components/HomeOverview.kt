@@ -12,27 +12,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import br.com.dillmann.fireflycompanion.business.currency.Currency
+import br.com.dillmann.fireflycompanion.android.ui.components.Section
 import br.com.dillmann.fireflycompanion.business.summary.Summary
 import java.math.BigDecimal
 
 @Composable
-fun HomeBalance(summary: Summary?) {
+fun HomeOverview(summary: Summary?) {
     val scrollState = rememberScrollState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Section(
+        title = "Overview"
     ) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 32.dp, bottom = 16.dp),
-            text = "Overview",
-            style = MaterialTheme.typography.headlineSmall,
-        )
 
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -139,7 +129,7 @@ private fun DetailContent(
     } else {
         val value = valueProvider(summary)
         Text(
-            text = formatValue(value, summary.currency),
+            text = summary.currency.format(value ?: BigDecimal.ZERO),
             style = valueStyle.copy(fontWeight = FontWeight.SemiBold),
             color = colorSchema,
         )
@@ -150,11 +140,4 @@ private fun DetailContent(
         style = labelStyle,
         color = colorSchema.copy(alpha = 0.7f)
     )
-}
-
-private fun formatValue(value: BigDecimal?, currency: Currency?): String {
-    if (value == null || currency == null)
-        return "-"
-
-    return currency.format(value)
 }

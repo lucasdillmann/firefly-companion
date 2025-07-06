@@ -8,7 +8,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import br.com.dillmann.fireflycompanion.android.home.components.HomeBalance
+import br.com.dillmann.fireflycompanion.android.home.components.HomeAccounts
+import br.com.dillmann.fireflycompanion.android.home.components.HomeBudgets
+import br.com.dillmann.fireflycompanion.android.home.components.HomeCreditCards
+import br.com.dillmann.fireflycompanion.android.home.components.HomeExpensesByCategory
+import br.com.dillmann.fireflycompanion.android.home.components.HomeGoals
+import br.com.dillmann.fireflycompanion.android.home.components.HomeMonthlyBalance
+import br.com.dillmann.fireflycompanion.android.home.components.HomeMonthlySavings
+import br.com.dillmann.fireflycompanion.android.home.components.HomeOverview
+import br.com.dillmann.fireflycompanion.android.home.components.HomeSpendFrequency
 import br.com.dillmann.fireflycompanion.android.ui.activity.PreconfiguredActivity
 import br.com.dillmann.fireflycompanion.android.ui.activity.async
 import br.com.dillmann.fireflycompanion.android.ui.activity.state
@@ -37,9 +45,19 @@ class HomeActivity : PreconfiguredActivity() {
         PullToRefreshBox(
             isRefreshing = reloading,
             onRefresh = ::reload,
-            modifier = Modifier.padding(padding).fillMaxSize(),
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize(),
         ) {
-            HomeBalance(summary)
+            HomeOverview(summary)
+            HomeCreditCards()
+            HomeAccounts()
+            HomeExpensesByCategory()
+            HomeBudgets()
+            HomeMonthlySavings()
+            HomeSpendFrequency()
+            HomeMonthlyBalance()
+            HomeGoals()
         }
     }
 }

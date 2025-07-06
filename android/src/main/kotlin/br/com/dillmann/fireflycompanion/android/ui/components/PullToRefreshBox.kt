@@ -1,8 +1,6 @@
 package br.com.dillmann.fireflycompanion.android.ui.components
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,7 +17,7 @@ fun PullToRefreshBox(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable BoxScope.() -> Unit,
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val pullState = rememberPullToRefreshState()
@@ -31,7 +29,11 @@ fun PullToRefreshBox(
             .fillMaxHeight(),
         contentAlignment = Alignment.TopStart
     ) {
-        content()
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            content()
+        }
         Indicator(
             modifier = Modifier.align(Alignment.TopCenter),
             isRefreshing = isRefreshing,
