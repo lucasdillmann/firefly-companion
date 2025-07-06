@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.onboarding.components
+package br.com.dillmann.fireflycompanion.android.preferences.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -11,15 +11,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun OnboardingPreferencesFormButtons(onContinue: () -> Unit) {
+fun PreferencesFormButtons(
+    saveText: String = "Save",
+    onSave: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .padding(bottom = 32.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.End,
     ) {
-        Button(onClick = onContinue) {
-            Text(text = "Finish")
+        Button(onClick = onSave) {
+            Text(text = saveText)
         }
     }
 

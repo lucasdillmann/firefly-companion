@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.onboarding
+package br.com.dillmann.fireflycompanion.android.preferences
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
@@ -8,18 +8,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.home.HomeActivity
-import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingPreferencesHeader
 import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
 import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.preferences.components.PreferencesFormButtons
 import br.com.dillmann.fireflycompanion.android.preferences.components.PreferencesFormFields
+import br.com.dillmann.fireflycompanion.android.preferences.components.PreferencesHeader
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.SavePreferencesUseCase
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.getKoin
 
-class OnboardingPreferencesFormActivity : PreconfiguredActivity() {
+class PreferencesActivity : PreconfiguredActivity() {
     private val getPreferences = getKoin().get<GetPreferencesUseCase>()
 
     @Composable
@@ -36,7 +36,7 @@ class OnboardingPreferencesFormActivity : PreconfiguredActivity() {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start,
         ) {
-            OnboardingPreferencesHeader()
+            PreferencesHeader()
             PreferencesFormFields(
                 requireBiometricLogin = requireBiometricLogin,
                 theme = theme,
@@ -45,9 +45,8 @@ class OnboardingPreferencesFormActivity : PreconfiguredActivity() {
                     recreate()
                 }
             )
-            PreferencesFormButtons(saveText = "Finish") {
+            PreferencesFormButtons {
                 submitPreferences(requireBiometricLogin.value, theme.value)
-                start<HomeActivity>()
                 finish()
             }
         }

@@ -25,5 +25,6 @@
         <activity android:name=".onboarding.OnboardingServerFormActivity"/>
         <activity android:name=".onboarding.OnboardingStartActivity"/>
         <activity android:name=".onboarding.OnboardingPreferencesFormActivity"/>
+        <activity android:name=".preferences.PreferencesActivity"/>
     </application>
 </manifest>

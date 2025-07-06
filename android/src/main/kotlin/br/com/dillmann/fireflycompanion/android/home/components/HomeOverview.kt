@@ -20,7 +20,7 @@ import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibilityToggle
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
-import br.com.dillmann.fireflycompanion.android.onboarding.OnboardingPreferencesFormActivity
+import br.com.dillmann.fireflycompanion.android.preferences.PreferencesActivity
 import br.com.dillmann.fireflycompanion.business.summary.Summary
 import java.math.BigDecimal
 
@@ -43,7 +43,7 @@ fun HomeOverview(summary: Summary?) {
 
             IconButton(
                 modifier = Modifier.size(baseSize),
-                onClick = { context.start<OnboardingPreferencesFormActivity>(finish = true) }
+                onClick = { context.start<PreferencesActivity>() }
             ) {
                 Icon(
                     contentDescription = "Open the preferences screen",

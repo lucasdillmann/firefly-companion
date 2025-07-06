@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.onboarding.components
+package br.com.dillmann.fireflycompanion.android.preferences.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -11,7 +11,7 @@ import br.com.dillmann.fireflycompanion.android.biometric.Biometrics
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
 
 @Composable
-fun OnboardingPreferencesFormFields(
+fun PreferencesFormFields(
     requireBiometricLogin: MutableState<Boolean>,
     theme: MutableState<Preferences.Theme>,
     onThemeChanged: (Preferences.Theme) -> Unit = {}
