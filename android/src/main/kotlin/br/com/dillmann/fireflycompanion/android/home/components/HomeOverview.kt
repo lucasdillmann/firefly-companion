@@ -124,7 +124,7 @@ private fun DetailBlock(
 ) {
     val baseColor = MaterialTheme.colorScheme.secondaryContainer
     val compositeColor = tintColor
-        ?.copy(alpha = 0.20f)
+        ?.copy(alpha = 0.25f)
         ?.compositeOver(baseColor)
         ?: baseColor
 

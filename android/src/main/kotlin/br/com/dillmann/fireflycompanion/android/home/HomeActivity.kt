@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AutoAwesome
@@ -92,11 +93,11 @@ private fun QuickActions() {
     ) {
         SmallFloatingActionButton(
             onClick = {},
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
         ) {
             Icon(
                 imageVector = Icons.Filled.AutoAwesome,
                 contentDescription = i18n(R.string.ia_assistant),
+                modifier = Modifier.size(16.dp),
             )
         }
 
