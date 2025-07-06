@@ -6,15 +6,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import br.com.dillmann.fireflycompanion.android.core.components.section.SectionCard
+import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 
 @Composable
 fun HomeAccounts() {
     SectionCard(
-        title = "Accounts"
+        title = i18n(R.string.accounts)
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "Not yet implemented",
+            text = i18n(R.string.not_implemented),
             style = MaterialTheme.typography.bodyLarge,
         )
     }

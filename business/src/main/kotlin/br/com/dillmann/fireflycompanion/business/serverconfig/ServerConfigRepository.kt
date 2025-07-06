@@ -1,6 +1,6 @@
 package br.com.dillmann.fireflycompanion.business.serverconfig
 
 interface ServerConfigRepository {
-    fun getConfig(): ServerConfig?
-    fun saveConfig(serverConfig: ServerConfig)
+    suspend fun getConfig(): ServerConfig?
+    suspend fun saveConfig(serverConfig: ServerConfig)
 }

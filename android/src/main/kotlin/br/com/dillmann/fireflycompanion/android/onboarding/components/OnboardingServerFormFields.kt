@@ -16,6 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.core.validation.ValidationOutcome
 
 @Composable
@@ -41,7 +43,7 @@ fun OnboardingServerFormFields(
     OutlinedTextField(
         value = serverUrl.value,
         onValueChange = { serverUrl.value = it },
-        label = { Text(text = "Server URL") },
+        label = { Text(text = i18n(R.string.server_url)) },
         modifier = Modifier
             .padding(top = 32.dp, bottom = 0.dp)
             .focusRequester(serverUrlFocusRequester)
@@ -64,7 +66,7 @@ fun OnboardingServerFormFields(
     OutlinedTextField(
         value = accessToken.value,
         onValueChange = { accessToken.value = it },
-        label = { Text(text = "Personal access token") },
+        label = { Text(text = i18n(R.string.personal_access_token)) },
         modifier = Modifier
             .padding(top = 0.dp, bottom = 32.dp)
             .focusRequester(accessTokenFocusRequester)

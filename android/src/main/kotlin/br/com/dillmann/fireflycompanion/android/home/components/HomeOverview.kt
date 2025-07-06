@@ -16,10 +16,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibilityToggle
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
+import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.preferences.PreferencesActivity
 import br.com.dillmann.fireflycompanion.business.summary.Summary
 import java.math.BigDecimal
@@ -34,7 +36,7 @@ fun HomeOverview(summary: Summary?) {
     )
 
     Section(
-        title = "Overview",
+        title = i18n(R.string.overview),
         rightContent = {
             val baseSize = MaterialTheme.typography.headlineSmall.lineHeight.value.dp
             MoneyVisibilityToggle(
@@ -46,7 +48,7 @@ fun HomeOverview(summary: Summary?) {
                 onClick = { context.start<PreferencesActivity>() }
             ) {
                 Icon(
-                    contentDescription = "Open the preferences screen",
+                    contentDescription = i18n(R.string.open_preferences),
                     imageVector = Icons.Filled.Settings,
                 )
             }
@@ -66,7 +68,7 @@ fun HomeOverview(summary: Summary?) {
                 horizontalAlignment = Alignment.Start,
             ) {
                 DetailContent(
-                    title = "Net worth",
+                    title = i18n(R.string.net_worth),
                     summary = summary,
                     colorSchema = MaterialTheme.colorScheme.onPrimaryContainer,
                     valueStyle = MaterialTheme.typography.displaySmall,
@@ -86,25 +88,25 @@ fun HomeOverview(summary: Summary?) {
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             DetailBlock(
-                title = "Earned",
+                title = i18n(R.string.earned),
                 summary = summary,
                 tintColor = Color(0xFF4CAF50),
                 valueProvider = { it.earned },
             )
             DetailBlock(
-                title = "Spent",
+                title = i18n(R.string.spent),
                 summary = summary,
                 tintColor = Color(0xFFF44336),
                 valueProvider = { it.spent?.abs() },
             )
             DetailBlock(
-                title = "Left to spend",
+                title = i18n(R.string.left_to_spend),
                 summary = summary,
                 tintColor = Color(0xFF2196F3),
                 valueProvider = { it.leftToSpend },
             )
             DetailBlock(
-                title = "Balance",
+                title = i18n(R.string.balance),
                 summary = summary,
                 valueProvider = { it.balance },
             )

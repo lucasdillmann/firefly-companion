@@ -9,6 +9,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.R
 
 @Composable
 fun MoneyVisibilityToggle(
@@ -24,7 +26,7 @@ fun MoneyVisibilityToggle(
         modifier = modifier.size(24.dp),
     ) {
         Icon(
-            contentDescription = "Toggle monetary visibility",
+            contentDescription = i18n(R.string.toggle_money_visibility),
             imageVector = monetaryVisibilityIcon,
         )
     }

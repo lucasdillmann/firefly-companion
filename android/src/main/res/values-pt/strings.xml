@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">Firefly Companion</string>
+    <string name="app_locked">App bloqueado</string>
+    <string name="use_biometrics_to_unlock">Use sua biometria para desbloquear e continuar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="authentication_required">Você precisa fazer login para continuar</string>
+    <string name="authentication_failed">Falha no login</string>
+    <string name="authentication_failed_details">Desculpe, mas não foi possível desbloquear o app neste momento: Um erro
+        inesperado foi encontrado enquanto sua biometria era validada. Por favor, tente novamente.
+    </string>
+    <string name="got_it">Entendi</string>
+    <string name="unlock">Desbloquar</string>
+    <string name="toggle_money_visibility">Alternar visibilidade do dinheiro</string>
+    <string name="accounts">Contas</string>
+    <string name="not_implemented">Ainda não implementado</string>
+    <string name="budgets">Orçamentos</string>
+    <string name="credit_cards">Cartões de crédito</string>
+    <string name="expenses_by_category">Despesas por categoria</string>
+    <string name="goals">Objetivos</string>
+    <string name="monthly_balance">Balanço mensal</string>
+    <string name="monthly_savings">Economia mensal</string>
+    <string name="spend_frequency">Frequência de gastos</string>
+    <string name="overview">Visão geral</string>
+    <string name="open_preferences">Abrir preferências</string>
+    <string name="net_worth">Patrimônio líquido</string>
+    <string name="earned">Ganhos</string>
+    <string name="spent">Gastos</string>
+    <string name="left_to_spend">Orçamento restante</string>
+    <string name="balance">Balanço geral</string>
+    <string name="onboarding_main_title">Olá 👋</string>
+    <string name="onboarding_main_message">Bem-vindo ao Firefly Companion. Antes de usar o aplicativo, precisamos nos conectar ao seu servidor Firefly III.</string>
+    <string name="continue_">Continuar</string>
+    <string name="connecting_to_firefly_server">Conectando ao seu servidor Firefly III…</string>
+    <string name="finish">Finalizar</string>
+    <string name="onboarding_preferences_title">O que você prefere?</string>
+    <string name="onboarding_preferences_message">Para finalizar, selecione o que faz mais sentido para você. Você
+        sempre pode alterar essas opções mais tarde na tela de configurações.
+    </string>
+    <string name="i_dont_have_a_token">Eu não tenho um token</string>
+    <string name="onboarding_token_instructions_1">Se você ainda não tem um token, pode obter um fazendo login no seu
+        servidor usando a interface web do Firefly III e, no menu esquerdo, clicar em Opções > Perfil.
+    </string>
+    <string name="onboarding_token_instructions_2">Depois disso, vá para a aba \"OAuth\" e gere um novo token de acesso
+        pessoal usando o botão localizado na última seção da página.
+    </string>
+    <string name="server_url">URL do servidor</string>
+    <string name="personal_access_token">Token de acesso</string>
+    <string name="onboarding_server_title">Conexão com o servidor</string>
+    <string name="onboarding_server_message">Informe a URL e token de acesso do seu servidor Firefly III.</string>
+    <string name="language">Idioma</string>
+    <string name="language_auto">Automático (usar do telefone)</string>
+    <string name="language_english">Inglês</string>
+    <string name="language_portuguese">Português do Brasil</string>
+    <string name="theme">Tema</string>
+    <string name="theme_auto">Automático (usar do telefone)</string>
+    <string name="theme_dark">Escuro</string>
+    <string name="theme_light">Claro</string>
+    <string name="require_biometric_login">Usar login por biometria</string>
+    <string name="not_supported">Não suportado</string>
+    <string name="biometrics_not_supported">Desculpe, mas seu dispositivo não suporta o desbloqueio do aplicativo usando
+        sua biometria
+    </string>
+    <string name="save">Salvar</string>
+    <string name="preferences">Configurações</string>
+</resources>

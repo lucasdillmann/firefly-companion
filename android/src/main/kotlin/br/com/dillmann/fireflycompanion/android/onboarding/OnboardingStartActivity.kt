@@ -11,6 +11,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
 import br.com.dillmann.fireflycompanion.android.core.activity.start
+import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.R
 
 class OnboardingStartActivity : PreconfiguredActivity() {
     @Composable
@@ -24,14 +26,14 @@ class OnboardingStartActivity : PreconfiguredActivity() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Hello there \uD83D\uDC4B",
+                text = i18n(R.string.onboarding_main_title),
                 style = MaterialTheme.typography.headlineLarge,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
             Text(
-                text = "Welcome to Firefly Companion. Before using the app, we need to connect to your Firefly III server.",
+                text = i18n(R.string.onboarding_main_message),
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 16.dp, bottom = 64.dp)
@@ -43,7 +45,7 @@ class OnboardingStartActivity : PreconfiguredActivity() {
                     finish()
                 },
             ) {
-                Text(text = "Continue")
+                Text(text = i18n(R.string.continue_))
             }
         }
     }

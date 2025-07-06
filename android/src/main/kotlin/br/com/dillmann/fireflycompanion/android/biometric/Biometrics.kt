@@ -1,9 +1,11 @@
 package br.com.dillmann.fireflycompanion.android.biometric
 
+import br.com.dillmann.fireflycompanion.android.R
 import android.content.Context
 import android.hardware.biometrics.BiometricManager
 import android.hardware.biometrics.BiometricPrompt
 import android.os.CancellationSignal
+import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import java.util.concurrent.Executors
 
 object Biometrics {
@@ -42,9 +44,9 @@ object Biometrics {
         val executor = Executors.newSingleThreadExecutor()
         val prompt = BiometricPrompt
             .Builder(context)
-            .setTitle("App locked")
-            .setSubtitle("Use your biometric credentials to unlock and continue")
-            .setNegativeButton("Cancel", executor) { _, _ -> callback(Outcome.KEPT_LOCKED) }
+            .setTitle(i18n(R.string.app_locked))
+            .setSubtitle(i18n(R.string.use_biometrics_to_unlock))
+            .setNegativeButton(i18n(R.string.cancel), executor) { _, _ -> callback(Outcome.KEPT_LOCKED) }
             .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_WEAK)
             .build()
 

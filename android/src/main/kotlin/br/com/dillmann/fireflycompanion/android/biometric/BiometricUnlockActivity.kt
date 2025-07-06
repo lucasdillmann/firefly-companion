@@ -13,7 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
-import br.com.dillmann.fireflycompanion.android.core.extensions.noLineBreaks
+import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.R
 
 class BiometricUnlockActivity : PreconfiguredActivity(allowAnonymous = true) {
     private val errorDialogVisible = mutableStateOf(false)
@@ -29,34 +30,31 @@ class BiometricUnlockActivity : PreconfiguredActivity(allowAnonymous = true) {
             horizontalAlignment = Alignment.Start,
         ) {
             Text(
-                text = "App locked",
+                text = i18n(R.string.app_locked),
                 style = MaterialTheme.typography.headlineMedium,
                 textAlign = TextAlign.Left,
                 modifier = Modifier.padding(top = 64.dp, bottom = 16.dp)
             )
 
             Text(
-                text = "You need to authenticate before continuing",
+                text = i18n(R.string.authentication_required),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(top = 0.dp, bottom = 32.dp)
             )
 
             Button(onClick = ::unlock) {
-                Text(text = "Unlock")
+                Text(text = i18n(R.string.unlock))
             }
         }
 
         if (errorDialogVisible.value) {
             AlertDialog(
                 onDismissRequest = { errorDialogVisible.value = false },
-                title = { Text(text = "Authentication failed") },
+                title = { Text(text = i18n(R.string.authentication_failed)) },
                 text = {
                     Column {
                         Text(
-                            text = """
-                                Sorry, but we're unable to unlock the app at this moment: An unexpected error was found
-                                while checking for your biometrics. Please try again.
-                            """.noLineBreaks(),
+                            text = i18n(R.string.authentication_failed_details),
                             modifier = Modifier.padding(bottom = 16.dp),
                         )
                     }
@@ -65,7 +63,7 @@ class BiometricUnlockActivity : PreconfiguredActivity(allowAnonymous = true) {
                     TextButton(
                         onClick = { errorDialogVisible.value = false }
                     ) {
-                        Text("Got it")
+                        Text(i18n(R.string.got_it))
                     }
                 }
             )

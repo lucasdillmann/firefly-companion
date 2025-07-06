@@ -7,26 +7,28 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import br.com.dillmann.fireflycompanion.android.home.HomeActivity
-import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingPreferencesHeader
+import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
 import br.com.dillmann.fireflycompanion.android.core.activity.start
+import br.com.dillmann.fireflycompanion.android.core.context.AppContext
+import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.home.HomeActivity
+import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingPreferencesHeader
 import br.com.dillmann.fireflycompanion.android.preferences.components.PreferencesFormButtons
 import br.com.dillmann.fireflycompanion.android.preferences.components.PreferencesFormFields
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.SavePreferencesUseCase
 import kotlinx.coroutines.runBlocking
-import org.koin.android.ext.android.getKoin
 
 class OnboardingPreferencesFormActivity : PreconfiguredActivity() {
-    private val getPreferences = getKoin().get<GetPreferencesUseCase>()
+    private val getPreferences = koin().get<GetPreferencesUseCase>()
 
     @Composable
     override fun Content(padding: PaddingValues) {
         val currentPreferences = runBlocking { getPreferences.getPreferences() }
-        val requireBiometricLogin = remember { mutableStateOf(currentPreferences.requireBiometricLogin) }
-        val theme = remember { mutableStateOf(currentPreferences.theme) }
+        val preferences = remember { mutableStateOf(currentPreferences) }
 
         Column(
             modifier = Modifier
@@ -38,28 +40,25 @@ class OnboardingPreferencesFormActivity : PreconfiguredActivity() {
         ) {
             OnboardingPreferencesHeader()
             PreferencesFormFields(
-                requireBiometricLogin = requireBiometricLogin,
-                theme = theme,
-                onThemeChanged = {
-                    submitPreferences(requireBiometricLogin.value, theme.value)
+                state = preferences,
+                onChange = {
+                    submitPreferences(preferences.value)
                     recreate()
                 }
             )
-            PreferencesFormButtons(saveText = "Finish") {
-                submitPreferences(requireBiometricLogin.value, theme.value)
+            PreferencesFormButtons(saveText = i18n(R.string.finish)) {
+                submitPreferences(preferences.value)
                 start<HomeActivity>()
                 finish()
             }
         }
     }
 
-    private fun submitPreferences(
-        requireBiometricLogin: Boolean,
-        theme: Preferences.Theme,
-    ) {
-        val savePreferences = getKoin().get<SavePreferencesUseCase>()
-        val preferences = Preferences(requireBiometricLogin, theme)
-
-        runBlocking { savePreferences.savePreferences(preferences) }
+    private fun submitPreferences(preferences: Preferences) {
+        val savePreferences = koin().get<SavePreferencesUseCase>()
+        runBlocking {
+            savePreferences.savePreferences(preferences)
+            AppContext.reconfigure(preferences)
+        }
     }
 }

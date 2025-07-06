@@ -1,57 +1,35 @@
 package br.com.dillmann.fireflycompanion.android
 
-import android.content.Context
 import android.os.Bundle
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import br.com.dillmann.fireflycompanion.android.home.HomeActivity
-import br.com.dillmann.fireflycompanion.android.onboarding.OnboardingStartActivity
 import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
 import br.com.dillmann.fireflycompanion.android.core.activity.async
 import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibility
-import br.com.dillmann.fireflycompanion.business.BusinessModule
+import br.com.dillmann.fireflycompanion.android.core.context.AppContext
+import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager
+import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.home.HomeActivity
+import br.com.dillmann.fireflycompanion.android.onboarding.OnboardingStartActivity
 import br.com.dillmann.fireflycompanion.business.serverconfig.usecase.GetConfigUseCase
-import br.com.dillmann.fireflycompanion.core.CoreModule
-import br.com.dillmann.fireflycompanion.database.DatabaseModule
-import br.com.dillmann.fireflycompanion.thirdparty.ThirdPartyModule
-import org.koin.android.ext.android.getKoin
-import org.koin.core.context.loadKoinModules
-import org.koin.core.context.startKoin
-import org.koin.dsl.module
 
 class MainActivity : PreconfiguredActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        startKoinIfNeeded()
-        MoneyVisibility.initialize(this)
+        AppContext.init(this)
+        KoinManager.init()
+        MoneyVisibility.init(this)
 
         super.onCreate(savedInstanceState)
 
         async {
-            val serverConfig = getKoin().get<GetConfigUseCase>().getConfig()
+            val serverConfig = koin().get<GetConfigUseCase>().getConfig()
             if (serverConfig == null)
                 start<OnboardingStartActivity>()
             else
                 start<HomeActivity>()
 
             finish()
-        }
-    }
-
-    private fun startKoinIfNeeded() {
-        try {
-            getKoin()
-        } catch (_: IllegalStateException) {
-            startKoin {
-                loadKoinModules(module {
-                    single<Context> { this@MainActivity }
-                })
-
-                loadKoinModules(CoreModule)
-                loadKoinModules(BusinessModule)
-                loadKoinModules(DatabaseModule)
-                loadKoinModules(ThirdPartyModule)
-            }
         }
     }
 

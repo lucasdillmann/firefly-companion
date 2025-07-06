@@ -22,12 +22,14 @@ import br.com.dillmann.fireflycompanion.android.onboarding.components.Onboarding
 import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
 import br.com.dillmann.fireflycompanion.android.core.activity.async
 import br.com.dillmann.fireflycompanion.android.core.activity.start
+import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.business.serverconfig.ServerConfig
 import br.com.dillmann.fireflycompanion.business.serverconfig.usecase.SaveConfigUseCase
 import br.com.dillmann.fireflycompanion.core.validation.ConsistencyException
 import br.com.dillmann.fireflycompanion.core.validation.MessageException
 import br.com.dillmann.fireflycompanion.core.validation.ValidationOutcome
-import org.koin.android.ext.android.getKoin
 
 class OnboardingServerFormActivity : PreconfiguredActivity() {
     @Composable
@@ -70,7 +72,7 @@ class OnboardingServerFormActivity : PreconfiguredActivity() {
                 ) {
                     CircularProgressIndicator()
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text(text = "Connecting to the Firefly III server...")
+                    Text(text = i18n(R.string.connecting_to_firefly_server))
                 }
             }
         }
@@ -82,7 +84,7 @@ class OnboardingServerFormActivity : PreconfiguredActivity() {
                 text = { Text(text = exception.message ?: "") },
                 confirmButton = {
                     TextButton(onClick = { errorDialog.value = null }) {
-                        Text("Got it")
+                        Text(i18n(R.string.got_it))
                     }
                 }
             )
@@ -96,7 +98,7 @@ class OnboardingServerFormActivity : PreconfiguredActivity() {
         showLoading: MutableState<Boolean>,
         errorDialog: MutableState<MessageException?>,
     ) {
-        val saveAction = getKoin().get<SaveConfigUseCase>()
+        val saveAction = koin().get<SaveConfigUseCase>()
         val config = ServerConfig(serverUrl, accessToken)
 
         outcome.value = null

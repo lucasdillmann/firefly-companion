@@ -8,7 +8,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import br.com.dillmann.fireflycompanion.android.core.extensions.noLineBreaks
+import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.R
 
 @Composable
 fun OnboardingServerFormButtons(onContinue: () -> Unit) {
@@ -24,13 +25,13 @@ fun OnboardingServerFormButtons(onContinue: () -> Unit) {
                 contentColor = MaterialTheme.colorScheme.secondary,
             )
         ) {
-            Text(text = "I don't have a token")
+            Text(text = i18n(R.string.i_dont_have_a_token))
         }
 
         Spacer(modifier = Modifier.width(8.dp))
 
         Button(onClick = onContinue) {
-            Text(text = "Continue")
+            Text(text = i18n(R.string.continue_))
         }
     }
 
@@ -41,26 +42,18 @@ fun OnboardingServerFormButtons(onContinue: () -> Unit) {
             text = {
                 Column {
                     Text(
-                        text = """
-                            If you don't have a token yet, you can grab one by logging-in to your server using the 
-                            Firefly III web interface, then on the left menu click on Options > Profile. 
-                        """.noLineBreaks(),
+                        text = i18n(R.string.onboarding_token_instructions_1),
                         modifier = Modifier.padding(bottom = 16.dp),
                     )
 
-                    Text(
-                        text = """
-                            After that, change to the "OAuth" tab and generate a new personal access token using the 
-                            button located at the last section of the page.
-                        """.noLineBreaks(),
-                    )
+                    Text(text = i18n(R.string.onboarding_token_instructions_2))
                 }
             },
             confirmButton = {
                 TextButton(
                     onClick = { showDialog.value = false }
                 ) {
-                    Text("Got it")
+                    Text(i18n(R.string.got_it))
                 }
             }
         )

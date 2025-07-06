@@ -21,14 +21,14 @@ import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActiv
 import br.com.dillmann.fireflycompanion.android.core.activity.async
 import br.com.dillmann.fireflycompanion.android.core.activity.state
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
+import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.business.summary.usecase.GetSummaryUseCase
-import org.koin.android.ext.android.getKoin
 
 class HomeActivity : PreconfiguredActivity() {
     @Composable
     @OptIn(ExperimentalMaterial3Api::class)
     override fun Content(padding: PaddingValues) {
-        val summaryUseCase = getKoin().get<GetSummaryUseCase>()
+        val summaryUseCase = koin().get<GetSummaryUseCase>()
         var summary by state { summaryUseCase.getSummary() }
         var reloading by state(false)
 

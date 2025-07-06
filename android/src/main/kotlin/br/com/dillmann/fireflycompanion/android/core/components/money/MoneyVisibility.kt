@@ -14,7 +14,7 @@ object MoneyVisibility {
     private lateinit var preferences: SharedPreferences
     private var state = mutableStateOf(DEFAULT_VALUE)
 
-    fun initialize(context: Context) {
+    fun init(context: Context) {
         preferences = context
             .applicationContext
             .getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE)
