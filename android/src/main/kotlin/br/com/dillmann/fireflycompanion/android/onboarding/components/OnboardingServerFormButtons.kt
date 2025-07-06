@@ -8,7 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import br.com.dillmann.fireflycompanion.android.ui.extensions.noLineBreaks
+import br.com.dillmann.fireflycompanion.android.core.extensions.noLineBreaks
 
 @Composable
 fun OnboardingServerFormButtons(onContinue: () -> Unit) {

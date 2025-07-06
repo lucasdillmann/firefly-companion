@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.ui.activity
+package br.com.dillmann.fireflycompanion.android.core.activity
 
 import android.os.Bundle
 import android.view.WindowManager
@@ -7,13 +7,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import br.com.dillmann.fireflycompanion.android.biometric.BiometricUnlockActivity
 import br.com.dillmann.fireflycompanion.android.biometric.Biometrics
-import br.com.dillmann.fireflycompanion.android.ui.theme.AppTheme
+import br.com.dillmann.fireflycompanion.android.core.theme.AppTheme
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
 import org.koin.java.KoinJavaComponent.getKoin
@@ -68,6 +67,5 @@ abstract class PreconfiguredActivity(
     }
 
     @Composable
-    @OptIn(ExperimentalMaterial3Api::class)
     abstract fun Content(padding: PaddingValues)
 }

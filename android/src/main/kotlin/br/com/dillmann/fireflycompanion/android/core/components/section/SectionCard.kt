@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.ui.components
+package br.com.dillmann.fireflycompanion.android.core.components.section
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

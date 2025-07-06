@@ -6,9 +6,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import br.com.dillmann.fireflycompanion.android.home.HomeActivity
 import br.com.dillmann.fireflycompanion.android.onboarding.OnboardingStartActivity
-import br.com.dillmann.fireflycompanion.android.ui.activity.PreconfiguredActivity
-import br.com.dillmann.fireflycompanion.android.ui.activity.async
-import br.com.dillmann.fireflycompanion.android.ui.activity.start
+import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
+import br.com.dillmann.fireflycompanion.android.core.activity.async
+import br.com.dillmann.fireflycompanion.android.core.activity.start
+import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibility
 import br.com.dillmann.fireflycompanion.business.BusinessModule
 import br.com.dillmann.fireflycompanion.business.serverconfig.usecase.GetConfigUseCase
 import br.com.dillmann.fireflycompanion.core.CoreModule
@@ -22,6 +23,8 @@ import org.koin.dsl.module
 class MainActivity : PreconfiguredActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         startKoinIfNeeded()
+        MoneyVisibility.initialize(this)
+
         super.onCreate(savedInstanceState)
 
         async {

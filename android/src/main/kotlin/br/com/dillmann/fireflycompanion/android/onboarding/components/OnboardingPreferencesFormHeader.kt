@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import br.com.dillmann.fireflycompanion.android.ui.extensions.noLineBreaks
+import br.com.dillmann.fireflycompanion.android.core.extensions.noLineBreaks
 
 @Composable
 fun OnboardingPreferencesHeader() {

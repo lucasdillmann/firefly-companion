@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.ui.components
+package br.com.dillmann.fireflycompanion.android.core.components.pullrefresh
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 @ExperimentalMaterial3Api
-fun PullToRefreshBox(
+fun PullToRefresh(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,

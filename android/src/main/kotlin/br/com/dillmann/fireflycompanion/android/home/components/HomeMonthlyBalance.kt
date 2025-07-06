@@ -5,7 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import br.com.dillmann.fireflycompanion.android.ui.components.SectionCard
+import br.com.dillmann.fireflycompanion.android.core.components.section.SectionCard
 
 @Composable
 fun HomeMonthlyBalance() {

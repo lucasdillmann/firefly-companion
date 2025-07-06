@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.ui.theme
+package br.com.dillmann.fireflycompanion.android.core.theme
 
 import androidx.compose.ui.graphics.Color
 

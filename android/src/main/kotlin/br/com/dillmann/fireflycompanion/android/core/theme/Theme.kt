@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.ui.theme
+package br.com.dillmann.fireflycompanion.android.core.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -10,9 +10,6 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
-import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
-import kotlinx.coroutines.runBlocking
-import org.koin.java.KoinJavaComponent.getKoin
 
 private val DarkColorScheme =
     darkColorScheme(

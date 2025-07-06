@@ -17,10 +17,10 @@ import br.com.dillmann.fireflycompanion.android.home.components.HomeMonthlyBalan
 import br.com.dillmann.fireflycompanion.android.home.components.HomeMonthlySavings
 import br.com.dillmann.fireflycompanion.android.home.components.HomeOverview
 import br.com.dillmann.fireflycompanion.android.home.components.HomeSpendFrequency
-import br.com.dillmann.fireflycompanion.android.ui.activity.PreconfiguredActivity
-import br.com.dillmann.fireflycompanion.android.ui.activity.async
-import br.com.dillmann.fireflycompanion.android.ui.activity.state
-import br.com.dillmann.fireflycompanion.android.ui.components.PullToRefreshBox
+import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
+import br.com.dillmann.fireflycompanion.android.core.activity.async
+import br.com.dillmann.fireflycompanion.android.core.activity.state
+import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
 import br.com.dillmann.fireflycompanion.business.summary.usecase.GetSummaryUseCase
 import org.koin.android.ext.android.getKoin
 
@@ -42,7 +42,7 @@ class HomeActivity : PreconfiguredActivity() {
             }
         }
 
-        PullToRefreshBox(
+        PullToRefresh(
             isRefreshing = reloading,
             onRefresh = ::reload,
             modifier = Modifier

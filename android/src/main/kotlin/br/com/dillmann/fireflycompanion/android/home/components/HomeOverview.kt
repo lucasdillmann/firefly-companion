@@ -4,25 +4,53 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import br.com.dillmann.fireflycompanion.android.ui.components.Section
+import br.com.dillmann.fireflycompanion.android.core.activity.start
+import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
+import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibilityToggle
+import br.com.dillmann.fireflycompanion.android.core.components.section.Section
+import br.com.dillmann.fireflycompanion.android.onboarding.OnboardingPreferencesFormActivity
 import br.com.dillmann.fireflycompanion.business.summary.Summary
 import java.math.BigDecimal
 
 @Composable
 fun HomeOverview(summary: Summary?) {
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
+
+    Spacer(
+        modifier = Modifier.size(20.dp)
+    )
 
     Section(
-        title = "Overview"
+        title = "Overview",
+        rightContent = {
+            val baseSize = MaterialTheme.typography.headlineSmall.lineHeight.value.dp
+            MoneyVisibilityToggle(
+                modifier = Modifier.size(baseSize),
+            )
+
+            IconButton(
+                modifier = Modifier.size(baseSize),
+                onClick = { context.start<OnboardingPreferencesFormActivity>(finish = true) }
+            ) {
+                Icon(
+                    contentDescription = "Open the preferences screen",
+                    imageVector = Icons.Filled.Settings,
+                )
+            }
+        }
     ) {
 
         Card(
@@ -99,7 +127,9 @@ private fun DetailBlock(
         ?: baseColor
 
     Card(
-        modifier = modifier.minimumInteractiveComponentSize(),
+        modifier = modifier
+            .defaultMinSize(minWidth = 125.dp)
+            .minimumInteractiveComponentSize(),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = compositeColor)
@@ -138,9 +168,9 @@ private fun DetailContent(
         )
         Spacer(modifier = Modifier.size(8.dp))
     } else {
-        val value = valueProvider(summary)
-        Text(
-            text = summary.currency.format(value ?: BigDecimal.ZERO),
+        MoneyText(
+            value = valueProvider(summary) ?: BigDecimal.ZERO,
+            currency = summary.currency,
             style = valueStyle.copy(fontWeight = FontWeight.SemiBold),
             color = colorSchema,
         )

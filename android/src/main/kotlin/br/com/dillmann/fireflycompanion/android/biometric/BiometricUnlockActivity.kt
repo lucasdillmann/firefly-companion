@@ -12,8 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import br.com.dillmann.fireflycompanion.android.ui.activity.PreconfiguredActivity
-import br.com.dillmann.fireflycompanion.android.ui.extensions.noLineBreaks
+import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
+import br.com.dillmann.fireflycompanion.android.core.extensions.noLineBreaks
 
 class BiometricUnlockActivity : PreconfiguredActivity(allowAnonymous = true) {
     private val errorDialogVisible = mutableStateOf(false)

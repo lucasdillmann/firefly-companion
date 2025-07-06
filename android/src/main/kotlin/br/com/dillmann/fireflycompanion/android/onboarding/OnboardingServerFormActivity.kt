@@ -19,9 +19,9 @@ import androidx.compose.ui.window.Dialog
 import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingServerFormButtons
 import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingServerFormFields
 import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingServerFormHeader
-import br.com.dillmann.fireflycompanion.android.ui.activity.PreconfiguredActivity
-import br.com.dillmann.fireflycompanion.android.ui.activity.async
-import br.com.dillmann.fireflycompanion.android.ui.activity.start
+import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
+import br.com.dillmann.fireflycompanion.android.core.activity.async
+import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.business.serverconfig.ServerConfig
 import br.com.dillmann.fireflycompanion.business.serverconfig.usecase.SaveConfigUseCase
 import br.com.dillmann.fireflycompanion.core.validation.ConsistencyException

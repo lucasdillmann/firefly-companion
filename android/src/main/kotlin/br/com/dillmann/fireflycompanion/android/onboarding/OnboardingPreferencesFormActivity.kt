@@ -11,8 +11,8 @@ import br.com.dillmann.fireflycompanion.android.home.HomeActivity
 import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingPreferencesFormButtons
 import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingPreferencesFormFields
 import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingPreferencesHeader
-import br.com.dillmann.fireflycompanion.android.ui.activity.PreconfiguredActivity
-import br.com.dillmann.fireflycompanion.android.ui.activity.start
+import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
+import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.SavePreferencesUseCase
