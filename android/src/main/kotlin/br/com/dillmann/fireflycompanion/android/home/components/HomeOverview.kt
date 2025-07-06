@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -59,16 +60,19 @@ fun HomeOverview(summary: Summary?) {
             DetailBlock(
                 title = "Earned",
                 summary = summary,
+                tintColor = Color(0xFF4CAF50),
                 valueProvider = { it.earned },
             )
             DetailBlock(
                 title = "Spent",
                 summary = summary,
-                valueProvider = { it.spent },
+                tintColor = Color(0xFFF44336),
+                valueProvider = { it.spent?.abs() },
             )
             DetailBlock(
                 title = "Left to spend",
                 summary = summary,
+                tintColor = Color(0xFF2196F3),
                 valueProvider = { it.leftToSpend },
             )
             DetailBlock(
@@ -85,13 +89,20 @@ private fun DetailBlock(
     title: String,
     summary: Summary?,
     modifier: Modifier = Modifier,
+    tintColor: Color? = null,
     valueProvider: (Summary) -> BigDecimal?,
 ) {
+    val baseColor = MaterialTheme.colorScheme.secondaryContainer
+    val compositeColor = tintColor
+        ?.copy(alpha = 0.20f)
+        ?.compositeOver(baseColor)
+        ?: baseColor
+
     Card(
         modifier = modifier.minimumInteractiveComponentSize(),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+        colors = CardDefaults.cardColors(containerColor = compositeColor)
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
