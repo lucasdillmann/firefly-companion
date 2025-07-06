@@ -1,64 +1,75 @@
 package br.com.dillmann.fireflycompanion.android.home
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.*
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import br.com.dillmann.fireflycompanion.android.home.components.HomeAccounts
-import br.com.dillmann.fireflycompanion.android.home.components.HomeBudgets
-import br.com.dillmann.fireflycompanion.android.home.components.HomeCreditCards
-import br.com.dillmann.fireflycompanion.android.home.components.HomeExpensesByCategory
-import br.com.dillmann.fireflycompanion.android.home.components.HomeGoals
-import br.com.dillmann.fireflycompanion.android.home.components.HomeMonthlyBalance
-import br.com.dillmann.fireflycompanion.android.home.components.HomeMonthlySavings
-import br.com.dillmann.fireflycompanion.android.home.components.HomeOverview
-import br.com.dillmann.fireflycompanion.android.home.components.HomeSpendFrequency
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
-import br.com.dillmann.fireflycompanion.android.core.activity.async
-import br.com.dillmann.fireflycompanion.android.core.activity.state
-import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
-import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
-import br.com.dillmann.fireflycompanion.business.summary.usecase.GetSummaryUseCase
+import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.home.components.HomeMainTab
+import br.com.dillmann.fireflycompanion.android.home.components.HomeMoreTab
+import br.com.dillmann.fireflycompanion.android.home.components.HomeTransactionsTab
 
 class HomeActivity : PreconfiguredActivity() {
     @Composable
     @OptIn(ExperimentalMaterial3Api::class)
     override fun Content(padding: PaddingValues) {
-        val summaryUseCase = koin().get<GetSummaryUseCase>()
-        var summary by state { summaryUseCase.getSummary() }
-        var reloading by state(false)
+        val navController = rememberNavController()
 
-        fun reload() {
-            reloading = true
-            summary = null
-
-            async {
-                summary = summaryUseCase.getSummary()
-                reloading = false
+        Scaffold(
+            bottomBar = {
+                NavigationBar {
+                    val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    val currentDestination = navBackStackEntry?.destination
+                    HomeTabs.entries.forEach {
+                        NavBarTab(it, navController, currentDestination)
+                    }
+                }
+            }
+        ) {
+            NavHost(
+                navController = navController,
+                startDestination = HomeTabs.MAIN.name,
+                modifier = Modifier.padding(it)
+            ) {
+                composable(HomeTabs.MAIN.name) { HomeMainTab() }
+                composable(HomeTabs.TRANSACTIONS.name) { HomeTransactionsTab() }
+                composable(HomeTabs.MORE.name) { HomeMoreTab() }
             }
         }
-
-        PullToRefresh(
-            isRefreshing = reloading,
-            onRefresh = ::reload,
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize(),
-        ) {
-            HomeOverview(summary)
-            HomeCreditCards()
-            HomeAccounts()
-            HomeExpensesByCategory()
-            HomeBudgets()
-            HomeMonthlySavings()
-            HomeSpendFrequency()
-            HomeMonthlyBalance()
-            HomeGoals()
-        }
     }
+}
+
+@Composable
+private fun RowScope.NavBarTab(
+    tab: HomeTabs,
+    controller: NavController,
+    current: NavDestination?,
+) {
+    val description = i18n(tab.title)
+    NavigationBarItem(
+        selected = current?.hierarchy?.any { it.route == tab.name } == true,
+        onClick = {
+            controller.navigate(tab.name) {
+                popUpTo(controller.graph.findStartDestination().id) { saveState = true }
+                launchSingleTop = true
+                restoreState = true
+            }
+        },
+        icon = { Icon(tab.icon, contentDescription = description) },
+        label = { Text(description) }
+    )
 }
 

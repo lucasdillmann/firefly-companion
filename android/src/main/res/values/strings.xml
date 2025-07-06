@@ -65,4 +65,7 @@
     </string>
     <string name="save">Save</string>
     <string name="preferences">Preferences</string>
+    <string name="tab_main">Home</string>
+    <string name="tab_transactions">Transactions</string>
+    <string name="tab_more">More</string>
 </resources>

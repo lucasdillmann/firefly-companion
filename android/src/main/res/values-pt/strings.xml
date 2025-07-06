@@ -62,4 +62,7 @@
     </string>
     <string name="save">Salvar</string>
     <string name="preferences">Configurações</string>
+    <string name="tab_main">Início</string>
+    <string name="tab_transactions">Movimentações</string>
+    <string name="tab_more">Outros</string>
 </resources>

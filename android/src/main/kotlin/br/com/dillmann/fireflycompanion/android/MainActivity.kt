@@ -30,7 +30,7 @@ class MainActivity : PreconfiguredActivity() {
                 start<HomeActivity>()
 
             finish()
-        }
+        }.join()
     }
 
     @Composable

@@ -48,7 +48,7 @@ abstract class PreconfiguredActivity(
                     }
                 }
             }
-        }
+        }.join()
     }
 
     override fun onResume() {

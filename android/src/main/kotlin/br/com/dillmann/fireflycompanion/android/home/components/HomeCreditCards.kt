@@ -12,7 +12,7 @@ import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 @Composable
 fun HomeCreditCards() {
     SectionCard(
-        title = i18n(R.string.accounts)
+        title = i18n(R.string.credit_cards)
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
