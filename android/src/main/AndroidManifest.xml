@@ -20,8 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".assistant.AssistantActivity"/>
         <activity android:name=".biometric.BiometricUnlockActivity"/>
         <activity android:name=".home.HomeActivity"/>
+        <activity android:name=".newtransaction.NewTransactionActivity"/>
         <activity android:name=".onboarding.OnboardingServerFormActivity"/>
         <activity android:name=".onboarding.OnboardingStartActivity"/>
         <activity android:name=".onboarding.OnboardingPreferencesFormActivity"/>

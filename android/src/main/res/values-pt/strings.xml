@@ -67,4 +67,5 @@
     <string name="tab_more">Outros</string>
     <string name="ia_assistant">Assistente de IA</string>
     <string name="new_transaction">Nova movimentação</string>
+    <string name="assistant_title">Assistente pessoal de finanças</string>
 </resources>

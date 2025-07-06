@@ -31,10 +31,6 @@ fun HomeOverview(summary: Summary?) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
 
-    Spacer(
-        modifier = Modifier.size(20.dp)
-    )
-
     Section(
         title = i18n(R.string.overview),
         rightContent = {

@@ -70,4 +70,5 @@
     <string name="tab_more">More</string>
     <string name="ia_assistant">IA assistant</string>
     <string name="new_transaction">New transaction</string>
+    <string name="assistant_title">Personal finances assistant</string>
 </resources>
