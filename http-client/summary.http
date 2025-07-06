@@ -1,0 +1,3 @@
+### Account balance
+GET {{base-url}}/v1/summary/basic?start=2025-07-01&end=2025-07-31
+Authorization: Bearer {{token}}

@@ -48,4 +48,9 @@ openApiGenerate {
             "enumPropertyNaming" to "UPPERCASE",
         )
     )
+    typeMappings.putAll(mapOf(
+        "number" to "java.math.BigDecimal",
+        "double" to "java.math.BigDecimal",
+        "float" to "java.math.BigDecimal",
+    ))
 }

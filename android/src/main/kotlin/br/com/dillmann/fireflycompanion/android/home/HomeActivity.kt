@@ -1,41 +1,46 @@
 package br.com.dillmann.fireflycompanion.android.home
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import br.com.dillmann.fireflycompanion.android.home.components.HomeBalance
 import br.com.dillmann.fireflycompanion.android.ui.activity.PreconfiguredActivity
-import br.com.dillmann.fireflycompanion.android.ui.extensions.noLineBreaks
+import br.com.dillmann.fireflycompanion.android.ui.activity.async
+import br.com.dillmann.fireflycompanion.android.ui.activity.state
+import br.com.dillmann.fireflycompanion.android.ui.components.PullToRefreshBox
+import br.com.dillmann.fireflycompanion.business.summary.usecase.GetSummaryUseCase
+import org.koin.android.ext.android.getKoin
 
 class HomeActivity : PreconfiguredActivity() {
     @Composable
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun Content(padding: PaddingValues) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 24.dp),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.Start,
-        ) {
-            Text(
-                text = "Home",
-                style = MaterialTheme.typography.headlineMedium,
-                textAlign = TextAlign.Left,
-                modifier = Modifier.padding(top = 64.dp, bottom = 16.dp)
-            )
+        val summaryUseCase = getKoin().get<GetSummaryUseCase>()
+        var summary by state { summaryUseCase.getSummary() }
+        var reloading by state(false)
 
-            Text(
-                text = """
-                    There's nothing implemented here. Yet.
-                """.noLineBreaks(),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(top = 0.dp, bottom = 32.dp)
-            )
+        fun reload() {
+            reloading = true
+            summary = null
+
+            async {
+                summary = summaryUseCase.getSummary()
+                reloading = false
+            }
+        }
+
+        PullToRefreshBox(
+            isRefreshing = reloading,
+            onRefresh = ::reload,
+            modifier = Modifier.padding(padding).fillMaxSize(),
+        ) {
+            HomeBalance(summary)
         }
     }
 }
+

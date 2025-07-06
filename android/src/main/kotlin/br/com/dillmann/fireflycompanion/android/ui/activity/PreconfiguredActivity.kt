@@ -1,11 +1,13 @@
 package br.com.dillmann.fireflycompanion.android.ui.activity
 
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,6 +29,13 @@ abstract class PreconfiguredActivity(
         super.onCreate(savedInstanceState)
 
         restoreState().whenComplete { _, _ ->
+            if (preferences.requireBiometricLogin && !allowAnonymous) {
+                window?.setFlags(
+                    WindowManager.LayoutParams.FLAG_SECURE,
+                    WindowManager.LayoutParams.FLAG_SECURE,
+                )
+            }
+
             enableEdgeToEdge()
             setContent {
                 AppTheme(preferences) {
@@ -59,5 +68,6 @@ abstract class PreconfiguredActivity(
     }
 
     @Composable
+    @OptIn(ExperimentalMaterial3Api::class)
     abstract fun Content(padding: PaddingValues)
 }
