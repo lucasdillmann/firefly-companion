@@ -68,4 +68,6 @@
     <string name="tab_main">Home</string>
     <string name="tab_transactions">Transactions</string>
     <string name="tab_more">More</string>
+    <string name="ia_assistant">IA assistant</string>
+    <string name="new_transaction">New transaction</string>
 </resources>
