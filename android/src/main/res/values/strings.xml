@@ -67,7 +67,7 @@
     <string name="preferences">Preferences</string>
     <string name="tab_main">Home</string>
     <string name="tab_transactions">Transactions</string>
-    <string name="tab_more">More</string>
+    <string name="tab_accounts">Accounts</string>
     <string name="ia_assistant">IA assistant</string>
     <string name="new_transaction">New transaction</string>
     <string name="assistant_title">Personal finances assistant</string>

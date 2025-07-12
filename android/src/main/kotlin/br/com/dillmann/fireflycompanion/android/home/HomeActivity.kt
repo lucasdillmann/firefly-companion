@@ -31,7 +31,7 @@ import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.assistant.AssistantActivity
 import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.home.components.HomeMainTab
-import br.com.dillmann.fireflycompanion.android.home.components.HomeMoreTab
+import br.com.dillmann.fireflycompanion.android.home.components.HomeAccountsTab
 import br.com.dillmann.fireflycompanion.android.home.components.HomeTransactionsTab
 import br.com.dillmann.fireflycompanion.android.newtransaction.NewTransactionActivity
 
@@ -62,7 +62,7 @@ class HomeActivity : PreconfiguredActivity() {
             ) {
                 composable(HomeTabs.MAIN.name) { HomeMainTab() }
                 composable(HomeTabs.TRANSACTIONS.name) { HomeTransactionsTab() }
-                composable(HomeTabs.MORE.name) { HomeMoreTab() }
+                composable(HomeTabs.ACCOUNTS.name) { HomeAccountsTab() }
             }
         }
     }

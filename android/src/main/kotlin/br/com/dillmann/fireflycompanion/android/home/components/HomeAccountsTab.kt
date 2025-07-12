@@ -7,9 +7,9 @@ import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 
 @Composable
-fun HomeMoreTab() {
+fun HomeAccountsTab() {
     Section(
-        title = i18n(R.string.tab_more),
+        title = i18n(R.string.tab_accounts),
     ) {
         Text(i18n(R.string.not_implemented))
     }
