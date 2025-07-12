@@ -4,8 +4,8 @@ data class Page<T>(
     val currentPage: Int,
     val totalPages: Int,
     val pageSize: Int,
-    val items: List<T>
-) : Iterable<T> by items {
+    val content: List<T>
+) : Iterable<T> by content {
     companion object {
         fun <T> empty() = Page<T>(0, 0, 0, emptyList())
     }

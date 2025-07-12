@@ -8,5 +8,5 @@ internal fun <I, O> Meta?.toPage(items: List<I>, converter: (I) -> O): Page<O> =
         currentPage = this?.pagination?.currentPage ?: 0,
         totalPages = this?.pagination?.totalPages ?: 0,
         pageSize = this?.pagination?.perPage ?: 0,
-        items = items.map(converter),
+        content = items.map(converter),
     )
