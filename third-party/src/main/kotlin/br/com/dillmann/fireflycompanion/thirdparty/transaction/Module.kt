@@ -8,5 +8,5 @@ import org.koin.dsl.module
 internal val TransactionModule =
     module {
         single { TransactionsApi(get(Qualifiers.API_BASE_URL), get()) }
-        single<TransactionRepository> { TransactionHttpRepository(get()) }
+        single<TransactionRepository> { TransactionHttpRepository(get(), get()) }
     }

@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.konan.properties.loadProperties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -15,6 +13,7 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.process)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -30,6 +29,7 @@ dependencies {
 android {
     namespace = "br.com.dillmann.fireflycompanion.android"
     compileSdk = 35
+    buildToolsVersion = "35.0.0"
 
     defaultConfig {
         applicationId = "br.com.dillmann.fireflycompanion"
@@ -38,10 +38,6 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        val localProperties = loadProperties("local.properties")
-        buildConfigField("String", "FIREFLY_URL", "\"${localProperties.getProperty("fireflyUrl")}\"")
-        buildConfigField("String", "FIREFLY_ACCESS_TOKEN", "\"${localProperties.getProperty("fireflyAccessToken")}\"")
     }
 
     buildTypes {
@@ -62,7 +58,6 @@ android {
 
     buildFeatures {
         compose = true
-        buildConfig = true
     }
 }
 

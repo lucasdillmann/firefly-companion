@@ -5,57 +5,71 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material.icons.filled.QuestionMark
-import androidx.compose.material.icons.filled.SwapHoriz
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.activity.async
+import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.activity.state
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibilityToggle
+import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.BasicPullToRefresh
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.transaction.TransactionFormActivity
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
-import br.com.dillmann.fireflycompanion.business.transaction.usecase.GetTransactionsUseCase
+import br.com.dillmann.fireflycompanion.business.transaction.usecase.ListTransactionsUseCase
+import br.com.dillmann.fireflycompanion.business.transaction.usecase.SearchTransactionsUseCase
 import java.time.format.DateTimeFormatter
+import java.util.concurrent.CompletableFuture
 import java.util.logging.Logger
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun HomeTransactionsTab() {
-    val transactionsUseCase = koin().get<GetTransactionsUseCase>()
+    val listUseCase = koin().get<ListTransactionsUseCase>()
+    val searchUseCase = koin().get<SearchTransactionsUseCase>()
+
     var transactions by state(emptyList<Transaction>())
     var currentPage by state(0)
-    var loading by state(false)
+    var refreshing by state(false)
     val listState = rememberLazyListState()
+    var loadTask by state<CompletableFuture<Any>?>(null)
+    var searchTerms by state("")
 
     fun loadTransactions(page: Int = 0, refresh: Boolean = false) {
-        loading = true
+        loadTask?.cancel(true)
         if (refresh) {
             currentPage = 0
             transactions = emptyList()
         }
 
-        async {
+        loadTask = async {
             try {
-                transactions += transactionsUseCase.getTransactions(pageNumber = page)
+                if (searchTerms.isBlank())
+                    transactions += listUseCase.list(pageNumber = page)
+                else
+                    transactions += searchUseCase.search(pageNumber = page, terms = searchTerms)
             } catch (e: Exception) {
                 Logger
                     .getLogger("HomeTransactionsTab")
                     .warning("Error loading transactions: ${e.message}")
             } finally {
-                loading = false
+                loadTask = null
+                refreshing = false
             }
         }
     }
@@ -67,7 +81,7 @@ fun HomeTransactionsTab() {
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .collect { lastVisibleIndex ->
-                if (lastVisibleIndex != null && !loading) {
+                if (lastVisibleIndex != null && loadTask.done()) {
                     val totalItems = transactions.size
                     if (lastVisibleIndex >= totalItems - 3 && totalItems > 0) {
                         currentPage++
@@ -77,41 +91,48 @@ fun HomeTransactionsTab() {
             }
     }
 
-    Section(
-        title = i18n(R.string.tab_transactions),
-        rightContent = {
-            MoneyVisibilityToggle()
-        }
+    BasicPullToRefresh(
+        isRefreshing = refreshing,
+        onRefresh = {
+            refreshing = true
+            loadTransactions(refresh = true)
+        },
+        enabled = loadTask.done(),
+        modifier = Modifier.fillMaxSize(),
     ) {
-        if (!loading && transactions.isEmpty()) {
-            Text(
-                text = i18n(R.string.not_implemented),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(16.dp)
+        Section(
+            title = i18n(R.string.tab_transactions),
+            rightContent = {
+                MoneyVisibilityToggle()
+            }
+        ) {
+            SearchField(
+                searchTerms = searchTerms,
+                enabled = loadTask.done(),
+                onChange = { searchTerms = it },
+                refresh = { loadTransactions(refresh = true) },
             )
-        } else {
-            LazyColumn(
-                state = listState,
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                items(transactions) { transaction ->
-                    TransactionItem(transaction)
-                }
 
-                if (loading) {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(24.dp),
-                                strokeWidth = 2.dp
-                            )
+            if (loadTask.done() && transactions.isEmpty()) {
+                Text(
+                    text = i18n(R.string.not_implemented),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(16.dp)
+                )
+            } else {
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    items(transactions) { transaction ->
+                        TransactionItem(transaction)
+                    }
+
+                    if (!loadTask.done()) {
+                        item {
+                            LoadingIndicator()
                         }
                     }
                 }
@@ -121,7 +142,69 @@ fun HomeTransactionsTab() {
 }
 
 @Composable
+private fun SearchField(
+    searchTerms: String,
+    enabled: Boolean,
+    onChange: (String) -> Unit,
+    refresh: () -> Unit,
+) {
+    TextField(
+        value = searchTerms,
+        onValueChange = { onChange(it.replace("\n", "")) },
+        label = { Text(text = i18n(R.string.search)) },
+        enabled = enabled,
+        modifier = Modifier
+            .padding(top = 0.dp, bottom = 8.dp, start = 0.dp, end = 0.dp)
+            .fillMaxWidth(),
+        textStyle = MaterialTheme.typography.bodyMedium,
+        trailingIcon = {
+            Button(
+                onClick = refresh,
+                enabled = enabled,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = i18n(R.string.search),
+                )
+            }
+        },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Search,
+        ),
+        keyboardActions = KeyboardActions(
+            onSearch = { refresh() },
+            onDone = { refresh() },
+        ),
+        colors = TextFieldDefaults.colors(
+            unfocusedContainerColor = Color.Transparent,
+            focusedContainerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        ),
+        singleLine = true,
+    )
+}
+
+@Composable
+private fun LoadingIndicator() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(24.dp),
+            strokeWidth = 2.dp
+        )
+    }
+}
+
+@Composable
 private fun TransactionItem(transaction: Transaction) {
+    val context = LocalContext.current
     val (icon, tint) = when (transaction.type) {
         Transaction.Type.WITHDRAWAL -> Icons.Default.ArrowUpward to Color(0xFFF44336)
         Transaction.Type.DEPOSIT -> Icons.Default.ArrowDownward to Color(0xFF4CAF50)
@@ -132,7 +215,12 @@ private fun TransactionItem(transaction: Transaction) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        onClick = {
+            context.start<TransactionFormActivity>(
+                extras = mapOf("transaction" to transaction)
+            )
+        }
     ) {
         Row(
             modifier = Modifier
@@ -217,3 +305,6 @@ private fun TransactionItem(transaction: Transaction) {
         }
     }
 }
+
+private fun CompletableFuture<out Any>?.done() =
+    this == null || isDone

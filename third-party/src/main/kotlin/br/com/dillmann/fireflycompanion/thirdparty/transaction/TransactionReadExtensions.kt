@@ -7,8 +7,8 @@ import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.TransactionTyp
 import java.math.BigDecimal
 import java.time.OffsetDateTime
 
-internal fun TransactionRead.toTransaction(): Transaction? {
-    val split = attributes.transactions.firstOrNull() ?: return null
+internal fun TransactionRead.toTransaction(): Transaction {
+    val split = attributes.transactions.first()
 
     return Transaction(
         id = id,

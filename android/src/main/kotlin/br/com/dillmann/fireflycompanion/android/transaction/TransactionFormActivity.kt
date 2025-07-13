@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.newtransaction
+package br.com.dillmann.fireflycompanion.android.transaction
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -10,7 +10,7 @@ import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActiv
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 
-class NewTransactionActivity : PreconfiguredActivity() {
+class TransactionFormActivity : PreconfiguredActivity() {
     @Composable
     override fun Content(padding: PaddingValues) {
         Section(

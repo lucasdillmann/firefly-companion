@@ -1,6 +1,7 @@
 package br.com.dillmann.fireflycompanion.business.transaction
 
 import br.com.dillmann.fireflycompanion.business.currency.Currency
+import java.io.Serializable
 import java.math.BigDecimal
 import java.time.OffsetDateTime
 
@@ -14,8 +15,8 @@ data class Transaction(
     val type: Type,
     val sourceAccountName: String?,
     val destinationAccountName: String?,
-) {
-    enum class Type {
+) : Serializable {
+    enum class Type : Serializable {
         WITHDRAWAL, DEPOSIT, TRANSFER, UNKNOWN
     }
 }
