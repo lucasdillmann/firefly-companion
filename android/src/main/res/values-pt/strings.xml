@@ -69,4 +69,14 @@
     <string name="new_transaction">Nova movimentação</string>
     <string name="assistant_title">Assistente pessoal de finanças</string>
     <string name="search">Pesquisar</string>
+
+    <!-- Account types -->
+    <string name="cash">Dinheiro</string>
+    <string name="asset">Ativo</string>
+    <string name="expense">Despesa</string>
+    <string name="_import">Importação</string>
+    <string name="revenue">Receita</string>
+    <string name="liability">Passivo</string>
+    <string name="initial_balance">Saldo inicial</string>
+    <string name="reconciliation">Reconciliação</string>
 </resources>

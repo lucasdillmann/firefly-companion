@@ -72,4 +72,14 @@
     <string name="new_transaction">New transaction</string>
     <string name="assistant_title">Personal finances assistant</string>
     <string name="search">Search</string>
+
+    <!-- Account types -->
+    <string name="cash">Cash</string>
+    <string name="asset">Asset</string>
+    <string name="expense">Expense</string>
+    <string name="_import">Import</string>
+    <string name="revenue">Revenue</string>
+    <string name="liability">Liability</string>
+    <string name="initial_balance">Initial balance</string>
+    <string name="reconciliation">Reconciliation</string>
 </resources>

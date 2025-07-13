@@ -1,11 +1,13 @@
 package br.com.dillmann.fireflycompanion.business.account
 
+import br.com.dillmann.fireflycompanion.business.currency.Currency
 import java.math.BigDecimal
 
 data class Account(
     val id: String,
     val active: Boolean,
     val name: String,
+    val currency: Currency,
     val openingBalance: BigDecimal,
     val currentBalance: BigDecimal,
     val type: Type,

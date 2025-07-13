@@ -1,6 +1,7 @@
 package br.com.dillmann.fireflycompanion.thirdparty.account
 
 import br.com.dillmann.fireflycompanion.business.account.Account
+import br.com.dillmann.fireflycompanion.business.currency.Currency
 import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.AccountRead
 import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.ShortAccountTypeProperty
 import java.math.BigDecimal
@@ -14,6 +15,12 @@ internal fun AccountRead.toAccount(): Account =
         currentBalance = attributes.currentBalance?.toBigDecimal() ?: BigDecimal.ZERO,
         openingBalance = attributes.openingBalance?.toBigDecimal() ?: BigDecimal.ZERO,
         includeInNetWorth = attributes.includeNetWorth ?: false,
+        currency = Currency(
+            id = attributes.currencyId ?: "",
+            code = attributes.currencyCode ?: "USD",
+            symbol = attributes.currencySymbol ?: "$",
+            decimalPlaces = attributes.currencyDecimalPlaces ?: 2,
+        )
     )
 
 private fun ShortAccountTypeProperty.toAccountType() =

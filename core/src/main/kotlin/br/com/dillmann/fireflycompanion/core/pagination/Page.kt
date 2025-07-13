@@ -10,5 +10,5 @@ data class Page<T>(
         fun <T> empty() = Page<T>(0, 0, 0, emptyList())
     }
 
-    val hasNextPage = currentPage < totalPages
+    fun filter(predicate: (T) -> Boolean) = copy(content = content.filter(predicate))
 }

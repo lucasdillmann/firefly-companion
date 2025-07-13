@@ -1,3 +1,7 @@
 ### Account balance
 GET {{base-url}}/v1/summary/basic?start=2025-07-01&end=2025-07-31
 Authorization: Bearer {{token}}
+
+### Accounts
+GET {{base-url}}/v1/accounts?type=asset&active=true
+Authorization: Bearer {{token}}
