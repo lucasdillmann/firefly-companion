@@ -3,6 +3,7 @@ package br.com.dillmann.fireflycompanion.thirdparty.transaction
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 import br.com.dillmann.fireflycompanion.business.transaction.TransactionRepository
 import br.com.dillmann.fireflycompanion.core.pagination.Page
+import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
 import br.com.dillmann.fireflycompanion.thirdparty.core.toPage
 import br.com.dillmann.fireflycompanion.thirdparty.firefly.apis.SearchApi
 import br.com.dillmann.fireflycompanion.thirdparty.firefly.apis.TransactionsApi
@@ -14,14 +15,13 @@ internal class TransactionHttpRepository(
     private val searchApi: SearchApi,
 ) : TransactionRepository {
     override suspend fun list(
-        pageNumber: Int,
-        pageSize: Int,
+        page: PageRequest,
         startDate: LocalDate?,
         endDate: LocalDate?,
     ): Page<Transaction> {
         val response = mainApi.listTransaction(
-            page = pageNumber + 1,
-            limit = pageSize,
+            page = page.number + 1,
+            limit = page.size,
             start = startDate?.toString(),
             end = endDate?.toString(),
         )
@@ -33,13 +33,12 @@ internal class TransactionHttpRepository(
     }
 
     override suspend fun search(
-        pageNumber: Int,
-        pageSize: Int,
+        page: PageRequest,
         terms: String
     ): Page<Transaction> {
         val response = searchApi.searchTransactions(
-            page = pageNumber + 1,
-            limit = pageSize,
+            page = page.number + 1,
+            limit = page.size,
             query = terms,
         )
 

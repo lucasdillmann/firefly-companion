@@ -33,6 +33,7 @@ import br.com.dillmann.fireflycompanion.android.transaction.TransactionFormActiv
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.ListTransactionsUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.SearchTransactionsUseCase
+import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Logger
@@ -58,14 +59,14 @@ fun HomeTransactionsTab() {
 
         loadTask = async {
             try {
-                if (searchTerms.isBlank())
-                    transactions += listUseCase.list(pageNumber = page)
-                else
-                    transactions += searchUseCase.search(pageNumber = page, terms = searchTerms)
+                val page = PageRequest(number = page)
+                transactions +=
+                    if (searchTerms.isBlank()) listUseCase.list(page)
+                    else searchUseCase.search(page, searchTerms)
             } catch (e: Exception) {
                 Logger
                     .getLogger("HomeTransactionsTab")
-                    .warning("Error loading transactions: ${e.message}")
+                    .warning("Error loading transactions: ${e.stackTrace}")
             } finally {
                 loadTask = null
             }
