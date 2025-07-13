@@ -25,7 +25,7 @@ import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.activity.state
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibilityToggle
-import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.BasicPullToRefresh
+import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
@@ -45,7 +45,6 @@ fun HomeTransactionsTab() {
 
     var transactions by state(emptyList<Transaction>())
     var currentPage by state(0)
-    var refreshing by state(false)
     val listState = rememberLazyListState()
     var loadTask by state<CompletableFuture<Any>?>(null)
     var searchTerms by state("")
@@ -69,7 +68,6 @@ fun HomeTransactionsTab() {
                     .warning("Error loading transactions: ${e.message}")
             } finally {
                 loadTask = null
-                refreshing = false
             }
         }
     }
@@ -91,12 +89,8 @@ fun HomeTransactionsTab() {
             }
     }
 
-    BasicPullToRefresh(
-        isRefreshing = refreshing,
-        onRefresh = {
-            refreshing = true
-            loadTransactions(refresh = true)
-        },
+    PullToRefresh(
+        onRefresh = { loadTransactions(refresh = true) },
         enabled = loadTask.done(),
         modifier = Modifier.fillMaxSize(),
     ) {

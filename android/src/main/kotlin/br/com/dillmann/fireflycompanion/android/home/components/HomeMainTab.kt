@@ -8,7 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import br.com.dillmann.fireflycompanion.android.core.activity.async
 import br.com.dillmann.fireflycompanion.android.core.activity.state
-import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
+import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefreshWithScroll
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.business.summary.usecase.GetSummaryUseCase
 
@@ -17,20 +17,16 @@ import br.com.dillmann.fireflycompanion.business.summary.usecase.GetSummaryUseCa
 fun HomeMainTab() {
     val summaryUseCase = koin().get<GetSummaryUseCase>()
     var summary by state { summaryUseCase.getSummary() }
-    var reloading by state(false)
 
     fun reload() {
-        reloading = true
         summary = null
 
         async {
             summary = summaryUseCase.getSummary()
-            reloading = false
         }
     }
 
-    PullToRefresh(
-        isRefreshing = reloading,
+    PullToRefreshWithScroll(
         onRefresh = ::reload,
         modifier = Modifier.fillMaxSize(),
     ) {
