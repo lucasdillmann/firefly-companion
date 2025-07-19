@@ -10,4 +10,6 @@ interface TransactionRepository {
     suspend fun search(page: PageRequest, terms: String): Page<Transaction>
 
     suspend fun save(transaction: Transaction): Transaction
+
+    suspend fun deleteById(id: String)
 }

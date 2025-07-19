@@ -1,5 +1,6 @@
 package br.com.dillmann.fireflycompanion.business.transaction
 
+import br.com.dillmann.fireflycompanion.business.transaction.usecase.DeleteTransactionUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.ListTransactionsUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.SaveTransactionUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.SearchTransactionsUseCase
@@ -13,5 +14,6 @@ internal val TransactionModule =
             ListTransactionsUseCase::class,
             SearchTransactionsUseCase::class,
             SaveTransactionUseCase::class,
+            DeleteTransactionUseCase::class,
         )
     }

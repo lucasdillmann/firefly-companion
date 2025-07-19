@@ -1,5 +1,6 @@
 package br.com.dillmann.fireflycompanion.business.transaction
 
+import br.com.dillmann.fireflycompanion.business.transaction.usecase.DeleteTransactionUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.ListTransactionsUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.SaveTransactionUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.SearchTransactionsUseCase
@@ -10,7 +11,7 @@ import java.time.LocalDate
 internal class TransactionService(
     private val repository: TransactionRepository,
     private val validator: TransactionValidator,
-) : ListTransactionsUseCase, SearchTransactionsUseCase, SaveTransactionUseCase {
+) : ListTransactionsUseCase, SearchTransactionsUseCase, SaveTransactionUseCase, DeleteTransactionUseCase {
 
     override suspend fun list(page: PageRequest, startDate: LocalDate?, endDate: LocalDate?): Page<Transaction> =
         repository.list(page, startDate, endDate)
@@ -21,5 +22,9 @@ internal class TransactionService(
     override suspend fun save(transaction: Transaction): Transaction {
         validator.validate(transaction)
         return repository.save(transaction)
+    }
+
+    override suspend fun delete(id: String) {
+        repository.deleteById(id)
     }
 }

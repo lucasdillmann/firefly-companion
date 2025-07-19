@@ -46,4 +46,8 @@ internal class TransactionHttpRepository(
         val outputPayload = transactionApi.storeTransaction(inputPayload)
         return converter.toDomain(outputPayload.data)
     }
+
+    override suspend fun deleteById(id: String) {
+        transactionApi.deleteTransaction(id)
+    }
 }
