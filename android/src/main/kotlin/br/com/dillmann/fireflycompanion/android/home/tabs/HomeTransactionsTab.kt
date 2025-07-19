@@ -1,6 +1,7 @@
 package br.com.dillmann.fireflycompanion.android.home.tabs
 
 import android.app.Activity.RESULT_OK
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -92,6 +93,11 @@ fun HomeTransactionsTab(resultNotifier: ResultNotifier) {
 
     DisposableEffect(Unit) {
         onDispose { resultNotifier.unsubscribe(::handleResult) }
+    }
+
+    BackHandler(enabled = searchTerms.isNotBlank()) {
+        searchTerms = ""
+        loadTransactions(refresh = true)
     }
 
     LaunchedEffect(listState) {
