@@ -1,18 +1,13 @@
 package br.com.dillmann.fireflycompanion.android.home.tabs
 
+import android.app.Activity.RESULT_OK
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBalance
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.MonetizationOn
-import androidx.compose.material.icons.filled.Money
-import androidx.compose.material.icons.filled.Payment
-import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.accounts.AccountFormActivity
 import br.com.dillmann.fireflycompanion.android.core.activity.async
+import br.com.dillmann.fireflycompanion.android.core.activity.result.ResultNotifier
 import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.activity.state
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
@@ -34,6 +30,7 @@ import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.Pull
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.home.HomeTabs
 import br.com.dillmann.fireflycompanion.business.account.Account
 import br.com.dillmann.fireflycompanion.business.account.usecase.ListAccountsUseCase
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
@@ -43,9 +40,8 @@ import java.util.logging.Logger
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun HomeAccountsTab() {
+fun HomeAccountsTab(resultNotifier: ResultNotifier) {
     val listUseCase = koin().get<ListAccountsUseCase>()
-
     var accounts by state(emptyList<Account>())
     var currentPage by state(0)
     var hasMorePages by state(true)
@@ -75,8 +71,18 @@ fun HomeAccountsTab() {
         }
     }
 
+    fun handleResult(requestCode: Int, resultCode: Int) {
+        if (requestCode == HomeTabs.ACCOUNTS.ordinal && resultCode == RESULT_OK)
+            loadAccounts(refresh = true)
+    }
+
     LaunchedEffect(Unit) {
+        resultNotifier.subscribe(::handleResult)
         loadAccounts()
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { resultNotifier.unsubscribe(::handleResult) }
     }
 
     LaunchedEffect(listState) {
@@ -154,7 +160,12 @@ private fun AccountItem(account: Account) {
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        onClick = { context.start<AccountFormActivity>(extras = mapOf("account" to account)) }
+        onClick = {
+            context.start<AccountFormActivity>(
+                extras = mapOf("account" to account),
+                requestCode = HomeTabs.ACCOUNTS.ordinal,
+            )
+        }
     ) {
         Row(
             modifier = Modifier

@@ -25,7 +25,7 @@ import br.com.dillmann.fireflycompanion.android.home.tabs.HomeTransactionsTab
 class HomeActivity : PreconfiguredActivity() {
     private companion object {
         private val QUICK_ACTION_ENABLED_TABS =
-            listOf(HomeTabs.MAIN, HomeTabs.TRANSACTIONS).map(HomeTabs::name)
+            listOf(HomeTabs.MAIN, HomeTabs.TRANSACTIONS)
     }
 
     @Composable
@@ -44,8 +44,9 @@ class HomeActivity : PreconfiguredActivity() {
                 }
             },
             floatingActionButton = {
-                if (currentDestination?.route in QUICK_ACTION_ENABLED_TABS)
-                    HomeQuickActions()
+                val currentTab = currentDestination?.route?.let(HomeTabs::valueOf)
+                if (currentTab != null && currentTab in QUICK_ACTION_ENABLED_TABS)
+                    HomeQuickActions(currentTab)
             }
         ) {
             NavHost(
@@ -53,9 +54,9 @@ class HomeActivity : PreconfiguredActivity() {
                 startDestination = HomeTabs.MAIN.name,
                 modifier = Modifier.padding(it)
             ) {
-                composable(HomeTabs.MAIN.name) { HomeMainTab() }
-                composable(HomeTabs.TRANSACTIONS.name) { HomeTransactionsTab() }
-                composable(HomeTabs.ACCOUNTS.name) { HomeAccountsTab() }
+                composable(HomeTabs.MAIN.name) { HomeMainTab(resultNotifier) }
+                composable(HomeTabs.TRANSACTIONS.name) { HomeTransactionsTab(resultNotifier) }
+                composable(HomeTabs.ACCOUNTS.name) { HomeAccountsTab(resultNotifier) }
             }
         }
     }

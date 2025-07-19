@@ -18,10 +18,11 @@ import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.assistant.AssistantActivity
 import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.home.HomeTabs
 import br.com.dillmann.fireflycompanion.android.transaction.TransactionFormActivity
 
 @Composable
-fun HomeQuickActions() {
+fun HomeQuickActions(currentTab: HomeTabs) {
     val context = LocalContext.current
 
     Column(
@@ -39,7 +40,9 @@ fun HomeQuickActions() {
         }
 
         FloatingActionButton(
-            onClick = { context.start<TransactionFormActivity>() },
+            onClick = {
+                context.start<TransactionFormActivity>(requestCode = currentTab.ordinal)
+            },
         ) {
             Icon(
                 imageVector = Icons.Filled.Add,

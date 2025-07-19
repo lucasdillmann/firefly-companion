@@ -42,8 +42,15 @@ internal class TransactionHttpRepository(
     }
 
     override suspend fun save(transaction: Transaction): Transaction {
-        val inputPayload = converter.toApi(transaction)
-        val outputPayload = transactionApi.storeTransaction(inputPayload)
+        val outputPayload =
+            if (transaction.id != null) {
+                val inputPayload = converter.toApiUpdate(transaction)
+                transactionApi.updateTransaction(transaction.id!!, inputPayload)
+            } else {
+                val inputPayload = converter.toApiStore(transaction)
+                transactionApi.storeTransaction(inputPayload)
+            }
+
         return converter.toDomain(outputPayload.data)
     }
 

@@ -80,4 +80,15 @@
     <string name="initial_balance">Saldo inicial</string>
     <string name="reconciliation">Reconciliação</string>
     <string name="account">Conta</string>
+    <string name="edit_transaction">Editar movimentação</string>
+    <string name="delete">Excluir</string>
+    <string name="loading">Segura ai um segundo</string>
+    <string name="delete_transaction">Excluir movimentação</string>
+    <string name="delete_transaction_confirmation">Tem certeza que deseja excluir esta movimentação? Esta ação não pode ser desfeita.</string>
+    <string name="description">Descrição</string>
+    <string name="amount">Valor</string>
+    <string name="category">Categoria</string>
+    <string name="source_account">Conta de origem</string>
+    <string name="destination_account">Conta de destino</string>
+    <string name="transaction_type">Tipo da transação</string>
 </resources>

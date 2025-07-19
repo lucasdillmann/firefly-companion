@@ -81,4 +81,15 @@
     <string name="initial_balance">Initial balance</string>
     <string name="reconciliation">Reconciliation</string>
     <string name="account">Account</string>
+    <string name="edit_transaction">Edit transaction</string>
+    <string name="delete">Delete</string>
+    <string name="loading">Hang on tight</string>
+    <string name="delete_transaction">Delete transaction</string>
+    <string name="delete_transaction_confirmation">Are you sure you want to delete this transaction? This action cannot be undone.</string>
+    <string name="description">Description</string>
+    <string name="amount">Amount</string>
+    <string name="category">Category</string>
+    <string name="source_account">Source account</string>
+    <string name="destination_account">Destination account</string>
+    <string name="transaction_type">Transaction type</string>
 </resources>

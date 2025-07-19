@@ -8,6 +8,8 @@ import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.TransactionTyp
 import org.mapstruct.*
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.TransactionSplitStore
+import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.TransactionSplitUpdate
+import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.TransactionUpdate
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 internal interface TransactionConverter {
@@ -34,10 +36,23 @@ internal interface TransactionConverter {
     @Mapping(target = "sourceName", source = "sourceAccountName")
     @Mapping(target = "destinationName", source = "destinationAccountName")
     @Mapping(target = "categoryName", source = "category")
-    fun toApiSplit(input: Transaction): TransactionSplitStore
+    fun toApiSplitStore(input: Transaction): TransactionSplitStore
 
-    fun toApi(input: Transaction): TransactionStore =
-        TransactionStore(transactions = listOf(toApiSplit(input)))
+    @Mapping(target = "currencyCode", source = "currency.code")
+    @Mapping(target = "sourceName", source = "sourceAccountName")
+    @Mapping(target = "destinationName", source = "destinationAccountName")
+    @Mapping(target = "categoryName", source = "category")
+    fun toApiSplitUpdate(input: Transaction): TransactionSplitUpdate
+
+    fun toApiStore(input: Transaction): TransactionStore =
+        TransactionStore(
+            transactions = mutableListOf(toApiSplitStore(input)),
+        )
+
+    fun toApiUpdate(input: Transaction): TransactionUpdate =
+        TransactionUpdate(
+            transactions = mutableListOf(toApiSplitUpdate(input)),
+        )
 
     fun <T> value(transaction: TransactionRead, selector: (TransactionSplit) -> T?): T? =
         transaction.attributes.transactions.first().let(selector)

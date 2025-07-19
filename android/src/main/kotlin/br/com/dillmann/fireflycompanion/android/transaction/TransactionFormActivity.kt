@@ -1,24 +1,210 @@
 package br.com.dillmann.fireflycompanion.android.transaction
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import android.os.Bundle
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
-import br.com.dillmann.fireflycompanion.android.core.components.section.Section
+import br.com.dillmann.fireflycompanion.android.core.activity.async
+import br.com.dillmann.fireflycompanion.android.core.activity.state
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.transaction.components.TransactionFormFields
+import br.com.dillmann.fireflycompanion.business.currency.usecase.GetDefaultCurrencyUseCase
+import br.com.dillmann.fireflycompanion.business.transaction.Transaction
+import br.com.dillmann.fireflycompanion.business.transaction.usecase.DeleteTransactionUseCase
+import br.com.dillmann.fireflycompanion.business.transaction.usecase.SaveTransactionUseCase
+import br.com.dillmann.fireflycompanion.core.validation.ConsistencyException
+import br.com.dillmann.fireflycompanion.core.validation.ValidationOutcome
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.time.OffsetDateTime
 
 class TransactionFormActivity : PreconfiguredActivity() {
+    private var transaction: Transaction? = null
+    private val isEditMode: Boolean
+        get() = transaction != null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        transaction = intent.getSerializableExtra("transaction", Transaction::class.java)
+    }
+
     @Composable
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun Content(padding: PaddingValues) {
-        Section(
-            title = i18n(R.string.new_transaction),
-            modifier = Modifier.padding(padding),
-        ) {
-            Text(
-                text = i18n(R.string.not_implemented),
+        val scrollState = rememberScrollState()
+        val validationOutcome = state<ValidationOutcome?>(null)
+        val showLoading = state(false)
+        val showDeleteConfirmation = state(false)
+        val description = state(TextFieldValue(transaction?.description ?: ""))
+        val amount = state(TextFieldValue(transaction?.amount?.toString() ?: ""))
+        val category = state(TextFieldValue(transaction?.category ?: ""))
+        val sourceAccount = state(TextFieldValue(transaction?.sourceAccountName ?: ""))
+        val destinationAccount = state(TextFieldValue(transaction?.destinationAccountName ?: ""))
+        val transactionType = state(transaction?.type ?: Transaction.Type.WITHDRAWAL)
+
+        fun handleSave() {
+            val saveAction = koin().get<SaveTransactionUseCase>()
+            val getCurrencyAction = koin().get<GetDefaultCurrencyUseCase>()
+
+            validationOutcome.value = null
+            showLoading.value = true
+
+            async {
+                try {
+                    val updatedTransaction = Transaction(
+                        id = transaction?.id,
+                        description = description.value.text,
+                        category = category.value.text.takeIf { it.isNotBlank() },
+                        date = transaction?.date ?: OffsetDateTime.now(),
+                        amount = amount.value.text.toBigDecimalOrNull() ?: BigDecimal.ZERO,
+                        currency = transaction?.currency ?: getCurrencyAction.getDefault(),
+                        type = transactionType.value,
+                        sourceAccountName = sourceAccount.value.text.takeIf { it.isNotBlank() },
+                        destinationAccountName = destinationAccount.value.text.takeIf { it.isNotBlank() }
+                    )
+
+                    saveAction.save(updatedTransaction)
+                    setResult(RESULT_OK)
+                    finish()
+                } catch (ex: ConsistencyException) {
+                    validationOutcome.value = ex.outcome
+                } finally {
+                    showLoading.value = false
+                }
+            }
+        }
+
+        fun handleDelete() {
+            val deleteAction = koin().get<DeleteTransactionUseCase>()
+            val id = transaction?.id ?: return
+
+            showLoading.value = true
+
+            async {
+                try {
+                    deleteAction.delete(id)
+                    setResult(RESULT_OK)
+                    finish()
+                } finally {
+                    showLoading.value = false
+                }
+            }
+        }
+
+        LaunchedEffect(Unit) {
+            async {
+                if (transaction == null)
+                    return@async
+
+                showLoading.value = true
+                val currency = koin().get<GetDefaultCurrencyUseCase>().getDefault()
+                val formattedValue = transaction!!
+                    .amount
+                    .setScale(currency.decimalPlaces, RoundingMode.HALF_EVEN)
+                    .toPlainString()
+
+                amount.value = TextFieldValue(formattedValue)
+                showLoading.value = false
+            }
+        }
+
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        val key = if (isEditMode) R.string.edit_transaction else R.string.new_transaction
+                        Text(text = i18n(key))
+                    },
+                    actions = {
+                        if (isEditMode) {
+                            IconButton(
+                                onClick = { showDeleteConfirmation.value = true },
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = i18n(R.string.delete)
+                                )
+                            }
+                        }
+
+                        Button(onClick = { handleSave() }) {
+                            Text(i18n(R.string.save))
+                        }
+                    }
+                )
+            }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start,
+            ) {
+                TransactionFormFields(
+                    description = description,
+                    amount = amount,
+                    category = category,
+                    sourceAccount = sourceAccount,
+                    destinationAccount = destinationAccount,
+                    transactionType = transactionType,
+                    validationOutcome = validationOutcome.value
+                )
+            }
+        }
+
+        if (showLoading.value) {
+            Dialog(onDismissRequest = {}) {
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator()
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(text = i18n(R.string.loading))
+                }
+            }
+        }
+
+        if (showDeleteConfirmation.value) {
+            AlertDialog(
+                onDismissRequest = { showDeleteConfirmation.value = false },
+                title = { Text(i18n(R.string.delete_transaction)) },
+                text = { Text(i18n(R.string.delete_transaction_confirmation)) },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showDeleteConfirmation.value = false
+                            handleDelete()
+                        }
+                    ) {
+                        Text(i18n(R.string.delete))
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = { showDeleteConfirmation.value = false }
+                    ) {
+                        Text(i18n(R.string.cancel))
+                    }
+                }
             )
         }
     }

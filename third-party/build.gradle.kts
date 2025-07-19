@@ -57,6 +57,7 @@ openApiGenerate {
     configOptions.putAll(
         mapOf(
             "dateLibrary" to "java8",
+            "modelMutable" to "true",
             "enumPropertyNaming" to "UPPERCASE",
         )
     )

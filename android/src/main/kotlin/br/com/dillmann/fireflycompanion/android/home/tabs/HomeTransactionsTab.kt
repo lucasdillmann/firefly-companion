@@ -1,5 +1,6 @@
 package br.com.dillmann.fireflycompanion.android.home.tabs
 
+import android.app.Activity.RESULT_OK
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.activity.async
+import br.com.dillmann.fireflycompanion.android.core.activity.result.ResultNotifier
 import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.activity.state
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
@@ -29,6 +31,7 @@ import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.Pull
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.home.HomeTabs
 import br.com.dillmann.fireflycompanion.android.transaction.TransactionFormActivity
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.ListTransactionsUseCase
@@ -40,10 +43,9 @@ import java.util.logging.Logger
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun HomeTransactionsTab() {
+fun HomeTransactionsTab(resultNotifier: ResultNotifier) {
     val listUseCase = koin().get<ListTransactionsUseCase>()
     val searchUseCase = koin().get<SearchTransactionsUseCase>()
-
     var transactions by state(emptyList<Transaction>())
     var currentPage by state(0)
     var hasMorePages by state(true)
@@ -78,8 +80,18 @@ fun HomeTransactionsTab() {
         }
     }
 
+    fun handleResult(requestCode: Int, resultCode: Int) {
+        if (requestCode == HomeTabs.TRANSACTIONS.ordinal && resultCode == RESULT_OK)
+            loadTransactions(refresh = true)
+    }
+
     LaunchedEffect(Unit) {
+        resultNotifier.subscribe(::handleResult)
         loadTransactions()
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { resultNotifier.unsubscribe(::handleResult) }
     }
 
     LaunchedEffect(listState) {
@@ -218,7 +230,8 @@ private fun TransactionItem(transaction: Transaction) {
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         onClick = {
             context.start<TransactionFormActivity>(
-                extras = mapOf("transaction" to transaction)
+                extras = mapOf("transaction" to transaction),
+                requestCode = HomeTabs.TRANSACTIONS.ordinal,
             )
         }
     ) {

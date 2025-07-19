@@ -6,7 +6,7 @@ import java.math.BigDecimal
 import java.time.OffsetDateTime
 
 data class Transaction(
-    val id: String,
+    val id: String?,
     val description: String,
     val category: String?,
     val date: OffsetDateTime,
