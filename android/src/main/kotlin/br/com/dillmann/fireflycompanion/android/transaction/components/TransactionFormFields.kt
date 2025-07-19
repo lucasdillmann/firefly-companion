@@ -30,7 +30,7 @@ fun TransactionFormFields(
     val destinationAccountRequiredTypes = listOf(Type.TRANSFER, Type.DEPOSIT)
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         supportedTypes.forEach { type ->
@@ -46,9 +46,7 @@ fun TransactionFormFields(
         value = description.value,
         onValueChange = { description.value = it },
         label = { Text(text = i18n(R.string.description)) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
+        modifier = Modifier.fillMaxWidth(),
         isError = validationOutcome?.messageFor("description") != null,
         supportingText = {
             val message = validationOutcome?.messageFor("description")
@@ -66,9 +64,7 @@ fun TransactionFormFields(
         value = amount.value,
         onValueChange = { amount.value = it },
         label = { Text(text = i18n(R.string.amount)) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
+        modifier = Modifier.fillMaxWidth(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
         isError = validationOutcome?.messageFor("amount") != null,
         supportingText = {
@@ -87,15 +83,8 @@ fun TransactionFormFields(
         value = category.value,
         onValueChange = { category.value = it },
         label = { Text(text = i18n(R.string.category)) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-    )
-
-    Text(
-        text = i18n(R.string.transaction_type),
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+        modifier = Modifier.fillMaxWidth(),
+        supportingText = { null },
     )
 
     if (transactionType.value in sourceAccountRequiredTypes) {
@@ -103,9 +92,7 @@ fun TransactionFormFields(
             value = sourceAccount.value,
             onValueChange = { sourceAccount.value = it },
             label = { Text(text = i18n(R.string.source_account)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
+            modifier = Modifier.fillMaxWidth(),
             isError = validationOutcome?.messageFor("sourceAccountName") != null,
             supportingText = {
                 val message = validationOutcome?.messageFor("sourceAccountName")
@@ -125,9 +112,7 @@ fun TransactionFormFields(
             value = destinationAccount.value,
             onValueChange = { destinationAccount.value = it },
             label = { Text(text = i18n(R.string.destination_account)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
+            modifier = Modifier.fillMaxWidth(),
             isError = validationOutcome?.messageFor("destinationAccountName") != null,
             supportingText = {
                 val message = validationOutcome?.messageFor("destinationAccountName")

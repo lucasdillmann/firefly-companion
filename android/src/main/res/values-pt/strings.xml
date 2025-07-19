@@ -90,5 +90,4 @@
     <string name="category">Categoria</string>
     <string name="source_account">Conta de origem</string>
     <string name="destination_account">Conta de destino</string>
-    <string name="transaction_type">Tipo da transação</string>
 </resources>
