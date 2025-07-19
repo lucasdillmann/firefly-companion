@@ -17,10 +17,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
-import br.com.dillmann.fireflycompanion.android.home.components.HomeAccountsTab
-import br.com.dillmann.fireflycompanion.android.home.components.HomeMainTab
+import br.com.dillmann.fireflycompanion.android.home.tabs.HomeAccountsTab
+import br.com.dillmann.fireflycompanion.android.home.tabs.HomeMainTab
 import br.com.dillmann.fireflycompanion.android.home.components.HomeQuickActions
-import br.com.dillmann.fireflycompanion.android.home.components.HomeTransactionsTab
+import br.com.dillmann.fireflycompanion.android.home.tabs.HomeTransactionsTab
 
 class HomeActivity : PreconfiguredActivity() {
     private companion object {

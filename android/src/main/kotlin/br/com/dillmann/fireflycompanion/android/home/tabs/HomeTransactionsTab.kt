@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.home.components
+package br.com.dillmann.fireflycompanion.android.home.tabs
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -46,23 +46,28 @@ fun HomeTransactionsTab() {
 
     var transactions by state(emptyList<Transaction>())
     var currentPage by state(0)
+    var hasMorePages by state(true)
     val listState = rememberLazyListState()
     var loadTask by state<CompletableFuture<Any>?>(null)
     var searchTerms by state("")
 
-    fun loadTransactions(page: Int = 0, refresh: Boolean = false) {
+    fun loadTransactions(pageNumber: Int = 0, refresh: Boolean = false) {
         loadTask?.cancel(true)
         if (refresh) {
             currentPage = 0
+            hasMorePages = true
             transactions = emptyList()
         }
 
         loadTask = async {
             try {
-                val page = PageRequest(number = page)
-                transactions +=
-                    if (searchTerms.isBlank()) listUseCase.list(page)
-                    else searchUseCase.search(page, searchTerms)
+                val pageRequest = PageRequest(pageNumber)
+                val page =
+                    if (searchTerms.isBlank()) listUseCase.list(pageRequest)
+                    else searchUseCase.search(pageRequest, searchTerms)
+
+                transactions += page.content
+                hasMorePages = page.hasMorePages
             } catch (e: Exception) {
                 Logger
                     .getLogger("HomeTransactionsTab")
@@ -82,7 +87,7 @@ fun HomeTransactionsTab() {
             .collect { lastVisibleIndex ->
                 if (lastVisibleIndex != null && loadTask.done()) {
                     val totalItems = transactions.size
-                    if (lastVisibleIndex >= totalItems - 3 && totalItems > 0) {
+                    if (lastVisibleIndex >= totalItems - 3 && totalItems > 0 && hasMorePages) {
                         currentPage++
                         loadTransactions(currentPage)
                     }

@@ -79,4 +79,5 @@
     <string name="liability">Passivo</string>
     <string name="initial_balance">Saldo inicial</string>
     <string name="reconciliation">Reconciliação</string>
+    <string name="account">Conta</string>
 </resources>

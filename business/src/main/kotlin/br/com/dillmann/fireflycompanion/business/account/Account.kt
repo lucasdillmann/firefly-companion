@@ -1,6 +1,7 @@
 package br.com.dillmann.fireflycompanion.business.account
 
 import br.com.dillmann.fireflycompanion.business.currency.Currency
+import java.io.Serializable
 import java.math.BigDecimal
 
 data class Account(
@@ -12,7 +13,7 @@ data class Account(
     val currentBalance: BigDecimal,
     val type: Type,
     val includeInNetWorth: Boolean,
-) {
+) : Serializable {
     enum class Type {
         ASSET,
         EXPENSE,

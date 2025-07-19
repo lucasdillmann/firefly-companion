@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.home.components
+package br.com.dillmann.fireflycompanion.android.home.tabs
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,11 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.accounts.AccountFormActivity
 import br.com.dillmann.fireflycompanion.android.core.activity.async
+import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.activity.state
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibilityToggle
@@ -45,20 +48,23 @@ fun HomeAccountsTab() {
 
     var accounts by state(emptyList<Account>())
     var currentPage by state(0)
+    var hasMorePages by state(true)
     val listState = rememberLazyListState()
     var loadTask by state<CompletableFuture<Any>?>(null)
 
-    fun loadAccounts(page: Int = 0, refresh: Boolean = false) {
+    fun loadAccounts(pageNumber: Int = 0, refresh: Boolean = false) {
         loadTask?.cancel(true)
         if (refresh) {
+            hasMorePages = true
             currentPage = 0
             accounts = emptyList()
         }
 
         loadTask = async {
             try {
-                val page = PageRequest(number = page)
-                accounts += listUseCase.listAccounts(page).content
+                val page = listUseCase.listAccounts(page = PageRequest(pageNumber))
+                accounts += page.content
+                hasMorePages = page.hasMorePages
             } catch (e: Exception) {
                 Logger
                     .getLogger("HomeAccountsTab")
@@ -78,7 +84,7 @@ fun HomeAccountsTab() {
             .collect { lastVisibleIndex ->
                 if (lastVisibleIndex != null && loadTask.done()) {
                     val totalItems = accounts.size
-                    if (lastVisibleIndex >= totalItems - 3 && totalItems > 0) {
+                    if (lastVisibleIndex >= totalItems - 3 && totalItems > 0 && hasMorePages) {
                         currentPage++
                         loadAccounts(currentPage)
                     }
@@ -142,10 +148,13 @@ private fun LoadingIndicator() {
 
 @Composable
 private fun AccountItem(account: Account) {
+    val context = LocalContext.current
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        onClick = { context.start<AccountFormActivity>(extras = mapOf("account" to account)) }
     ) {
         Row(
             modifier = Modifier

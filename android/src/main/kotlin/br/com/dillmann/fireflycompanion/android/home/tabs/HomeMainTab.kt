@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.home.components
+package br.com.dillmann.fireflycompanion.android.home.tabs
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -10,6 +10,15 @@ import br.com.dillmann.fireflycompanion.android.core.activity.async
 import br.com.dillmann.fireflycompanion.android.core.activity.state
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefreshWithScroll
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.home.components.HomeAccounts
+import br.com.dillmann.fireflycompanion.android.home.components.HomeBudgets
+import br.com.dillmann.fireflycompanion.android.home.components.HomeCreditCards
+import br.com.dillmann.fireflycompanion.android.home.components.HomeExpensesByCategory
+import br.com.dillmann.fireflycompanion.android.home.components.HomeGoals
+import br.com.dillmann.fireflycompanion.android.home.components.HomeMonthlyBalance
+import br.com.dillmann.fireflycompanion.android.home.components.HomeMonthlySavings
+import br.com.dillmann.fireflycompanion.android.home.components.HomeOverview
+import br.com.dillmann.fireflycompanion.android.home.components.HomeSpendFrequency
 import br.com.dillmann.fireflycompanion.business.summary.usecase.GetSummaryUseCase
 
 @Composable
