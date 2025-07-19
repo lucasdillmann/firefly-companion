@@ -6,7 +6,10 @@ import br.com.dillmann.fireflycompanion.business.summary.SummaryRepository
 import br.com.dillmann.fireflycompanion.thirdparty.firefly.apis.SummaryApi
 import java.time.LocalDate
 
-internal class SummaryHttpRepository(private val api: SummaryApi): SummaryRepository {
+internal class SummaryHttpRepository(
+    private val api: SummaryApi,
+    private val converter: SummaryConverter,
+) : SummaryRepository {
     override suspend fun getSummaryByCurrency(
         startDate: LocalDate,
         endDate: LocalDate,
@@ -14,13 +17,13 @@ internal class SummaryHttpRepository(private val api: SummaryApi): SummaryReposi
     ): Summary? {
         val response =
             api.getBasicSummary(
-                start = startDate.toString(),
-                end = endDate.toString(),
+                start = startDate,
+                end = endDate,
                 currencyCode = currency.code,
             )
 
         return response
             .takeIf { it.isNotEmpty() }
-            ?.toSummary(currency)
+            ?.let { converter.toDomain(currency, it) }
     }
 }

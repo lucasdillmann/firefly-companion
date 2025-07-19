@@ -17,7 +17,11 @@ data class Transaction(
     val destinationAccountName: String?,
 ) : Serializable {
     enum class Type : Serializable {
-        WITHDRAWAL, DEPOSIT, TRANSFER, UNKNOWN
+        WITHDRAWAL,
+        DEPOSIT,
+        TRANSFER,
+        RECONCILIATION,
+        OPENING_BALANCE,
     }
 }
 

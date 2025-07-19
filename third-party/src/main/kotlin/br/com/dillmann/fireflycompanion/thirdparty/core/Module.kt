@@ -1,6 +1,7 @@
 package br.com.dillmann.fireflycompanion.thirdparty.core
 
 import br.com.dillmann.fireflycompanion.business.serverconfig.usecase.GetConfigUseCase
+import br.com.dillmann.fireflycompanion.thirdparty.core.firefly.FireflyAuthenticator
 import kotlinx.coroutines.runBlocking
 import okhttp3.Call
 import okhttp3.OkHttpClient

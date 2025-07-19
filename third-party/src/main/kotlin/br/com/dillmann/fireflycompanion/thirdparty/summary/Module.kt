@@ -2,11 +2,13 @@ package br.com.dillmann.fireflycompanion.thirdparty.summary
 
 import br.com.dillmann.fireflycompanion.business.summary.SummaryRepository
 import br.com.dillmann.fireflycompanion.thirdparty.core.Qualifiers
+import br.com.dillmann.fireflycompanion.thirdparty.core.converter.getConverter
 import br.com.dillmann.fireflycompanion.thirdparty.firefly.apis.SummaryApi
 import org.koin.dsl.module
 
 internal val SummaryModule =
     module {
         single { SummaryApi(get(Qualifiers.API_BASE_URL), get()) }
-        single<SummaryRepository> { SummaryHttpRepository(get()) }
+        single<SummaryConverter> { getConverter() }
+        single<SummaryRepository> { SummaryHttpRepository(get(), get()) }
     }

@@ -1,7 +1,12 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.OffsetDateTime
 
 plugins {
     id("java-library")
+    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.open.api.generator)
     alias(libs.plugins.jetbrains.kotlin.jvm)
 }
@@ -12,6 +17,9 @@ dependencies {
     api(libs.okhttp3)
     api(libs.moshi.kotlin)
     api(libs.moshi.adapters)
+    api(libs.mapstruct)
+
+    kapt(libs.mapstruct.processor)
 }
 
 java {
@@ -35,6 +43,10 @@ tasks {
     compileKotlin {
         dependsOn(openApiGenerate)
     }
+
+    withType<KaptGenerateStubsTask> {
+        dependsOn(openApiGenerate)
+    }
 }
 
 openApiGenerate {
@@ -44,13 +56,17 @@ openApiGenerate {
     generatorName = "kotlin"
     configOptions.putAll(
         mapOf(
-            "dateLibrary" to "string",
+            "dateLibrary" to "java8",
             "enumPropertyNaming" to "UPPERCASE",
         )
     )
     typeMappings.putAll(mapOf(
-        "number" to "java.math.BigDecimal",
-        "double" to "java.math.BigDecimal",
-        "float" to "java.math.BigDecimal",
+        "number" to BigDecimal::class.qualifiedName,
+        "double" to BigDecimal::class.qualifiedName,
+        "float" to BigDecimal::class.qualifiedName,
+        "amount" to BigDecimal::class.qualifiedName,
+        "date-time" to OffsetDateTime::class.qualifiedName,
+        "date" to LocalDate::class.qualifiedName,
+        "time" to LocalTime::class.qualifiedName,
     ))
 }

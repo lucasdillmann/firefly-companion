@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.thirdparty.core
+package br.com.dillmann.fireflycompanion.thirdparty.core.firefly
 
 import br.com.dillmann.fireflycompanion.core.pagination.Page
 import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.Meta
