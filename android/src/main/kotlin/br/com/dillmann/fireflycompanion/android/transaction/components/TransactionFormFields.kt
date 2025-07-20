@@ -11,15 +11,19 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.components.datepicker.DatePicker
+import br.com.dillmann.fireflycompanion.android.core.components.datepicker.DatePickerType
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction.Type
 import br.com.dillmann.fireflycompanion.core.validation.ValidationOutcome
+import java.time.OffsetDateTime
 
 @Composable
 fun TransactionFormFields(
     description: MutableState<TextFieldValue>,
     amount: MutableState<TextFieldValue>,
     category: MutableState<TextFieldValue>,
+    dateTime: MutableState<OffsetDateTime>,
     sourceAccount: MutableState<TextFieldValue>,
     destinationAccount: MutableState<TextFieldValue>,
     transactionType: MutableState<Type>,
@@ -69,6 +73,22 @@ fun TransactionFormFields(
         isError = validationOutcome?.messageFor("amount") != null,
         supportingText = {
             val message = validationOutcome?.messageFor("amount")
+            if (message != null) {
+                Text(
+                    text = message,
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
+        }
+    )
+
+    DatePicker(
+        dateTimeState = dateTime,
+        type = DatePickerType.DATE_ONLY,
+        label = i18n(R.string.date),
+        supportingText = {
+            val message = validationOutcome?.messageFor("dateTime")
             if (message != null) {
                 Text(
                     text = message,

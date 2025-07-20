@@ -50,6 +50,7 @@ class TransactionFormActivity : PreconfiguredActivity() {
         val description = state(TextFieldValue(transaction?.description ?: ""))
         val amount = state(TextFieldValue(transaction?.amount?.toString() ?: ""))
         val category = state(TextFieldValue(transaction?.category ?: ""))
+        val dateTime = state(transaction?.date ?: OffsetDateTime.now())
         val sourceAccount = state(TextFieldValue(transaction?.sourceAccountName ?: ""))
         val destinationAccount = state(TextFieldValue(transaction?.destinationAccountName ?: ""))
         val transactionType = state(transaction?.type ?: Transaction.Type.WITHDRAWAL)
@@ -67,7 +68,7 @@ class TransactionFormActivity : PreconfiguredActivity() {
                         id = transaction?.id,
                         description = description.value.text,
                         category = category.value.text.takeIf { it.isNotBlank() },
-                        date = transaction?.date ?: OffsetDateTime.now(),
+                        date = dateTime.value,
                         amount = amount.value.text.toBigDecimalOrNull() ?: BigDecimal.ZERO,
                         currency = transaction?.currency ?: getCurrencyAction.getDefault(),
                         type = transactionType.value,
@@ -159,6 +160,7 @@ class TransactionFormActivity : PreconfiguredActivity() {
                     description = description,
                     amount = amount,
                     category = category,
+                    dateTime = dateTime,
                     sourceAccount = sourceAccount,
                     destinationAccount = destinationAccount,
                     transactionType = transactionType,

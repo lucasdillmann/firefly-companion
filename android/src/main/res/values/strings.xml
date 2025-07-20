@@ -91,4 +91,5 @@
     <string name="category">Category</string>
     <string name="source_account">Source account</string>
     <string name="destination_account">Destination account</string>
+    <string name="date">Date</string>
 </resources>
