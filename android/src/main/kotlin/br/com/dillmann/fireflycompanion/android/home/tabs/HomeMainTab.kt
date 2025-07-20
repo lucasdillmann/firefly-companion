@@ -17,7 +17,6 @@ import br.com.dillmann.fireflycompanion.android.core.activity.state
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefreshWithScroll
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.android.home.HomeTabs
-import br.com.dillmann.fireflycompanion.android.home.components.HomeAccounts
 import br.com.dillmann.fireflycompanion.android.home.components.HomeBudgets
 import br.com.dillmann.fireflycompanion.android.home.components.HomeCreditCards
 import br.com.dillmann.fireflycompanion.android.home.components.HomeExpensesByCategory
@@ -65,7 +64,6 @@ fun HomeMainTab(
     ) {
         item { HomeOverview(summary) }
         item { HomeCreditCards() }
-        item { HomeAccounts() }
         item { HomeExpensesByCategory() }
         item { HomeBudgets() }
         item { HomeMonthlySavings() }

@@ -1,17 +1,19 @@
 package br.com.dillmann.fireflycompanion.business.preferences
 
+import java.io.Serializable
+
 data class Preferences(
     val requireBiometricLogin: Boolean = false,
     val theme: Theme = Theme.AUTO,
     val language: Language = Language.AUTO,
-) {
-    enum class Theme {
+) : Serializable {
+    enum class Theme : Serializable {
         AUTO,
         LIGHT,
         DARK,
     }
 
-    enum class Language {
+    enum class Language : Serializable {
         AUTO,
         ENGLISH,
         PORTUGUESE,

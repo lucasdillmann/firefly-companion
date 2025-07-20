@@ -47,7 +47,9 @@ fun HomeTransactionsTab(
 
     LaunchedEffect(Unit) {
         resultNotifier.subscribe(::handleResult)
-        listContext.refresh()
+
+        if (!listContext.isLoading() && !listContext.containsData())
+            listContext.refresh()
     }
 
     DisposableEffect(Unit) {

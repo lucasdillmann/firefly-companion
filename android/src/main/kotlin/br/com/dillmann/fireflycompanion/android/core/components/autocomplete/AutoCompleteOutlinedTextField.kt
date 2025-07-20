@@ -31,7 +31,7 @@ fun AutoCompleteOutlinedTextField(
 ) {
     var expanded by state(false)
     var suggestions by state(emptyList<String>())
-    var searchJob by state<CompletableFuture<Unit>?>(null)
+    var searchJob by state<CompletableFuture<Unit>?>(value = null, persistent = false)
     val showDropdown = suggestions.isNotEmpty() && expanded
 
     fun fetchSuggestions() {

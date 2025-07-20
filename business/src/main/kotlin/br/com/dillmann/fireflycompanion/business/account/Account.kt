@@ -14,7 +14,7 @@ data class Account(
     val type: Type,
     val includeInNetWorth: Boolean,
 ) : Serializable {
-    enum class Type {
+    enum class Type : Serializable {
         ASSET,
         EXPENSE,
         IMPORT,

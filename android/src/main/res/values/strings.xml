@@ -32,7 +32,7 @@
         your Firefly III server.
     </string>
     <string name="continue_">Continue</string>
-    <string name="connecting_to_firefly_server">Connecting to your Firefly III server...</string>
+    <string name="connecting_to_firefly_server">Connecting to your Firefly III server…</string>
     <string name="finish">Finish</string>
     <string name="onboarding_preferences_title">What suits you best?</string>
     <string name="onboarding_preferences_message">To finish things up select what you prefer. You can always change
@@ -92,4 +92,6 @@
     <string name="source_account">Source account</string>
     <string name="destination_account">Destination account</string>
     <string name="date">Date</string>
+    <string name="no_transactions_yet">There\'s no transactions. Yet.</string>
+    <string name="click_the_button_bellow_to_add">Click the add button bellow to create your first</string>
 </resources>

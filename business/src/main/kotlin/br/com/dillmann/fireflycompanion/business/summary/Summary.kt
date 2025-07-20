@@ -1,6 +1,7 @@
 package br.com.dillmann.fireflycompanion.business.summary
 
 import br.com.dillmann.fireflycompanion.business.currency.Currency
+import java.io.Serializable
 import java.math.BigDecimal
 
 data class Summary(
@@ -12,4 +13,4 @@ data class Summary(
     val unpaidBills: BigDecimal? = null,
     val leftToSpend: BigDecimal? = null,
     val balance: BigDecimal? = null,
-)
+) : Serializable

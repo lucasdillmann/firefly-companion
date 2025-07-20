@@ -12,6 +12,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -50,7 +51,7 @@ fun TransactionList(
     var hasMorePages by state(true)
     var lastListDate by state<LocalDate?>(null)
     val listState = rememberLazyListState()
-    var loadTask by state<CompletableFuture<Any>?>(null)
+    var loadTask by state<CompletableFuture<Any>?>(value = null, persistent = false)
 
     fun loadTransactions(pageNumber: Int = 0, refresh: Boolean = false) {
         loadTask.cancel()
@@ -83,6 +84,7 @@ fun TransactionList(
     val context = object: TransactionListContext {
         override fun isLoading() = !loadTask.done()
         override fun refresh() = loadTransactions(refresh = true)
+        override fun containsData() = items.isNotEmpty()
     }
 
     LaunchedEffect(listState) {
@@ -96,6 +98,10 @@ fun TransactionList(
                     }
                 }
             }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { loadTask.cancel() }
     }
 
     PullToRefresh(
@@ -114,9 +120,16 @@ fun TransactionList(
 
             if (loadTask.done() && items.isEmpty()) {
                 Text(
-                    text = i18n(R.string.not_implemented),
+                    text = i18n(R.string.no_transactions_yet),
+                    style = MaterialTheme.typography.headlineMedium,
+                    modifier = Modifier.padding(top = 96.dp).fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    text = i18n(R.string.click_the_button_bellow_to_add),
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+                    textAlign = TextAlign.Center,
                 )
             } else {
                 LazyColumn(

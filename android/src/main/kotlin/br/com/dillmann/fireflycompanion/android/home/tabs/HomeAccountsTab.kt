@@ -50,7 +50,7 @@ fun HomeAccountsTab(
     var currentPage by state(0)
     var hasMorePages by state(true)
     val listState = rememberLazyListState()
-    var loadTask by state<CompletableFuture<Any>?>(null)
+    var loadTask by state<CompletableFuture<Any>?>(value = null, persistent = false)
 
     fun loadAccounts(pageNumber: Int = 0, refresh: Boolean = false) {
         loadTask.cancel()
@@ -82,11 +82,14 @@ fun HomeAccountsTab(
 
     LaunchedEffect(Unit) {
         resultNotifier.subscribe(::handleResult)
-        loadAccounts()
+
+        if (accounts.isEmpty() && loadTask.done())
+            loadAccounts()
     }
 
     DisposableEffect(Unit) {
         onDispose { resultNotifier.unsubscribe(::handleResult) }
+        onDispose { loadTask.cancel() }
     }
 
     LaunchedEffect(listState) {

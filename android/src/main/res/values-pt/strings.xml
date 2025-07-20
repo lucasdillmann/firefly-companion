@@ -91,4 +91,6 @@
     <string name="source_account">Conta de origem</string>
     <string name="destination_account">Conta de destino</string>
     <string name="date">Data</string>
+    <string name="no_transactions_yet">Nenhuma transação encontrada</string>
+    <string name="click_the_button_bellow_to_add">Toque no adicionar abaixo para criar a sua primeira</string>
 </resources>
