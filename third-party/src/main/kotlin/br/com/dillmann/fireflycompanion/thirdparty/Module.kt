@@ -2,6 +2,7 @@ package br.com.dillmann.fireflycompanion.thirdparty
 
 import br.com.dillmann.fireflycompanion.thirdparty.about.AboutModule
 import br.com.dillmann.fireflycompanion.thirdparty.account.AccountModule
+import br.com.dillmann.fireflycompanion.thirdparty.autocomplete.AutoCompleteModule
 import br.com.dillmann.fireflycompanion.thirdparty.connectiontest.ConnectionTestModule
 import br.com.dillmann.fireflycompanion.thirdparty.core.CoreModule
 import br.com.dillmann.fireflycompanion.thirdparty.currency.CurrencyModule
@@ -17,6 +18,7 @@ val ThirdPartyModule =
         loadKoinModules(CoreModule)
         loadKoinModules(AboutModule)
         loadKoinModules(AccountModule)
+        loadKoinModules(AutoCompleteModule)
         loadKoinModules(ConnectionTestModule)
         loadKoinModules(CurrencyModule)
         loadKoinModules(SummaryModule)

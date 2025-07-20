@@ -11,9 +11,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.components.autocomplete.AutoCompleteOutlinedTextField
 import br.com.dillmann.fireflycompanion.android.core.components.datepicker.DatePicker
 import br.com.dillmann.fireflycompanion.android.core.components.datepicker.DatePickerType
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.business.autocomplete.AutoCompleteType
+import br.com.dillmann.fireflycompanion.business.autocomplete.usecase.AutoCompleteUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction.Type
 import br.com.dillmann.fireflycompanion.core.validation.ValidationOutcome
 import java.time.OffsetDateTime
@@ -29,6 +33,7 @@ fun TransactionFormFields(
     transactionType: MutableState<Type>,
     validationOutcome: ValidationOutcome?
 ) {
+    val autoComplete = koin().get<AutoCompleteUseCase>()
     val supportedTypes = listOf(Type.DEPOSIT, Type.WITHDRAWAL, Type.TRANSFER)
     val sourceAccountRequiredTypes = listOf(Type.TRANSFER, Type.WITHDRAWAL)
     val destinationAccountRequiredTypes = listOf(Type.TRANSFER, Type.DEPOSIT)
@@ -46,12 +51,14 @@ fun TransactionFormFields(
         }
     }
 
-    OutlinedTextField(
-        value = description.value,
-        onValueChange = { description.value = it },
-        label = { Text(text = i18n(R.string.description)) },
+    AutoCompleteOutlinedTextField(
+        value = description,
+        label = i18n(R.string.description),
         modifier = Modifier.fillMaxWidth(),
         isError = validationOutcome?.messageFor("description") != null,
+        suggestionsProvider = {
+            autoComplete.getSuggestions(AutoCompleteType.DESCRIPTION, it)
+        },
         supportingText = {
             val message = validationOutcome?.messageFor("description")
             if (message != null) {
@@ -99,19 +106,20 @@ fun TransactionFormFields(
         }
     )
 
-    OutlinedTextField(
-        value = category.value,
-        onValueChange = { category.value = it },
-        label = { Text(text = i18n(R.string.category)) },
+    AutoCompleteOutlinedTextField(
+        value = category,
+        label = i18n(R.string.category),
         modifier = Modifier.fillMaxWidth(),
         supportingText = { null },
+        suggestionsProvider = {
+            autoComplete.getSuggestions(AutoCompleteType.CATEGORY, it)
+        },
     )
 
     if (transactionType.value in sourceAccountRequiredTypes) {
-        OutlinedTextField(
-            value = sourceAccount.value,
-            onValueChange = { sourceAccount.value = it },
-            label = { Text(text = i18n(R.string.source_account)) },
+        AutoCompleteOutlinedTextField(
+            value = sourceAccount,
+            label = i18n(R.string.source_account),
             modifier = Modifier.fillMaxWidth(),
             isError = validationOutcome?.messageFor("sourceAccountName") != null,
             supportingText = {
@@ -123,15 +131,17 @@ fun TransactionFormFields(
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
-            }
+            },
+            suggestionsProvider = {
+                autoComplete.getSuggestions(AutoCompleteType.ACCOUNT, it)
+            },
         )
     }
 
     if (transactionType.value in destinationAccountRequiredTypes) {
-        OutlinedTextField(
-            value = destinationAccount.value,
-            onValueChange = { destinationAccount.value = it },
-            label = { Text(text = i18n(R.string.destination_account)) },
+        AutoCompleteOutlinedTextField(
+            value = destinationAccount,
+            label = i18n(R.string.destination_account),
             modifier = Modifier.fillMaxWidth(),
             isError = validationOutcome?.messageFor("destinationAccountName") != null,
             supportingText = {
@@ -143,7 +153,10 @@ fun TransactionFormFields(
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
-            }
+            },
+            suggestionsProvider = {
+                autoComplete.getSuggestions(AutoCompleteType.ACCOUNT, it)
+            },
         )
     }
 }
