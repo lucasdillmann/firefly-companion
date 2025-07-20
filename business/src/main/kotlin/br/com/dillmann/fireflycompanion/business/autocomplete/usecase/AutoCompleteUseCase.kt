@@ -6,6 +6,6 @@ interface AutoCompleteUseCase {
     suspend fun getSuggestions(
         type: AutoCompleteType,
         searchTerms: String,
-        limit: Int = 10,
+        limit: Int = 25,
     ): List<String>
 }
