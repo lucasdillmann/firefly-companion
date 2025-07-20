@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.core.activity.async
 import br.com.dillmann.fireflycompanion.android.core.activity.result.ResultNotifier
-import br.com.dillmann.fireflycompanion.android.core.activity.state
+import br.com.dillmann.fireflycompanion.android.core.activity.persistent
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefreshWithScroll
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.android.home.HomeTabs
@@ -34,7 +34,7 @@ fun HomeMainTab(
     modifier: Modifier = Modifier,
 ) {
     val summaryUseCase = koin().get<GetSummaryUseCase>()
-    var summary by state { summaryUseCase.getSummary() }
+    var summary by persistent { summaryUseCase.getSummary() }
 
     fun reload() {
         summary = null

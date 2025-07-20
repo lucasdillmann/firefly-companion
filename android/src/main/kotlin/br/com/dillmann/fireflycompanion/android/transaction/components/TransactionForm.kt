@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.activity.async
-import br.com.dillmann.fireflycompanion.android.core.activity.state
+import br.com.dillmann.fireflycompanion.android.core.activity.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.business.currency.usecase.GetDefaultCurrencyUseCase
@@ -53,16 +53,16 @@ fun TransactionForm(
 ) {
     val editMode = transaction != null
     val scrollState = rememberScrollState()
-    val validationOutcome = state<ValidationOutcome?>(null)
-    val showLoading = state(false)
-    val showDeleteConfirmation = state(false)
-    val description = state(TextFieldValue(transaction?.description ?: ""))
-    val amount = state(TextFieldValue(transaction?.amount?.toString() ?: ""))
-    val category = state(TextFieldValue(transaction?.category ?: ""))
-    val dateTime = state(transaction?.date ?: OffsetDateTime.now())
-    val sourceAccount = state(TextFieldValue(transaction?.sourceAccountName ?: ""))
-    val destinationAccount = state(TextFieldValue(transaction?.destinationAccountName ?: ""))
-    val transactionType = state(transaction?.type ?: Transaction.Type.WITHDRAWAL)
+    val validationOutcome = volatile<ValidationOutcome?>(null)
+    val showLoading = volatile(false)
+    val showDeleteConfirmation = volatile(false)
+    val description = volatile(TextFieldValue(transaction?.description ?: ""))
+    val amount = volatile(TextFieldValue(transaction?.amount?.toString() ?: ""))
+    val category = volatile(TextFieldValue(transaction?.category ?: ""))
+    val dateTime = volatile(transaction?.date ?: OffsetDateTime.now())
+    val sourceAccount = volatile(TextFieldValue(transaction?.sourceAccountName ?: ""))
+    val destinationAccount = volatile(TextFieldValue(transaction?.destinationAccountName ?: ""))
+    val transactionType = volatile(transaction?.type ?: Transaction.Type.WITHDRAWAL)
 
     fun handleSave() {
         val saveAction = koin().get<SaveTransactionUseCase>()

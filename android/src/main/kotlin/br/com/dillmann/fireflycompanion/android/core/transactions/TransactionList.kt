@@ -22,7 +22,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.activity.async
-import br.com.dillmann.fireflycompanion.android.core.activity.state
+import br.com.dillmann.fireflycompanion.android.core.activity.emptyVolatile
+import br.com.dillmann.fireflycompanion.android.core.activity.persistent
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibilityToggle
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
@@ -46,12 +47,12 @@ fun TransactionList(
     transactionsProvider: suspend (PageRequest) -> Page<Transaction>,
     dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy"),
 ): TransactionListContext {
-    var items by state(emptyList<Any>())
-    var currentPage by state(0)
-    var hasMorePages by state(true)
-    var lastListDate by state<LocalDate?>(null)
+    var items by persistent(emptyList<Any>())
+    var currentPage by persistent(0)
+    var hasMorePages by persistent(true)
+    var lastListDate by persistent<LocalDate?>(null)
     val listState = rememberLazyListState()
-    var loadTask by state<CompletableFuture<Any>?>(value = null, persistent = false)
+    var loadTask by emptyVolatile<CompletableFuture<Unit>>()
 
     fun loadTransactions(pageNumber: Int = 0, refresh: Boolean = false) {
         loadTask.cancel()

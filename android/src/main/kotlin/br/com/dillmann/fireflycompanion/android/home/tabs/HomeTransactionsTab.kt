@@ -6,7 +6,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import br.com.dillmann.fireflycompanion.android.core.activity.result.ResultNotifier
-import br.com.dillmann.fireflycompanion.android.core.activity.state
+import br.com.dillmann.fireflycompanion.android.core.activity.persistent
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.android.core.transactions.TransactionList
 import br.com.dillmann.fireflycompanion.android.home.HomeTabs
@@ -22,7 +22,7 @@ fun HomeTransactionsTab(
 ) {
     val listUseCase = koin().get<ListTransactionsUseCase>()
     val searchUseCase = koin().get<SearchTransactionsUseCase>()
-    var searchTerms by state("")
+    var searchTerms by persistent("")
 
     val listContext = TransactionList(
         modifier = modifier,

@@ -9,8 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
@@ -24,6 +22,8 @@ import br.com.dillmann.fireflycompanion.android.core.activity.async
 import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.activity.emptyVolatile
+import br.com.dillmann.fireflycompanion.android.core.activity.volatile
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.business.serverconfig.ServerConfig
 import br.com.dillmann.fireflycompanion.business.serverconfig.usecase.SaveConfigUseCase
@@ -35,11 +35,11 @@ class OnboardingServerFormActivity : PreconfiguredActivity() {
     @Composable
     override fun Content(padding: PaddingValues) {
         val scrollState = rememberScrollState()
-        val serverUrl = remember { mutableStateOf(TextFieldValue()) }
-        val accessToken = remember { mutableStateOf(TextFieldValue()) }
-        val validationOutcome = remember { mutableStateOf<ValidationOutcome?>(null) }
-        val showLoading = remember { mutableStateOf(false) }
-        val errorDialog = remember { mutableStateOf<MessageException?>(null) }
+        val serverUrl = volatile(TextFieldValue())
+        val accessToken = volatile(TextFieldValue())
+        val validationOutcome = emptyVolatile<ValidationOutcome?>()
+        val showLoading = volatile(false)
+        val errorDialog = emptyVolatile<MessageException>()
 
         Column(
             modifier = Modifier

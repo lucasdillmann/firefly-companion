@@ -21,9 +21,10 @@ import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.accounts.AccountFormActivity
 import br.com.dillmann.fireflycompanion.android.core.activity.async
+import br.com.dillmann.fireflycompanion.android.core.activity.emptyVolatile
 import br.com.dillmann.fireflycompanion.android.core.activity.result.ResultNotifier
 import br.com.dillmann.fireflycompanion.android.core.activity.start
-import br.com.dillmann.fireflycompanion.android.core.activity.state
+import br.com.dillmann.fireflycompanion.android.core.activity.persistent
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibilityToggle
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
@@ -46,11 +47,11 @@ fun HomeAccountsTab(
     modifier: Modifier = Modifier,
 ) {
     val listUseCase = koin().get<ListAccountsUseCase>()
-    var accounts by state(emptyList<Account>())
-    var currentPage by state(0)
-    var hasMorePages by state(true)
+    var accounts by persistent(emptyList<Account>())
+    var currentPage by persistent(0)
+    var hasMorePages by persistent(true)
     val listState = rememberLazyListState()
-    var loadTask by state<CompletableFuture<Any>?>(value = null, persistent = false)
+    var loadTask by emptyVolatile<CompletableFuture<Unit>>()
 
     fun loadAccounts(pageNumber: Int = 0, refresh: Boolean = false) {
         loadTask.cancel()

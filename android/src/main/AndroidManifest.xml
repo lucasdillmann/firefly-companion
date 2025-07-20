@@ -22,7 +22,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".accounts.AccountFormActivity"/>
-        <activity android:name=".assistant.AssistantActivity"/>
         <activity android:name=".biometric.BiometricUnlockActivity"/>
         <activity android:name=".home.HomeActivity"/>
         <activity android:name=".transaction.TransactionFormActivity"/>

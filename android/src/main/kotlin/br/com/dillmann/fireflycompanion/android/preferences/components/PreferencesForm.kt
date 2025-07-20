@@ -8,7 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.core.activity.async
 import br.com.dillmann.fireflycompanion.android.core.activity.start
-import br.com.dillmann.fireflycompanion.android.core.activity.state
+import br.com.dillmann.fireflycompanion.android.core.activity.volatile
 import br.com.dillmann.fireflycompanion.android.core.context.AppContext
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.android.core.theme.AppThemeContext
@@ -25,7 +25,7 @@ fun PreferencesForm(
     val getPreferences = koin().get<GetPreferencesUseCase>()
     val context = LocalContext.current
     val currentPreferences = async { getPreferences.getPreferences() }.join()
-    val state = state(currentPreferences)
+    val state = volatile(currentPreferences)
 
     Column(
         modifier = Modifier

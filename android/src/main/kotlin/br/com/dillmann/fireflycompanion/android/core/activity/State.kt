@@ -4,25 +4,27 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 
 @Composable
-fun <T> state(
-    persistent: Boolean = true,
-    loader: suspend () -> T,
-): MutableState<T?> {
-    val stateHolder =
-        if (persistent) rememberSaveable { mutableStateOf<T?>(null) }
-        else remember { mutableStateOf<T?>(null) }
+fun <T> persistent(loader: suspend () -> T, ): MutableState<T?> {
+    val stateHolder = rememberSaveable { mutableStateOf<T?>(null) }
 
     LaunchedEffect(Unit) {
-        async { stateHolder.value = loader() }.join()
+        async {
+            if (stateHolder.value == null)
+                stateHolder.value = loader()
+        }
     }
 
     return stateHolder
 }
 
 @Composable
-fun <T> state(
-    value: T,
-    persistent: Boolean = true,
-): MutableState<T> =
-    if (persistent) rememberSaveable { mutableStateOf(value) }
-    else remember { mutableStateOf(value) }
+fun <T> persistent(value: T): MutableState<T> =
+    rememberSaveable { mutableStateOf(value) }
+
+@Composable
+fun <T> volatile(value: T): MutableState<T> =
+    remember { mutableStateOf(value) }
+
+@Composable
+fun <T> emptyVolatile(): MutableState<T?> =
+    volatile(null)

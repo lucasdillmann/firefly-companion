@@ -4,16 +4,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.activity.volatile
 
 @Composable
 fun OnboardingServerFormButtons(onContinue: () -> Unit) {
-    val showDialog = remember { mutableStateOf(false) }
+    val showDialog = volatile(false)
 
     Row(
         modifier = Modifier.padding(bottom = 32.dp).fillMaxWidth(),

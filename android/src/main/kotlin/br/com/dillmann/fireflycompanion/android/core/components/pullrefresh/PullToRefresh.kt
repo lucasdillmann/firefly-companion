@@ -11,7 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import br.com.dillmann.fireflycompanion.android.core.activity.async
-import br.com.dillmann.fireflycompanion.android.core.activity.state
+import br.com.dillmann.fireflycompanion.android.core.activity.persistent
 import java.lang.Thread.sleep
 
 @Composable
@@ -23,7 +23,7 @@ fun PullToRefresh(
     content: @Composable () -> Unit,
 ) {
     val pullState = rememberPullToRefreshState()
-    var refreshing by state(false)
+    var refreshing by persistent(false)
 
     fun handleRefresh() {
         refreshing = true

@@ -18,6 +18,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.activity.volatile
 import br.com.dillmann.fireflycompanion.core.validation.ValidationOutcome
 
 @Composable
@@ -29,8 +30,8 @@ fun OnboardingServerFormFields(
 ) {
     val serverUrlFocusRequester = remember { FocusRequester() }
     val accessTokenFocusRequester = remember { FocusRequester() }
-    val serverUrlFocused = remember { mutableStateOf(false) }
-    val accessTokenFocused = remember { mutableStateOf(false) }
+    val serverUrlFocused = volatile(false)
+    val accessTokenFocused = volatile(false)
 
     LaunchedEffect(serverUrlFocused.value, accessTokenFocused.value) {
         if (serverUrlFocused.value) {

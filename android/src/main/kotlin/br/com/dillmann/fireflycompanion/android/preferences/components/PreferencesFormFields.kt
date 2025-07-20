@@ -11,6 +11,7 @@ import br.com.dillmann.fireflycompanion.android.biometric.Biometrics
 import br.com.dillmann.fireflycompanion.android.core.extensions.description
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.activity.volatile
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
 
 @Composable
@@ -20,9 +21,9 @@ fun PreferencesFormFields(
 ) {
     val context = LocalContext.current
     val preferences = state.value
-    var themeExpanded by remember { mutableStateOf(false) }
-    var languageExpanded by remember { mutableStateOf(false) }
-    var biometricsNotSupportedWarningVisible by remember { mutableStateOf(false) }
+    var themeExpanded by volatile(false)
+    var languageExpanded by volatile(false)
+    var biometricsNotSupportedWarningVisible by volatile(false)
 
     fun testBiometrics() {
         Biometrics.test(context) {

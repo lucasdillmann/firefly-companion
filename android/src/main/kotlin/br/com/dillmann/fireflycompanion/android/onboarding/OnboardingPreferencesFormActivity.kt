@@ -2,14 +2,14 @@ package br.com.dillmann.fireflycompanion.android.onboarding
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
+import br.com.dillmann.fireflycompanion.android.core.activity.async
 import br.com.dillmann.fireflycompanion.android.core.activity.start
+import br.com.dillmann.fireflycompanion.android.core.activity.volatile
 import br.com.dillmann.fireflycompanion.android.core.context.AppContext
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
@@ -28,8 +28,8 @@ class OnboardingPreferencesFormActivity : PreconfiguredActivity() {
 
     @Composable
     override fun Content(padding: PaddingValues) {
-        val currentPreferences = runBlocking { getPreferences.getPreferences() }
-        val preferences = remember { mutableStateOf(currentPreferences) }
+        val currentPreferences = async { getPreferences.getPreferences() }.get()
+        val preferences = volatile(currentPreferences)
 
         Column(
             modifier = Modifier
