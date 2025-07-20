@@ -1,6 +1,7 @@
 package br.com.dillmann.fireflycompanion.android.home.tabs
 
 import android.app.Activity.RESULT_OK
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -9,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.core.activity.async
 import br.com.dillmann.fireflycompanion.android.core.activity.result.ResultNotifier
 import br.com.dillmann.fireflycompanion.android.core.activity.state
@@ -59,15 +61,16 @@ fun HomeMainTab(
     PullToRefreshWithScroll(
         onRefresh = ::reload,
         modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(top = 8.dp, bottom = 96.dp),
     ) {
-        HomeOverview(summary)
-        HomeCreditCards()
-        HomeAccounts()
-        HomeExpensesByCategory()
-        HomeBudgets()
-        HomeMonthlySavings()
-        HomeSpendFrequency()
-        HomeMonthlyBalance()
-        HomeGoals()
+        item { HomeOverview(summary) }
+        item { HomeCreditCards() }
+        item { HomeAccounts() }
+        item { HomeExpensesByCategory() }
+        item { HomeBudgets() }
+        item { HomeMonthlySavings() }
+        item { HomeSpendFrequency() }
+        item { HomeMonthlyBalance() }
+        item { HomeGoals() }
     }
 }

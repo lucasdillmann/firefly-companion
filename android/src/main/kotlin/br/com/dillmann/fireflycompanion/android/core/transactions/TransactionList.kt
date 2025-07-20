@@ -122,7 +122,7 @@ fun TransactionList(
                 LazyColumn(
                     state = listState,
                     modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(vertical = 8.dp),
+                    contentPadding = PaddingValues(top = 8.dp, bottom = 96.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     items(items) {
