@@ -41,7 +41,10 @@ import java.util.logging.Logger
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun HomeAccountsTab(resultNotifier: ResultNotifier) {
+fun HomeAccountsTab(
+    resultNotifier: ResultNotifier,
+    modifier: Modifier = Modifier,
+) {
     val listUseCase = koin().get<ListAccountsUseCase>()
     var accounts by state(emptyList<Account>())
     var currentPage by state(0)
@@ -102,7 +105,7 @@ fun HomeAccountsTab(resultNotifier: ResultNotifier) {
     PullToRefresh(
         onRefresh = { loadAccounts(refresh = true) },
         enabled = loadTask.done(),
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
     ) {
         Section(
             title = i18n(R.string.accounts),

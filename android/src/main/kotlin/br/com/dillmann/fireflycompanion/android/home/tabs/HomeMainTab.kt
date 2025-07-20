@@ -28,7 +28,10 @@ import br.com.dillmann.fireflycompanion.business.summary.usecase.GetSummaryUseCa
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun HomeMainTab(resultNotifier: ResultNotifier) {
+fun HomeMainTab(
+    resultNotifier: ResultNotifier,
+    modifier: Modifier = Modifier,
+) {
     val summaryUseCase = koin().get<GetSummaryUseCase>()
     var summary by state { summaryUseCase.getSummary() }
 
@@ -55,7 +58,7 @@ fun HomeMainTab(resultNotifier: ResultNotifier) {
 
     PullToRefreshWithScroll(
         onRefresh = ::reload,
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
     ) {
         HomeOverview(summary)
         HomeCreditCards()

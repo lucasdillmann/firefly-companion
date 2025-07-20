@@ -44,7 +44,7 @@ fun PullToRefresh(
                 enabled = enabled,
             )
             .fillMaxHeight(),
-        contentAlignment = Alignment.TopStart
+        contentAlignment = Alignment.TopStart,
     ) {
         content()
 

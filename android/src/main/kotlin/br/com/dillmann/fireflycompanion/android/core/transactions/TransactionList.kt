@@ -40,6 +40,7 @@ import kotlin.collections.plus
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun TransactionList(
+    modifier: Modifier = Modifier,
     header: @Composable ((TransactionListContext) -> Unit)? = null,
     transactionsProvider: suspend (PageRequest) -> Page<Transaction>,
     dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy"),
@@ -100,7 +101,7 @@ fun TransactionList(
     PullToRefresh(
         onRefresh = { loadTransactions(refresh = true) },
         enabled = loadTask.done(),
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
     ) {
         Section(
             title = i18n(R.string.tab_transactions),

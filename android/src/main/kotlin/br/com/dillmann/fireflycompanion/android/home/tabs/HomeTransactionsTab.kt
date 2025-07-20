@@ -4,6 +4,7 @@ import android.app.Activity.RESULT_OK
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import br.com.dillmann.fireflycompanion.android.core.activity.result.ResultNotifier
 import br.com.dillmann.fireflycompanion.android.core.activity.state
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
@@ -15,12 +16,16 @@ import br.com.dillmann.fireflycompanion.business.transaction.usecase.SearchTrans
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun HomeTransactionsTab(resultNotifier: ResultNotifier) {
+fun HomeTransactionsTab(
+    resultNotifier: ResultNotifier,
+    modifier: Modifier = Modifier,
+) {
     val listUseCase = koin().get<ListTransactionsUseCase>()
     val searchUseCase = koin().get<SearchTransactionsUseCase>()
     var searchTerms by state("")
 
     val listContext = TransactionList(
+        modifier = modifier,
         header = { context ->
             HomeTransactionsSearchField(
                 searchTerms = searchTerms,
