@@ -1,0 +1,131 @@
+package br.com.dillmann.fireflycompanion.android.core.transactions
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.filled.QuestionMark
+import androidx.compose.material.icons.filled.SwapHoriz
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import br.com.dillmann.fireflycompanion.android.core.activity.start
+import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
+import br.com.dillmann.fireflycompanion.android.home.HomeTabs
+import br.com.dillmann.fireflycompanion.android.transaction.TransactionFormActivity
+import br.com.dillmann.fireflycompanion.business.transaction.Transaction
+
+@Composable
+fun TransactionListItem(
+    transaction: Transaction,
+) {
+    val context = LocalContext.current
+    val (icon, tint) = when (transaction.type) {
+        Transaction.Type.WITHDRAWAL -> Icons.Default.ArrowUpward to Color(0xFFF44336)
+        Transaction.Type.DEPOSIT -> Icons.Default.ArrowDownward to Color(0xFF4CAF50)
+        Transaction.Type.TRANSFER -> Icons.Default.SwapHoriz to Color(0xFF2196F3)
+        else -> Icons.Default.QuestionMark to Color.Unspecified
+    }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        onClick = {
+            context.start<TransactionFormActivity>(
+                extras = mapOf("transaction" to transaction),
+                requestCode = HomeTabs.TRANSACTIONS.ordinal,
+            )
+        }
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .padding(end = 8.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = transaction.type.name,
+                    tint = tint,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 8.dp)
+            ) {
+                Text(
+                    text = transaction.description,
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val text =
+                        when {
+                            transaction.type == Transaction.Type.TRANSFER ->
+                                "${transaction.sourceAccountName} → ${transaction.destinationAccountName}"
+
+                            transaction.category != null ->
+                                transaction.category!!
+
+                            else ->
+                                ""
+
+                        }
+
+                    Text(
+                        text = text,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+
+            Column {
+                MoneyText(
+                    value = transaction.amount,
+                    currency = transaction.currency,
+                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                    color = tint,
+                    horizontalArrangement = Arrangement.End,
+                )
+            }
+        }
+    }
+}

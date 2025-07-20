@@ -28,6 +28,7 @@ import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibilityToggle
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
+import br.com.dillmann.fireflycompanion.android.core.extensions.cancel
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.android.home.HomeTabs
@@ -49,7 +50,7 @@ fun HomeAccountsTab(resultNotifier: ResultNotifier) {
     var loadTask by state<CompletableFuture<Any>?>(null)
 
     fun loadAccounts(pageNumber: Int = 0, refresh: Boolean = false) {
-        loadTask?.cancel(true)
+        loadTask.cancel()
         if (refresh) {
             hasMorePages = true
             currentPage = 0

@@ -16,6 +16,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.TextFieldValue
 import br.com.dillmann.fireflycompanion.android.core.activity.async
 import br.com.dillmann.fireflycompanion.android.core.activity.state
+import br.com.dillmann.fireflycompanion.android.core.extensions.cancel
 import java.util.concurrent.CompletableFuture
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,7 +35,7 @@ fun AutoCompleteOutlinedTextField(
     val showDropdown = suggestions.isNotEmpty() && expanded
 
     fun fetchSuggestions() {
-        searchJob?.cancel(true)
+        searchJob.cancel()
         searchJob = async {
             suggestions = suggestionsProvider(value.value.text)
         }
@@ -75,7 +76,7 @@ fun AutoCompleteOutlinedTextField(
                     text = { Text(it) },
                     onClick = {
                         value.value = TextFieldValue(it)
-                        searchJob?.cancel(true)
+                        searchJob.cancel()
                         expanded = false
                     }
                 )
