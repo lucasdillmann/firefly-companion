@@ -133,8 +133,11 @@ fun TransactionForm(
     Scaffold(
         topBar = {
             TopAppBar(
+                modifier = Modifier.padding(end = 8.dp),
                 title = {
-                    val key = if (editMode) R.string.edit_transaction else R.string.new_transaction
+                    val key =
+                        if (editMode) R.string.edit_transaction
+                        else R.string.new_transaction
                     Text(text = i18n(key))
                 },
                 actions = {

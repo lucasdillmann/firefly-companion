@@ -26,13 +26,12 @@ import br.com.dillmann.fireflycompanion.android.core.activity.result.ResultNotif
 import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.activity.persistent
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
-import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibilityToggle
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.extensions.cancel
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
-import br.com.dillmann.fireflycompanion.android.home.HomeTabs
+import br.com.dillmann.fireflycompanion.android.home.components.HomeTopActions
 import br.com.dillmann.fireflycompanion.business.account.Account
 import br.com.dillmann.fireflycompanion.business.account.usecase.ListAccountsUseCase
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
@@ -114,7 +113,7 @@ fun HomeAccountsTab(
         Section(
             title = i18n(R.string.accounts),
             rightContent = {
-                MoneyVisibilityToggle()
+                HomeTopActions()
             }
         ) {
             if (loadTask.done() && accounts.isEmpty()) {
@@ -126,7 +125,7 @@ fun HomeAccountsTab(
             } else {
                 LazyColumn(
                     state = listState,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(top = 8.dp, bottom = 96.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {

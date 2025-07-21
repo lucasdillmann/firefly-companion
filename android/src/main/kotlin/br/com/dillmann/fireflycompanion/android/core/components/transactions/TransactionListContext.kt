@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.core.transactions
+package br.com.dillmann.fireflycompanion.android.core.components.transactions
 
 interface TransactionListContext {
     fun isLoading(): Boolean

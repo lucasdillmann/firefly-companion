@@ -4,50 +4,30 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
-import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
-import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibilityToggle
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
-import br.com.dillmann.fireflycompanion.android.preferences.PreferencesActivity
 import br.com.dillmann.fireflycompanion.business.summary.Summary
 import java.math.BigDecimal
 
 @Composable
 fun HomeOverview(summary: Summary?) {
     val scrollState = rememberScrollState()
-    val context = LocalContext.current
 
     Section(
         title = i18n(R.string.overview),
         rightContent = {
-            val baseSize = MaterialTheme.typography.headlineSmall.lineHeight.value.dp
-            MoneyVisibilityToggle(
-                modifier = Modifier.size(baseSize),
-            )
-
-            IconButton(
-                modifier = Modifier.size(baseSize),
-                onClick = { context.start<PreferencesActivity>() }
-            ) {
-                Icon(
-                    contentDescription = i18n(R.string.open_preferences),
-                    imageVector = Icons.Filled.Settings,
-                )
-            }
+            HomeTopActions()
         }
     ) {
 

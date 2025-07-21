@@ -16,7 +16,6 @@ import br.com.dillmann.fireflycompanion.android.core.activity.result.ResultNotif
 import br.com.dillmann.fireflycompanion.android.core.activity.persistent
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefreshWithScroll
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
-import br.com.dillmann.fireflycompanion.android.home.HomeTabs
 import br.com.dillmann.fireflycompanion.android.home.components.HomeBudgets
 import br.com.dillmann.fireflycompanion.android.home.components.HomeCreditCards
 import br.com.dillmann.fireflycompanion.android.home.components.HomeExpensesByCategory
@@ -60,7 +59,7 @@ fun HomeMainTab(
     PullToRefreshWithScroll(
         onRefresh = ::reload,
         modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(top = 8.dp, bottom = 96.dp),
+        contentPadding = PaddingValues(bottom = 96.dp),
     ) {
         item { HomeOverview(summary) }
         item { HomeCreditCards() }

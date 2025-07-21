@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.core.transactions
+package br.com.dillmann.fireflycompanion.android.core.components.transactions
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,12 +24,12 @@ import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.activity.async
 import br.com.dillmann.fireflycompanion.android.core.activity.emptyVolatile
 import br.com.dillmann.fireflycompanion.android.core.activity.persistent
-import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibilityToggle
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.extensions.cancel
 import br.com.dillmann.fireflycompanion.android.core.extensions.done
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.home.components.HomeTopActions
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 import br.com.dillmann.fireflycompanion.core.pagination.Page
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
@@ -113,7 +113,7 @@ fun TransactionList(
         Section(
             title = i18n(R.string.tab_transactions),
             rightContent = {
-                MoneyVisibilityToggle()
+                HomeTopActions()
             }
         ) {
             if (header != null)
@@ -135,7 +135,7 @@ fun TransactionList(
             } else {
                 LazyColumn(
                     state = listState,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(top = 8.dp, bottom = 96.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {

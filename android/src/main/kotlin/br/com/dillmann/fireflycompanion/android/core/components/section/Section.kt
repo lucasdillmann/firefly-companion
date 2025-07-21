@@ -21,13 +21,16 @@ fun Section(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
-        modifier = modifier.fillMaxWidth().padding(16.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
     ) {
-        Row {
+        Row(
+            modifier = Modifier.padding(top = 16.dp, bottom = 12.dp)
+        ) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 8.dp),
             )
 
             if (rightContent != null) {

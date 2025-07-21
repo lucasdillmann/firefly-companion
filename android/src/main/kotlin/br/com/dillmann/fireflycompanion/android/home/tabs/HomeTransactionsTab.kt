@@ -8,8 +8,7 @@ import androidx.compose.ui.Modifier
 import br.com.dillmann.fireflycompanion.android.core.activity.result.ResultNotifier
 import br.com.dillmann.fireflycompanion.android.core.activity.persistent
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
-import br.com.dillmann.fireflycompanion.android.core.transactions.TransactionList
-import br.com.dillmann.fireflycompanion.android.home.HomeTabs
+import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionList
 import br.com.dillmann.fireflycompanion.android.home.components.HomeTransactionsSearchField
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.ListTransactionsUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.SearchTransactionsUseCase

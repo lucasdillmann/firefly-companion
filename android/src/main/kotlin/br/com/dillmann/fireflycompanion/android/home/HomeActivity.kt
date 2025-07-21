@@ -33,6 +33,7 @@ import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.home.tabs.HomeAccountsTab
 import br.com.dillmann.fireflycompanion.android.home.tabs.HomeAssistantTab
 import br.com.dillmann.fireflycompanion.android.home.tabs.HomeMainTab
+import br.com.dillmann.fireflycompanion.android.home.tabs.HomeTabs
 import br.com.dillmann.fireflycompanion.android.home.tabs.HomeTransactionsTab
 import br.com.dillmann.fireflycompanion.android.transaction.TransactionFormActivity
 

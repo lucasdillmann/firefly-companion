@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.core.transactions
+package br.com.dillmann.fireflycompanion.android.core.components.transactions
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,7 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
-import br.com.dillmann.fireflycompanion.android.home.HomeTabs
+import br.com.dillmann.fireflycompanion.android.home.tabs.HomeTabs
 import br.com.dillmann.fireflycompanion.android.transaction.TransactionFormActivity
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 
