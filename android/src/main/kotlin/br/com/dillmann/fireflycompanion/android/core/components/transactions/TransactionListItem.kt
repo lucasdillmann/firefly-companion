@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.QuestionMark
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.Card
@@ -30,6 +31,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
+import br.com.dillmann.fireflycompanion.android.core.theme.Colors
 import br.com.dillmann.fireflycompanion.android.home.tabs.HomeTabs
 import br.com.dillmann.fireflycompanion.android.transaction.TransactionFormActivity
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
@@ -37,12 +39,20 @@ import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 @Composable
 fun TransactionListItem(
     transaction: Transaction,
+    showAccountNameOnReconciliation: Boolean,
 ) {
     val context = LocalContext.current
     val (icon, tint) = when (transaction.type) {
-        Transaction.Type.WITHDRAWAL -> Icons.Default.ArrowUpward to Color(0xFFF44336)
-        Transaction.Type.DEPOSIT -> Icons.Default.ArrowDownward to Color(0xFF4CAF50)
-        Transaction.Type.TRANSFER -> Icons.Default.SwapHoriz to Color(0xFF2196F3)
+        Transaction.Type.WITHDRAWAL -> Icons.Default.ArrowUpward to Colors.RED
+        Transaction.Type.DEPOSIT -> Icons.Default.ArrowDownward to Colors.GREEN
+        Transaction.Type.TRANSFER -> Icons.Default.SwapHoriz to Colors.BLUE
+        Transaction.Type.RECONCILIATION -> {
+            val icon = Icons.Default.Build
+            if (transaction.destinationAccountName!!.contains("reconciliation"))
+                icon to Colors.RED
+            else
+                icon to Colors.GREEN
+        }
         else -> Icons.Default.QuestionMark to Color.Unspecified
     }
 
@@ -98,6 +108,12 @@ fun TransactionListItem(
                         when {
                             transaction.type == Transaction.Type.TRANSFER ->
                                 "${transaction.sourceAccountName} → ${transaction.destinationAccountName}"
+
+                            transaction.type == Transaction.Type.RECONCILIATION && showAccountNameOnReconciliation ->
+                                if (transaction.sourceAccountName!!.contains("reconciliation"))
+                                    transaction.destinationAccountName!!
+                                else
+                                    transaction.sourceAccountName!!
 
                             transaction.category != null ->
                                 transaction.category!!

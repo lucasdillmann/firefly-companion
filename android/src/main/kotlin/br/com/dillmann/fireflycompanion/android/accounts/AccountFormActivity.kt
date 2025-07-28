@@ -1,25 +1,24 @@
 package br.com.dillmann.fireflycompanion.android.accounts
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.accounts.components.AccountDetails
 import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
-import br.com.dillmann.fireflycompanion.android.core.components.section.Section
-import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.activity.volatile
+import br.com.dillmann.fireflycompanion.business.account.Account
 
 class AccountFormActivity : PreconfiguredActivity() {
+    private var account: Account? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        account = intent.getSerializableExtra("account", Account::class.java)
+    }
+
     @Composable
     override fun Content(padding: PaddingValues) {
-        Section(
-            title = i18n(R.string.account),
-            modifier = Modifier.padding(padding),
-        ) {
-            Text(
-                text = i18n(R.string.not_implemented),
-            )
-        }
+        val state = volatile(account!!)
+        AccountDetails(state, resultNotifier)
     }
 }

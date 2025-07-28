@@ -1,0 +1,150 @@
+package br.com.dillmann.fireflycompanion.android.accounts.components
+
+import android.app.Activity.RESULT_OK
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.activity.async
+import br.com.dillmann.fireflycompanion.android.core.activity.result.ResultNotifier
+import br.com.dillmann.fireflycompanion.android.core.activity.volatile
+import br.com.dillmann.fireflycompanion.android.core.components.section.Section
+import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionList
+import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionListContext
+import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.business.account.Account
+import br.com.dillmann.fireflycompanion.business.account.usecase.GetAccountUseCase
+import br.com.dillmann.fireflycompanion.business.account.usecase.UpdateAccountBalanceUseCase
+import br.com.dillmann.fireflycompanion.business.transaction.usecase.ListTransactionsUseCase
+import org.koin.java.KoinJavaComponent.getKoin
+import java.math.BigDecimal
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun AccountDetails(
+    state: MutableState<Account>,
+    resultNotifier: ResultNotifier,
+) {
+    var account by state
+    var balanceState by volatile(TextFieldValue(account.currentBalance.toString()))
+    var showLoading by volatile(false)
+
+    var listContext: TransactionListContext? = null
+    val listTransactionsUseCase = getKoin().get<ListTransactionsUseCase>()
+    val updateBalanceUseCase = getKoin().get<UpdateAccountBalanceUseCase>()
+    val getAccountUseCase = getKoin().get<GetAccountUseCase>()
+
+    fun updateBalance() {
+        showLoading = true
+
+        async {
+            val newBalance = BigDecimal(balanceState.text)
+            account = updateBalanceUseCase.updateBalance(account.id, newBalance)
+
+            listContext?.refresh()
+            showLoading = false
+        }
+    }
+
+    fun handleResult(requestCode: Int, resultCode: Int) {
+        if (resultCode != RESULT_OK)
+            return
+
+        showLoading = true
+
+        async {
+            account = getAccountUseCase.getAccount(account.id)!!
+            listContext!!.refresh()
+
+            showLoading = false
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        resultNotifier.subscribe(::handleResult)
+
+        if (!listContext!!.isLoading() && !listContext!!.containsData())
+            listContext!!.refresh()
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { resultNotifier.unsubscribe(::handleResult) }
+    }
+
+    LaunchedEffect(account) {
+        balanceState = TextFieldValue(account.currentBalance.toString())
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                modifier = Modifier.padding(end = 8.dp),
+                title = {
+                    Text(text = account.name)
+                },
+                actions = {
+                    Button(
+                        onClick = { updateBalance() }
+                    ) {
+                        Text(i18n(R.string.save))
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        Column(modifier = Modifier.padding(innerPadding)) {
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 16.dp),
+                value = balanceState,
+                onValueChange = { balanceState = it },
+                label = { Text(i18n(R.string.balance)) },
+                textStyle = LocalTextStyle.current.copy(
+                    textAlign = TextAlign.Center,
+                    fontSize = LocalTextStyle.current.fontSize.times(2),
+                ),
+                singleLine = true,
+            )
+
+            Section(
+                title = i18n(R.string.tab_transactions),
+            ) {
+                listContext = TransactionList(
+                    showAccountNameOnReconciliation = false,
+                    transactionsProvider = { listTransactionsUseCase.list(page = it, accountId = account.id) },
+                )
+            }
+        }
+    }
+
+    if (showLoading) {
+        Dialog(onDismissRequest = {}) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                CircularProgressIndicator()
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(text = i18n(R.string.loading))
+            }
+        }
+    }
+}

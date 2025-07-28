@@ -8,6 +8,7 @@ import java.time.LocalDate
 interface ListTransactionsUseCase {
     suspend fun list(
         page: PageRequest,
+        accountId: String? = null,
         startDate: LocalDate? = null,
         endDate: LocalDate? = null,
     ): Page<Transaction>

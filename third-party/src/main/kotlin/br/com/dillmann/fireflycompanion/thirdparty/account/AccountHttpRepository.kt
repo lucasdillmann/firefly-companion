@@ -10,7 +10,7 @@ import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.AccountTypeFil
 
 internal class AccountHttpRepository(
     private val api: AccountsApi,
-    private val converter: AccountConverter
+    private val converter: AccountConverter,
 ) : AccountRepository {
     override suspend fun findAccounts(page: PageRequest, type: String?): Page<Account> {
         val response = api.listAccount(
@@ -19,6 +19,12 @@ internal class AccountHttpRepository(
             type = AccountTypeFilter.decode(type),
         )
 
-        return response.meta.toPage(response.data) { converter.toDomain(it) }
+        return response.meta.toPage(
+            items = response.data.sortedBy { it.attributes.name },
+            converter = converter::toDomain,
+        )
     }
+
+    override suspend fun findById(accountId: String): Account? =
+        api.getAccount(accountId).data.let(converter::toDomain)
 }

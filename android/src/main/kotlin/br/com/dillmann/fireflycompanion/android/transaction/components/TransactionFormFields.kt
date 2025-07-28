@@ -31,12 +31,13 @@ fun TransactionFormFields(
     sourceAccount: MutableState<TextFieldValue>,
     destinationAccount: MutableState<TextFieldValue>,
     transactionType: MutableState<Type>,
-    validationOutcome: ValidationOutcome?
+    validationOutcome: ValidationOutcome?,
 ) {
     val autoComplete = koin().get<AutoCompleteUseCase>()
     val supportedTypes = listOf(Type.DEPOSIT, Type.WITHDRAWAL, Type.TRANSFER)
-    val sourceAccountRequiredTypes = listOf(Type.TRANSFER, Type.WITHDRAWAL)
-    val destinationAccountRequiredTypes = listOf(Type.TRANSFER, Type.DEPOSIT)
+    val sourceAccountRequiredTypes = listOf(Type.TRANSFER, Type.WITHDRAWAL, Type.RECONCILIATION)
+    val destinationAccountRequiredTypes = listOf(Type.TRANSFER, Type.DEPOSIT, Type.RECONCILIATION)
+    val disabled = transactionType.value !in supportedTypes
 
     Row(
         modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
@@ -46,7 +47,8 @@ fun TransactionFormFields(
             FilterChip(
                 selected = transactionType.value == type,
                 onClick = { transactionType.value = type },
-                label = { Text(type.name) }
+                label = { Text(type.name) },
+                enabled = !disabled,
             )
         }
     }
@@ -55,6 +57,7 @@ fun TransactionFormFields(
         value = description,
         label = i18n(R.string.description),
         modifier = Modifier.fillMaxWidth(),
+        disabled = disabled,
         isError = validationOutcome?.messageFor("description") != null,
         suggestionsProvider = {
             autoComplete.getSuggestions(AutoCompleteType.DESCRIPTION, it)
@@ -76,6 +79,7 @@ fun TransactionFormFields(
         onValueChange = { amount.value = it },
         label = { Text(text = i18n(R.string.amount)) },
         modifier = Modifier.fillMaxWidth(),
+        enabled = !disabled,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
         isError = validationOutcome?.messageFor("amount") != null,
         supportingText = {
@@ -94,6 +98,7 @@ fun TransactionFormFields(
         dateTimeState = dateTime,
         type = DatePickerType.DATE_ONLY,
         label = i18n(R.string.date),
+        enabled = !disabled,
         supportingText = {
             val message = validationOutcome?.messageFor("dateTime")
             if (message != null) {
@@ -110,6 +115,7 @@ fun TransactionFormFields(
         value = category,
         label = i18n(R.string.category),
         modifier = Modifier.fillMaxWidth(),
+        disabled = disabled,
         supportingText = { null },
         suggestionsProvider = {
             autoComplete.getSuggestions(AutoCompleteType.CATEGORY, it)
@@ -121,6 +127,7 @@ fun TransactionFormFields(
             value = sourceAccount,
             label = i18n(R.string.source_account),
             modifier = Modifier.fillMaxWidth(),
+            disabled = disabled,
             isError = validationOutcome?.messageFor("sourceAccountName") != null,
             supportingText = {
                 val message = validationOutcome?.messageFor("sourceAccountName")
@@ -143,6 +150,7 @@ fun TransactionFormFields(
             value = destinationAccount,
             label = i18n(R.string.destination_account),
             modifier = Modifier.fillMaxWidth(),
+            disabled = disabled,
             isError = validationOutcome?.messageFor("destinationAccountName") != null,
             supportingText = {
                 val message = validationOutcome?.messageFor("destinationAccountName")

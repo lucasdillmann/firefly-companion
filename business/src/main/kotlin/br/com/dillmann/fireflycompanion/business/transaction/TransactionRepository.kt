@@ -5,7 +5,7 @@ import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
 import java.time.LocalDate
 
 interface TransactionRepository {
-    suspend fun list(page: PageRequest, startDate: LocalDate?, endDate: LocalDate?): Page<Transaction>
+    suspend fun list(page: PageRequest, accountId: String?, startDate: LocalDate?, endDate: LocalDate?): Page<Transaction>
 
     suspend fun search(page: PageRequest, terms: String): Page<Transaction>
 

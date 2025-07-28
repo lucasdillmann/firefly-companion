@@ -1,22 +1,13 @@
 package br.com.dillmann.fireflycompanion.android.core.components.transactions
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -25,11 +16,9 @@ import br.com.dillmann.fireflycompanion.android.core.activity.async
 import br.com.dillmann.fireflycompanion.android.core.activity.emptyVolatile
 import br.com.dillmann.fireflycompanion.android.core.activity.persistent
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
-import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.extensions.cancel
 import br.com.dillmann.fireflycompanion.android.core.extensions.done
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
-import br.com.dillmann.fireflycompanion.android.home.components.HomeTopActions
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 import br.com.dillmann.fireflycompanion.core.pagination.Page
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
@@ -37,11 +26,11 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.CompletableFuture
 import java.util.logging.Logger
-import kotlin.collections.plus
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun TransactionList(
+    showAccountNameOnReconciliation: Boolean,
     modifier: Modifier = Modifier,
     header: @Composable ((TransactionListContext) -> Unit)? = null,
     transactionsProvider: suspend (PageRequest) -> Page<Transaction>,
@@ -82,7 +71,7 @@ fun TransactionList(
         }
     }
 
-    val context = object: TransactionListContext {
+    val context = object : TransactionListContext {
         override fun isLoading() = !loadTask.done()
         override fun refresh() = loadTransactions(refresh = true)
         override fun containsData() = items.isNotEmpty()
@@ -110,26 +99,26 @@ fun TransactionList(
         enabled = loadTask.done(),
         modifier = modifier.fillMaxSize(),
     ) {
-        Section(
-            title = i18n(R.string.tab_transactions),
-            rightContent = {
-                HomeTopActions()
-            }
-        ) {
-            if (header != null)
+        Column(modifier = Modifier.fillMaxSize()) {
+            if (header != null) {
                 header(context)
+            }
 
             if (loadTask.done() && items.isEmpty()) {
                 Text(
                     text = i18n(R.string.no_transactions_yet),
                     style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(top = 96.dp).fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(top = 96.dp)
+                        .fillMaxWidth(),
                     textAlign = TextAlign.Center,
                 )
                 Text(
                     text = i18n(R.string.click_the_button_bellow_to_add),
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .fillMaxWidth(),
                     textAlign = TextAlign.Center,
                 )
             } else {
@@ -142,7 +131,11 @@ fun TransactionList(
                     items(items) {
                         when (it) {
                             is Transaction ->
-                                TransactionListItem(it)
+                                TransactionListItem(
+                                    transaction = it,
+                                    showAccountNameOnReconciliation = showAccountNameOnReconciliation,
+                                )
+
                             is LocalDate -> {
                                 val topPadding =
                                     if (items.indexOf(it) == 0) 0
@@ -151,7 +144,9 @@ fun TransactionList(
                                 Text(
                                     text = dateFormat.format(it),
                                     style = MaterialTheme.typography.titleMedium,
-                                    modifier = Modifier.padding(top = topPadding.dp, bottom = 8.dp).fillMaxWidth(),
+                                    modifier = Modifier
+                                        .padding(top = topPadding.dp, bottom = 8.dp)
+                                        .fillMaxWidth(),
                                     color = MaterialTheme.colorScheme.secondary,
                                     textAlign = TextAlign.Start,
                                 )

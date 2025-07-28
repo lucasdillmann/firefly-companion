@@ -17,6 +17,7 @@ import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.theme.Colors
 import br.com.dillmann.fireflycompanion.business.summary.Summary
 import java.math.BigDecimal
 
@@ -66,19 +67,19 @@ fun HomeOverview(summary: Summary?) {
             DetailBlock(
                 title = i18n(R.string.earned),
                 summary = summary,
-                tintColor = Color(0xFF4CAF50),
+                tintColor = Colors.GREEN,
                 valueProvider = { it.earned },
             )
             DetailBlock(
                 title = i18n(R.string.spent),
                 summary = summary,
-                tintColor = Color(0xFFF44336),
+                tintColor = Colors.RED,
                 valueProvider = { it.spent?.abs() },
             )
             DetailBlock(
                 title = i18n(R.string.left_to_spend),
                 summary = summary,
-                tintColor = Color(0xFF2196F3),
+                tintColor = Colors.BLUE,
                 valueProvider = { it.leftToSpend },
             )
             DetailBlock(

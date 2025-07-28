@@ -1,0 +1,34 @@
+### Get by ID
+GET {{base-url}}/v1/transactions/12564
+Authorization: Bearer {{token}}
+
+### Delete by ID
+DELETE {{base-url}}/v1/transactions/12573
+Authorization: Bearer {{token}}
+
+### Create
+POST {{base-url}}/v1/transactions
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/vnd.api+json, application/json
+
+{
+  "apply_rules": true,
+  "fire_webhooks": true,
+  "transactions": [
+    {
+      "type": "reconciliation",
+      "date": "2025-07-27T00:00:00-03:00",
+      "amount": "0.01",
+      "description": "Reconciliation",
+      "currency_id": "13",
+      "source_name": "XP (investimentos)",
+      "destination_name": "XP (investimentos) reconciliation (BRL)",
+      "reconciled": true,
+      "tags": [],
+      "notes": "Reconciliation",
+      "order": 0
+    }
+  ]
+}
+

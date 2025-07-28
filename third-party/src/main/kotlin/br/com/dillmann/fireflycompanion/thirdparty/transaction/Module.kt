@@ -10,5 +10,5 @@ internal val TransactionModule =
     module {
         single { TransactionsApi(get(Qualifiers.API_BASE_URL), get()) }
         single<TransactionConverter> { getConverter() }
-        single<TransactionRepository> { TransactionHttpRepository(get(), get(), get()) }
+        single<TransactionRepository> { TransactionHttpRepository(get(), get(), get(),get()) }
     }

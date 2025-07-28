@@ -13,8 +13,13 @@ internal class TransactionService(
     private val validator: TransactionValidator,
 ) : ListTransactionsUseCase, SearchTransactionsUseCase, SaveTransactionUseCase, DeleteTransactionUseCase {
 
-    override suspend fun list(page: PageRequest, startDate: LocalDate?, endDate: LocalDate?): Page<Transaction> =
-        repository.list(page, startDate, endDate)
+    override suspend fun list(
+        page: PageRequest,
+        accountId: String?,
+        startDate: LocalDate?,
+        endDate: LocalDate?,
+    ): Page<Transaction> =
+        repository.list(page, accountId, startDate, endDate)
 
     override suspend fun search(page: PageRequest, terms: String): Page<Transaction> =
         repository.search(page, terms)

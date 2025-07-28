@@ -5,22 +5,42 @@ import br.com.dillmann.fireflycompanion.business.transaction.TransactionReposito
 import br.com.dillmann.fireflycompanion.core.pagination.Page
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
 import br.com.dillmann.fireflycompanion.thirdparty.core.firefly.toPage
+import br.com.dillmann.fireflycompanion.thirdparty.firefly.apis.AccountsApi
 import br.com.dillmann.fireflycompanion.thirdparty.firefly.apis.SearchApi
 import br.com.dillmann.fireflycompanion.thirdparty.firefly.apis.TransactionsApi
+import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.TransactionTypeFilter
 import java.time.LocalDate
 
 internal class TransactionHttpRepository(
     private val transactionApi: TransactionsApi,
+    private val accountsApi: AccountsApi,
     private val searchApi: SearchApi,
     private val converter: TransactionConverter,
 ) : TransactionRepository {
-    override suspend fun list(page: PageRequest, startDate: LocalDate?, endDate: LocalDate?): Page<Transaction> {
-        val response = transactionApi.listTransaction(
-            page = page.number + 1,
-            limit = page.size,
-            start = startDate,
-            end = endDate,
-        )
+    override suspend fun list(
+        page: PageRequest,
+        accountId: String?,
+        startDate: LocalDate?,
+        endDate: LocalDate?,
+    ): Page<Transaction> {
+        val response =
+            if (accountId != null)
+                accountsApi.listTransactionByAccount(
+                    id = accountId,
+                    page = page.number + 1,
+                    limit = page.size,
+                    start = startDate,
+                    end = endDate,
+                    type = TransactionTypeFilter.ALL,
+                )
+            else
+                transactionApi.listTransaction(
+                    page = page.number + 1,
+                    limit = page.size,
+                    start = startDate,
+                    end = endDate,
+                    type = TransactionTypeFilter.ALL,
+                )
 
         return response.meta.toPage(
             items = response.data,

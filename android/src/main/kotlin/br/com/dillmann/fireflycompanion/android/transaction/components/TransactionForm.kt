@@ -152,7 +152,10 @@ fun TransactionForm(
                         }
                     }
 
-                    Button(onClick = { handleSave() }) {
+                    Button(
+                        onClick = { handleSave() },
+                        enabled = transaction?.type !== Transaction.Type.RECONCILIATION,
+                    ) {
                         Text(i18n(R.string.save))
                     }
                 }

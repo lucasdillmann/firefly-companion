@@ -4,5 +4,6 @@ import br.com.dillmann.fireflycompanion.core.pagination.Page
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
 
 interface AccountRepository {
+    suspend fun findById(accountId: String): Account?
     suspend fun findAccounts(page: PageRequest, type: String? = null): Page<Account>
 }

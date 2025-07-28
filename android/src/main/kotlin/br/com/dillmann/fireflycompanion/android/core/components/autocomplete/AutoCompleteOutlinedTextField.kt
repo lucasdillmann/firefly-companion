@@ -26,6 +26,7 @@ fun AutoCompleteOutlinedTextField(
     value: MutableState<TextFieldValue>,
     label: String,
     modifier: Modifier = Modifier,
+    disabled: Boolean = false,
     isError: Boolean = false,
     supportingText: @Composable (() -> Unit)? = null,
     suggestionsProvider: suspend (query: String) -> List<String>,
@@ -56,6 +57,7 @@ fun AutoCompleteOutlinedTextField(
             },
             isError = isError,
             label = { Text(label) },
+            enabled = !disabled,
             supportingText = supportingText,
             modifier = Modifier
                 .fillMaxWidth()
@@ -69,7 +71,7 @@ fun AutoCompleteOutlinedTextField(
         )
 
         ExposedDropdownMenu(
-            expanded = showDropdown,
+            expanded = showDropdown && !disabled,
             onDismissRequest = { expanded = false },
         ) {
             suggestions.forEach {
