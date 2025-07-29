@@ -1,6 +1,5 @@
 package br.com.dillmann.fireflycompanion.android.home.tabs
 
-import android.app.Activity.RESULT_OK
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,7 +21,6 @@ import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.accounts.AccountFormActivity
 import br.com.dillmann.fireflycompanion.android.core.activity.async
 import br.com.dillmann.fireflycompanion.android.core.activity.emptyVolatile
-import br.com.dillmann.fireflycompanion.android.core.activity.result.ResultNotifier
 import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.activity.persistent
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
@@ -31,6 +29,7 @@ import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.extensions.cancel
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.home.components.HomeTopActions
 import br.com.dillmann.fireflycompanion.business.account.Account
 import br.com.dillmann.fireflycompanion.business.account.usecase.ListAccountsUseCase
@@ -42,7 +41,6 @@ import java.util.logging.Logger
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun HomeAccountsTab(
-    resultNotifier: ResultNotifier,
     modifier: Modifier = Modifier,
 ) {
     val listUseCase = koin().get<ListAccountsUseCase>()
@@ -75,20 +73,16 @@ fun HomeAccountsTab(
         }
     }
 
-    fun handleResult(requestCode: Int, resultCode: Int) {
-        if (requestCode == HomeTabs.ACCOUNTS.ordinal && resultCode == RESULT_OK)
-            loadAccounts(refresh = true)
+    OnRefreshEvent {
+        loadAccounts(refresh = true)
     }
 
     LaunchedEffect(Unit) {
-        resultNotifier.subscribe(::handleResult)
-
         if (accounts.isEmpty() && loadTask.done())
             loadAccounts()
     }
 
     DisposableEffect(Unit) {
-        onDispose { resultNotifier.unsubscribe(::handleResult) }
         onDispose { loadTask.cancel() }
     }
 

@@ -73,9 +73,9 @@ class HomeActivity : PreconfiguredActivity() {
                     navController = navController,
                     startDestination = HomeTabs.MAIN.name,
                 ) {
-                    composable(HomeTabs.MAIN.name) { HomeMainTab(resultNotifier) }
-                    composable(HomeTabs.TRANSACTIONS.name) { HomeTransactionsTab(resultNotifier) }
-                    composable(HomeTabs.ACCOUNTS.name) { HomeAccountsTab(resultNotifier) }
+                    composable(HomeTabs.MAIN.name) { HomeMainTab() }
+                    composable(HomeTabs.TRANSACTIONS.name) { HomeTransactionsTab() }
+                    composable(HomeTabs.ACCOUNTS.name) { HomeAccountsTab() }
                     composable(HomeTabs.ASSISTANT.name) { HomeAssistantTab() }
                 }
 

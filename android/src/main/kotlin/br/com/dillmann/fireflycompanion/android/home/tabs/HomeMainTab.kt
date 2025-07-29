@@ -1,21 +1,18 @@
 package br.com.dillmann.fireflycompanion.android.home.tabs
 
-import android.app.Activity.RESULT_OK
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.core.activity.async
-import br.com.dillmann.fireflycompanion.android.core.activity.result.ResultNotifier
 import br.com.dillmann.fireflycompanion.android.core.activity.persistent
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefreshWithScroll
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.home.components.HomeBudgets
 import br.com.dillmann.fireflycompanion.android.home.components.HomeCreditCards
 import br.com.dillmann.fireflycompanion.android.home.components.HomeExpensesByCategory
@@ -29,7 +26,6 @@ import br.com.dillmann.fireflycompanion.business.summary.usecase.GetSummaryUseCa
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun HomeMainTab(
-    resultNotifier: ResultNotifier,
     modifier: Modifier = Modifier,
 ) {
     val summaryUseCase = koin().get<GetSummaryUseCase>()
@@ -43,17 +39,8 @@ fun HomeMainTab(
         }
     }
 
-    fun handleResult(requestCode: Int, resultCode: Int) {
-        if (requestCode == HomeTabs.MAIN.ordinal && resultCode == RESULT_OK)
-            reload()
-    }
-
-    LaunchedEffect(Unit) {
-        resultNotifier.subscribe(::handleResult)
-    }
-
-    DisposableEffect(Unit) {
-        onDispose { resultNotifier.unsubscribe(::handleResult) }
+    OnRefreshEvent {
+        reload()
     }
 
     PullToRefreshWithScroll(

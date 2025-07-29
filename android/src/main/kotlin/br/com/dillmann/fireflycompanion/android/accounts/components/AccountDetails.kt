@@ -1,6 +1,5 @@
 package br.com.dillmann.fireflycompanion.android.accounts.components
 
-import android.app.Activity.RESULT_OK
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -24,12 +22,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.activity.async
-import br.com.dillmann.fireflycompanion.android.core.activity.result.ResultNotifier
 import br.com.dillmann.fireflycompanion.android.core.activity.volatile
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionList
 import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionListContext
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
+import br.com.dillmann.fireflycompanion.android.core.refresh.RefreshDispatcher
 import br.com.dillmann.fireflycompanion.business.account.Account
 import br.com.dillmann.fireflycompanion.business.account.usecase.GetAccountUseCase
 import br.com.dillmann.fireflycompanion.business.account.usecase.UpdateAccountBalanceUseCase
@@ -41,7 +40,6 @@ import java.math.BigDecimal
 @OptIn(ExperimentalMaterial3Api::class)
 fun AccountDetails(
     state: MutableState<Account>,
-    resultNotifier: ResultNotifier,
 ) {
     var account by state
     var balanceState by volatile(TextFieldValue(account.currentBalance.toString()))
@@ -57,36 +55,24 @@ fun AccountDetails(
 
         async {
             val newBalance = BigDecimal(balanceState.text)
-            account = updateBalanceUseCase.updateBalance(account.id, newBalance)
+            updateBalanceUseCase.updateBalance(account.id, newBalance)
 
-            listContext?.refresh()
-            showLoading = false
+            RefreshDispatcher.notify()
         }
     }
 
-    fun handleResult(requestCode: Int, resultCode: Int) {
-        if (resultCode != RESULT_OK)
-            return
-
+    OnRefreshEvent {
         showLoading = true
 
-        async {
-            account = getAccountUseCase.getAccount(account.id)!!
-            listContext!!.refresh()
+        account = getAccountUseCase.getAccount(account.id)!!
+        listContext!!.refresh()
 
-            showLoading = false
-        }
+        showLoading = false
     }
 
     LaunchedEffect(Unit) {
-        resultNotifier.subscribe(::handleResult)
-
         if (!listContext!!.isLoading() && !listContext!!.containsData())
             listContext!!.refresh()
-    }
-
-    DisposableEffect(Unit) {
-        onDispose { resultNotifier.unsubscribe(::handleResult) }
     }
 
     LaunchedEffect(account) {

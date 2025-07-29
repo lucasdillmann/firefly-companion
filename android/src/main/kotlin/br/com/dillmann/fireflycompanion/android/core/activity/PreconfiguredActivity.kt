@@ -14,9 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import br.com.dillmann.fireflycompanion.android.biometric.BiometricUnlockActivity
 import br.com.dillmann.fireflycompanion.android.biometric.Biometrics
-import br.com.dillmann.fireflycompanion.android.core.activity.result.ResultNotifier
 import br.com.dillmann.fireflycompanion.android.core.context.AppContext
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.refresh.RefreshDispatcher
 import br.com.dillmann.fireflycompanion.android.core.theme.AppTheme
 import br.com.dillmann.fireflycompanion.android.core.theme.AppThemeContext
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
@@ -25,9 +25,6 @@ import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferen
 abstract class PreconfiguredActivity(
     private val allowAnonymous: Boolean = false,
 ) : ComponentActivity() {
-
-    internal val resultNotifier = ResultNotifier()
-
     override fun onResume() {
         super.onResume()
 
@@ -72,7 +69,9 @@ abstract class PreconfiguredActivity(
         caller: ComponentCaller,
     ) {
         super.onActivityResult(requestCode, resultCode, data, caller)
-        async { resultNotifier.notify(requestCode, resultCode) }
+
+        if (resultCode == RESULT_OK)
+            async { RefreshDispatcher.notify() }
     }
 
     @Composable

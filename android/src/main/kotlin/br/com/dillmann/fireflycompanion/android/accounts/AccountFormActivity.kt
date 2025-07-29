@@ -19,6 +19,6 @@ class AccountFormActivity : PreconfiguredActivity() {
     @Composable
     override fun Content(padding: PaddingValues) {
         val state = volatile(account!!)
-        AccountDetails(state, resultNotifier)
+        AccountDetails(state)
     }
 }
