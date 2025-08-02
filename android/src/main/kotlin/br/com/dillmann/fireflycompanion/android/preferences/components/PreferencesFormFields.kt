@@ -23,6 +23,7 @@ fun PreferencesFormFields(
     val preferences = state.value
     var themeExpanded by volatile(false)
     var languageExpanded by volatile(false)
+    var lockTimeoutExpanded by volatile(false)
     var biometricsNotSupportedWarningVisible by volatile(false)
 
     fun testBiometrics() {
@@ -56,6 +57,48 @@ fun PreferencesFormFields(
                     else state.value = preferences.copy(requireBiometricLogin = false)
                 },
             )
+        }
+
+        if (preferences.requireBiometricLogin) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = i18n(R.string.lock_timeout),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.weight(1f),
+                )
+
+                Box {
+                    Button(
+                        onClick = { lockTimeoutExpanded = !lockTimeoutExpanded },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        ),
+                        content = { Text(text = preferences.lockTimeout.description()) },
+                    )
+
+                    DropdownMenu(
+                        expanded = lockTimeoutExpanded,
+                        onDismissRequest = { lockTimeoutExpanded = false },
+                    ) {
+                        Preferences.LockTimeout.entries.forEach { option ->
+                            DropdownMenuItem(
+                                text = { Text(text = option.description()) },
+                                onClick = {
+                                    state.value = preferences.copy(lockTimeout = option)
+                                    onChange()
+                                    lockTimeoutExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))

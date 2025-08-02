@@ -1,11 +1,15 @@
 package br.com.dillmann.fireflycompanion.android.biometric
 
-import br.com.dillmann.fireflycompanion.android.R
 import android.content.Context
 import android.hardware.biometrics.BiometricManager
 import android.hardware.biometrics.BiometricPrompt
 import android.os.CancellationSignal
+import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.activity.async
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
+import org.koin.java.KoinJavaComponent.getKoin
+import java.time.LocalDateTime
 import java.util.concurrent.Executors
 
 object Biometrics {
@@ -18,23 +22,41 @@ object Biometrics {
     var locked = true
         private set
 
+    private var lockedAt: LocalDateTime? = null
+
     fun lock() {
         locked = true
+        lockedAt = LocalDateTime.now()
     }
 
     fun unlock(context: Context, callback: (Outcome) -> Unit) {
-        if (!locked) {
+        if (!locked || isWithinLockTimeout()) {
+            locked = false
+            lockedAt = null
+
             callback(Outcome.SUCCESS)
             return
         }
 
         prompt(context) {
-            if (it == Outcome.SUCCESS)
+            if (it == Outcome.SUCCESS) {
                 locked = false
+                lockedAt = null
+            }
 
             callback(it)
         }
-     }
+    }
+
+    private fun isWithinLockTimeout(): Boolean {
+        if (lockedAt == null)
+            return false
+
+        val preferences = async { getKoin().get<GetPreferencesUseCase>().getPreferences() }.get()
+        val skewSeconds = preferences.lockTimeout.seconds
+
+        return lockedAt!!.plusSeconds(skewSeconds) > LocalDateTime.now()
+    }
 
     fun test(context: Context, callback: (Outcome) -> Unit) {
         prompt(context, callback)

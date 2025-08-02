@@ -17,3 +17,14 @@ fun Preferences.Language.description(): String =
         Preferences.Language.ENGLISH -> i18n(R.string.language_english)
         Preferences.Language.PORTUGUESE -> i18n(R.string.language_portuguese)
     }
+
+fun Preferences.LockTimeout.description(): String =
+    when(this) {
+        Preferences.LockTimeout.IMMEDIATELY -> i18n(R.string.lock_timeout_immediately)
+        Preferences.LockTimeout.FIFTEEN_SECONDS -> i18n(R.string.lock_timeout_fifteen_seconds)
+        Preferences.LockTimeout.THIRTY_SECONDS -> i18n(R.string.lock_timeout_thirty_seconds)
+        Preferences.LockTimeout.ONE_MINUTE -> i18n(R.string.lock_timeout_one_minute)
+        Preferences.LockTimeout.TWO_MINUTES -> i18n(R.string.lock_timeout_two_minutes)
+        Preferences.LockTimeout.FIVE_MINUTES -> i18n(R.string.lock_timeout_five_minutes)
+        Preferences.LockTimeout.TEN_MINUTES -> i18n(R.string.lock_timeout_ten_minutes)
+    }

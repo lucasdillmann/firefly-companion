@@ -30,7 +30,7 @@ abstract class PreconfiguredActivity(
 
         val preferences = getPreferences()
         if (preferences.requireBiometricLogin && Biometrics.locked && !allowAnonymous) {
-                start<BiometricUnlockActivity>()
+            start<BiometricUnlockActivity>()
         }
     }
 

@@ -12,6 +12,7 @@ internal class PreferencesPreferencesRepository(private val contextProvider: Con
         private const val REQUIRE_BIOMETRIC_LOGIN_KEY = "require_biometric_login"
         private const val THEME_KEY = "theme"
         private const val LANGUAGE_KEY = "language"
+        private const val LOCK_TIMEOUT = "lock_timeout"
     }
 
     override suspend fun get(): Preferences? {
@@ -26,8 +27,12 @@ internal class PreferencesPreferencesRepository(private val contextProvider: Con
             .getString(LANGUAGE_KEY, Preferences.Language.AUTO.name)
             ?.let(Preferences.Language::valueOf)
             ?: Preferences.Language.AUTO
+        val lockTimeout = sharedPreferences
+            .getString(LOCK_TIMEOUT, Preferences.LockTimeout.IMMEDIATELY.name)
+            ?.let(Preferences.LockTimeout::valueOf)
+            ?: Preferences.LockTimeout.IMMEDIATELY
 
-        return Preferences(requireBiometricLogin, theme, language)
+        return Preferences(requireBiometricLogin, theme, language, lockTimeout)
     }
 
     override suspend fun save(preferences: Preferences) {
@@ -35,6 +40,7 @@ internal class PreferencesPreferencesRepository(private val contextProvider: Con
             putBoolean(REQUIRE_BIOMETRIC_LOGIN_KEY, preferences.requireBiometricLogin)
             putString(THEME_KEY, preferences.theme.name)
             putString(LANGUAGE_KEY, preferences.language.name)
+            putString(LOCK_TIMEOUT, preferences.lockTimeout.name)
         }
     }
 

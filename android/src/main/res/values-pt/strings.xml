@@ -93,4 +93,12 @@
     <string name="date">Data</string>
     <string name="no_transactions_yet">Nenhuma transação encontrada</string>
     <string name="click_the_button_bellow_to_add">Toque no adicionar abaixo para criar a sua primeira</string>
+    <string name="lock_timeout">Bloquear o app</string>
+    <string name="lock_timeout_immediately">Imediatamente</string>
+    <string name="lock_timeout_fifteen_seconds">Depois de 15 segundos</string>
+    <string name="lock_timeout_thirty_seconds">Depois de 30 segundos</string>
+    <string name="lock_timeout_one_minute">Depois de 1 minuto</string>
+    <string name="lock_timeout_two_minutes">Depois de 2 minutos</string>
+    <string name="lock_timeout_five_minutes">Depois de 5 minutos</string>
+    <string name="lock_timeout_ten_minutes">Depois de 10 minutos</string>
 </resources>

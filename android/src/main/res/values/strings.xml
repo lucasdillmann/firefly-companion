@@ -94,4 +94,12 @@
     <string name="date">Date</string>
     <string name="no_transactions_yet">There\'s no transactions. Yet.</string>
     <string name="click_the_button_bellow_to_add">Click the add button bellow to create your first</string>
+    <string name="lock_timeout">Lock the app</string>
+    <string name="lock_timeout_immediately">Immediately</string>
+    <string name="lock_timeout_fifteen_seconds">After 15 seconds</string>
+    <string name="lock_timeout_thirty_seconds">After 30 seconds</string>
+    <string name="lock_timeout_one_minute">After 1 minute</string>
+    <string name="lock_timeout_two_minutes">After 2 minutes</string>
+    <string name="lock_timeout_five_minutes">After 5 minutes</string>
+    <string name="lock_timeout_ten_minutes">After 10 minutes</string>
 </resources>
