@@ -21,8 +21,8 @@ import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.accounts.AccountFormActivity
 import br.com.dillmann.fireflycompanion.android.core.activity.async
 import br.com.dillmann.fireflycompanion.android.core.activity.emptyVolatile
-import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.activity.persistent
+import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section

@@ -1,15 +1,11 @@
 package br.com.dillmann.fireflycompanion.thirdparty.transaction
 
 import br.com.dillmann.fireflycompanion.business.currency.Currency
-import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.TransactionStore
-import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.TransactionRead
-import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.TransactionSplit
-import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.TransactionTypeProperty
-import org.mapstruct.*
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
-import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.TransactionSplitStore
-import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.TransactionSplitUpdate
-import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.TransactionUpdate
+import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.*
+import org.mapstruct.Mapper
+import org.mapstruct.Mapping
+import org.mapstruct.ReportingPolicy
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 internal interface TransactionConverter {

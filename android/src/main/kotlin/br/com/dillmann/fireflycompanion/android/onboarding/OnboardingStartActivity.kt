@@ -9,10 +9,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
 import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
-import br.com.dillmann.fireflycompanion.android.R
 
 class OnboardingStartActivity : PreconfiguredActivity() {
     @Composable

@@ -1,7 +1,7 @@
 package br.com.dillmann.fireflycompanion.android.core.extensions
 
-import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
 
 fun Preferences.Theme.description(): String =

@@ -4,8 +4,8 @@ import br.com.dillmann.fireflycompanion.business.account.Account
 import br.com.dillmann.fireflycompanion.business.account.AccountRepository
 import br.com.dillmann.fireflycompanion.core.pagination.Page
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
-import br.com.dillmann.fireflycompanion.thirdparty.firefly.apis.AccountsApi
 import br.com.dillmann.fireflycompanion.thirdparty.core.firefly.toPage
+import br.com.dillmann.fireflycompanion.thirdparty.firefly.apis.AccountsApi
 import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.AccountTypeFilter
 
 internal class AccountHttpRepository(
