@@ -1,5 +1,6 @@
 package br.com.dillmann.fireflycompanion.business.account
 
+import br.com.dillmann.fireflycompanion.business.account.usecase.GetAccountOverviewUseCase
 import br.com.dillmann.fireflycompanion.business.account.usecase.GetAccountUseCase
 import br.com.dillmann.fireflycompanion.business.account.usecase.ListAccountsUseCase
 import br.com.dillmann.fireflycompanion.business.account.usecase.UpdateAccountBalanceUseCase
@@ -9,13 +10,14 @@ import br.com.dillmann.fireflycompanion.business.transaction.usecase.SaveTransac
 import br.com.dillmann.fireflycompanion.core.pagination.Page
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
 import java.math.BigDecimal
+import java.time.LocalDate
 import java.time.OffsetDateTime
 
 internal class AccountService(
     private val repository: AccountRepository,
     private val defaultCurrency: GetDefaultCurrencyUseCase,
     private val saveTransaction: SaveTransactionUseCase,
-) : ListAccountsUseCase, UpdateAccountBalanceUseCase, GetAccountUseCase {
+) : ListAccountsUseCase, UpdateAccountBalanceUseCase, GetAccountUseCase, GetAccountOverviewUseCase {
     override suspend fun listAccounts(page: PageRequest): Page<Account> =
         repository.findAccounts(page, "asset").filter { it.active }
 
@@ -48,4 +50,7 @@ internal class AccountService(
 
         return repository.findById(accountId)!!
     }
+
+    override suspend fun getOverview(startDate: LocalDate, endDate: LocalDate): List<AccountOverview> =
+        repository.findOverview(startDate, endDate)
 }

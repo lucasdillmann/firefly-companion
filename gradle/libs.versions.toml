@@ -7,15 +7,16 @@ lifecycleRuntimeKtx = "2.9.2"
 lifecycleProcess = "2.9.2"
 activityCompose = "1.10.1"
 composeBom = "2025.07.00"
-composeNavigation = "2.9.2"
+composeNavigation = "2.9.3"
 appcompat = "1.7.1"
-material3 = "1.4.0-alpha18"
+material3 = "1.4.0-beta01"
 koin = "4.1.0"
 okhttp3 = "4.12.0"
 moshi = "1.15.0"
 openApiGenerator = "7.12.0"
 kotlinCoroutines = "1.10.2"
 mapstruct = "1.6.3"
+composeCharts = "0.1.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,6 +42,7 @@ moshi-adapters = { group = "com.squareup.moshi", name = "moshi-adapters", versio
 kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinCoroutines" }
 mapstruct = { group = "org.mapstruct", name = "mapstruct", version.ref = "mapstruct" }
 mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", version.ref = "mapstruct" }
+compose-charts = { group = "io.github.ehsannarmani", name = "compose-charts", version.ref = "composeCharts" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

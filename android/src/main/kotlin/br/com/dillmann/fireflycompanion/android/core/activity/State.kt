@@ -25,6 +25,15 @@ fun <T> persistent(value: T): MutableState<T> =
 fun <T> volatile(value: T): MutableState<T> =
     remember { mutableStateOf(value) }
 
+
+
+@Composable
+fun <T> volatile(loader: suspend () -> T): MutableState<T> =
+    remember {
+        val value = async { loader() }.get()
+        mutableStateOf(value)
+    }
+
 @Composable
 fun <T> emptyVolatile(): MutableState<T?> =
     volatile(null)

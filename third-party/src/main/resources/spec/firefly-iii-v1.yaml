@@ -16016,12 +16016,11 @@ components:
           description: Name of the object found by an auto-complete search.
     ChartDataPoint:
       type: object
-      properties:
-        key:
-          type: string
-          format: string
-          example: "value"
-          description: "The key is the label of the value, so for example: '2018-01-01' => 13 or 'Groceries' => -123."
+      additionalProperties:
+        type: number
+        format: double
+        description: |
+          A map from an ISO 8601 date-time string (e.g., "2024-08-02T10:00:00Z") to a decimal value.
     ChartDataSet:
       type: object
       properties:
@@ -16067,10 +16066,8 @@ components:
           example: 0
           description: "Used to indicate the Y axis for this data set. Is usually between 0 and 1 (left and right side of the chart)."
         entries:
-          type: object
           description: "The actual entries for this data set. They 'key' value is the label for the data point. The value is the actual (numerical) value."
-          items:
-            $ref: '#/components/schemas/ChartDataPoint'
+          $ref: '#/components/schemas/ChartDataPoint'
     ChartLine:
       type: array
       items:

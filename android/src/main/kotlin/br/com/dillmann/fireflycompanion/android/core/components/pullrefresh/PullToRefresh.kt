@@ -18,7 +18,7 @@ import java.lang.Thread.sleep
 @Composable
 @ExperimentalMaterial3Api
 fun PullToRefresh(
-    onRefresh: () -> Unit,
+    onRefresh: suspend () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     content: @Composable () -> Unit,
@@ -28,9 +28,9 @@ fun PullToRefresh(
 
     fun handleRefresh() {
         refreshing = true
-        onRefresh()
 
         async {
+            onRefresh()
             sleep(100)
             refreshing = false
         }

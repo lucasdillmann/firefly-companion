@@ -105,4 +105,5 @@
     <string name="lock_timeout_two_minutes">Depois de 2 minutos</string>
     <string name="lock_timeout_five_minutes">Depois de 5 minutos</string>
     <string name="lock_timeout_ten_minutes">Depois de 10 minutos</string>
+    <string name="accounts_overview">Visão geral das contas</string>
 </resources>

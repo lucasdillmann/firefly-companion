@@ -6,6 +6,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,16 +16,27 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.activity.persistent
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.theme.Colors
 import br.com.dillmann.fireflycompanion.business.summary.Summary
+import br.com.dillmann.fireflycompanion.business.summary.usecase.GetSummaryUseCase
 import java.math.BigDecimal
 
 @Composable
-fun HomeOverview(summary: Summary?) {
+fun HomeOverview() {
+    val useCase = koin().get<GetSummaryUseCase>()
+    var summary by persistent { useCase.getSummary() }
     val scrollState = rememberScrollState()
+
+    OnRefreshEvent {
+        summary = null
+        summary = useCase.getSummary()
+    }
 
     Section(
         title = i18n(R.string.overview),

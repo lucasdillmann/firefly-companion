@@ -10,5 +10,5 @@ internal val AccountModule =
     module {
         single { AccountsApi(get(Qualifiers.API_BASE_URL), get()) }
         single<AccountConverter> { getConverter() }
-        single<AccountRepository> { AccountHttpRepository(get(), get()) }
+        single<AccountRepository> { AccountHttpRepository(get(), get(), get()) }
     }

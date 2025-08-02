@@ -12,9 +12,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 @ExperimentalMaterial3Api
 fun PullToRefreshWithScroll(
-    onRefresh: () -> Unit,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
     modifier: Modifier = Modifier,
+    onRefresh: suspend () -> Unit,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     enabled: Boolean = true,
     content: LazyListScope.() -> Unit,
 ) {
