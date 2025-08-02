@@ -37,6 +37,7 @@ fun TransactionListItem(
             else
                 icon to Colors.GREEN
         }
+
         else -> Icons.Default.QuestionMark to Color.Unspecified
     }
 

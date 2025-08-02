@@ -28,7 +28,7 @@ fun AppTheme(content: @Composable () -> Unit) {
     val context = LocalContext.current
     val theme by remember { AppThemeContext.current() }
 
-    val colorScheme = when(theme) {
+    val colorScheme = when (theme) {
         Preferences.Theme.AUTO ->
             if (isSystemInDarkTheme()) dynamicDarkColorScheme(context)
             else dynamicLightColorScheme(context)

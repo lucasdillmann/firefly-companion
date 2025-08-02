@@ -85,7 +85,9 @@
     <string name="delete">Delete</string>
     <string name="loading">Hang on tight</string>
     <string name="delete_transaction">Delete transaction</string>
-    <string name="delete_transaction_confirmation">Are you sure you want to delete this transaction? This action cannot be undone.</string>
+    <string name="delete_transaction_confirmation">Are you sure you want to delete this transaction? This action cannot
+        be undone.
+    </string>
     <string name="description">Description</string>
     <string name="amount">Amount</string>
     <string name="category">Category</string>

@@ -28,7 +28,9 @@
     <string name="left_to_spend">Orçamento restante</string>
     <string name="balance">Balanço geral</string>
     <string name="onboarding_main_title">Olá 👋</string>
-    <string name="onboarding_main_message">Bem-vindo ao Firefly Companion. Antes de usar o aplicativo, precisamos nos conectar ao seu servidor Firefly III.</string>
+    <string name="onboarding_main_message">Bem-vindo ao Firefly Companion. Antes de usar o aplicativo, precisamos nos
+        conectar ao seu servidor Firefly III.
+    </string>
     <string name="continue_">Continuar</string>
     <string name="connecting_to_firefly_server">Conectando ao seu servidor Firefly III…</string>
     <string name="finish">Finalizar</string>
@@ -84,7 +86,9 @@
     <string name="delete">Excluir</string>
     <string name="loading">Segura ai um segundo</string>
     <string name="delete_transaction">Excluir movimentação</string>
-    <string name="delete_transaction_confirmation">Tem certeza que deseja excluir esta movimentação? Esta ação não pode ser desfeita.</string>
+    <string name="delete_transaction_confirmation">Tem certeza que deseja excluir esta movimentação? Esta ação não pode
+        ser desfeita.
+    </string>
     <string name="description">Descrição</string>
     <string name="amount">Valor</string>
     <string name="category">Categoria</string>

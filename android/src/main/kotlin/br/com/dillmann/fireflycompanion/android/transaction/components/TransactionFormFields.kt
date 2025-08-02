@@ -46,7 +46,9 @@ fun TransactionFormFields(
     val disabled = transactionType.value !in supportedTypes
 
     Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 5.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         supportedTypes.forEach { type ->

@@ -4,7 +4,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 
 @Composable
-fun <T> persistent(loader: suspend () -> T, ): MutableState<T?> {
+fun <T> persistent(loader: suspend () -> T): MutableState<T?> {
     val stateHolder = rememberSaveable { mutableStateOf<T?>(null) }
 
     LaunchedEffect(Unit) {

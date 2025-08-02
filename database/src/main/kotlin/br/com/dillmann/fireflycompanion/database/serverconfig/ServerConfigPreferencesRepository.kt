@@ -6,7 +6,9 @@ import br.com.dillmann.fireflycompanion.business.serverconfig.ServerConfig
 import br.com.dillmann.fireflycompanion.business.serverconfig.ServerConfigRepository
 import br.com.dillmann.fireflycompanion.database.context.ContextProvider
 
-internal class ServerConfigPreferencesRepository(private val contextProvider: ContextProvider) : ServerConfigRepository {
+internal class ServerConfigPreferencesRepository(
+    private val contextProvider: ContextProvider,
+) : ServerConfigRepository {
     companion object {
         private const val PREFERENCES_NAME = "server_config_preferences"
         private const val KEY_URL = "server_url"

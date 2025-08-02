@@ -61,13 +61,15 @@ openApiGenerate {
             "enumPropertyNaming" to "UPPERCASE",
         )
     )
-    typeMappings.putAll(mapOf(
-        "number" to BigDecimal::class.qualifiedName,
-        "double" to BigDecimal::class.qualifiedName,
-        "float" to BigDecimal::class.qualifiedName,
-        "amount" to BigDecimal::class.qualifiedName,
-        "date-time" to OffsetDateTime::class.qualifiedName,
-        "date" to LocalDate::class.qualifiedName,
-        "time" to LocalTime::class.qualifiedName,
-    ))
+    typeMappings.putAll(
+        mapOf(
+            "number" to BigDecimal::class.qualifiedName,
+            "double" to BigDecimal::class.qualifiedName,
+            "float" to BigDecimal::class.qualifiedName,
+            "amount" to BigDecimal::class.qualifiedName,
+            "date-time" to OffsetDateTime::class.qualifiedName,
+            "date" to LocalDate::class.qualifiedName,
+            "time" to LocalTime::class.qualifiedName,
+        )
+    )
 }

@@ -22400,11 +22400,11 @@ components:
           authorizationUrl: https://demo.firefly-iii.org/oauth/authorize
           tokenUrl: https://demo.firefly-iii.org/oauth/token
           refreshUrl: https://demo.firefly-iii.org/oauth/token
-          scopes: {}
+          scopes: { }
     local_bearer_auth:
       description: Optional Bearer token flow
       type: http
       scheme: bearer
 security:
-  - firefly_iii_auth: []
-  - local_bearer_auth: []
+  - firefly_iii_auth: [ ]
+  - local_bearer_auth: [ ]

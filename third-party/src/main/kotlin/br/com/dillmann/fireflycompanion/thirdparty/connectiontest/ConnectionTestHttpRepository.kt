@@ -5,7 +5,7 @@ import br.com.dillmann.fireflycompanion.thirdparty.firefly.apis.AboutApi
 import br.com.dillmann.fireflycompanion.thirdparty.firefly.infrastructure.ApiClient
 import okhttp3.Interceptor
 
-internal class ConnectionTestHttpRepository: ConnectionTestRepository {
+internal class ConnectionTestHttpRepository : ConnectionTestRepository {
     override suspend fun isServerReachable(url: String, token: String): Boolean {
         val authorizer = Interceptor {
             val request = it.request().newBuilder().header("Authorization", "Bearer $token").build()

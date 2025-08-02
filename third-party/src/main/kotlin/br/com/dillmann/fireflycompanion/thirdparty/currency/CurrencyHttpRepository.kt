@@ -7,7 +7,7 @@ import br.com.dillmann.fireflycompanion.thirdparty.firefly.apis.CurrenciesApi
 internal class CurrencyHttpRepository(
     private val api: CurrenciesApi,
     private val converter: CurrencyConverter,
-): CurrencyRepository {
+) : CurrencyRepository {
     override suspend fun getDefault(): Currency {
         val currency = api.getNativeCurrency()
         return converter.toDomain(currency)

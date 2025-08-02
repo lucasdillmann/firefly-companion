@@ -34,8 +34,10 @@ fun DatePicker(
     val formatter = when (type) {
         DatePickerType.DATE_ONLY ->
             DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+
         DatePickerType.TIME_ONLY ->
             DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
+
         DatePickerType.DATE_AND_TIME ->
             DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT)
     }
@@ -47,19 +49,23 @@ fun DatePicker(
         supportingText = supportingText,
         readOnly = true,
         enabled = enabled && !readOnly,
-        modifier = modifier.fillMaxWidth().onFocusEvent {
-            if (!it.isFocused || !enabled || readOnly)
-                return@onFocusEvent
+        modifier = modifier
+            .fillMaxWidth()
+            .onFocusEvent {
+                if (!it.isFocused || !enabled || readOnly)
+                    return@onFocusEvent
 
-            when (type) {
-                DatePickerType.DATE_ONLY ->
-                    showDatePicker(context, dateTime, dateTimeState)
-                DatePickerType.TIME_ONLY ->
-                    showTimePicker(context, dateTime, dateTimeState)
-                DatePickerType.DATE_AND_TIME ->
-                    showDatePicker(context, dateTime, dateTimeState, true)
-            }
-        },
+                when (type) {
+                    DatePickerType.DATE_ONLY ->
+                        showDatePicker(context, dateTime, dateTimeState)
+
+                    DatePickerType.TIME_ONLY ->
+                        showTimePicker(context, dateTime, dateTimeState)
+
+                    DatePickerType.DATE_AND_TIME ->
+                        showDatePicker(context, dateTime, dateTimeState, true)
+                }
+            },
     )
 }
 

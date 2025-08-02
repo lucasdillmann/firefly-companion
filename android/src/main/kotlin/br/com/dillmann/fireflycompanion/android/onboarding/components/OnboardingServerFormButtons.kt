@@ -14,7 +14,9 @@ fun OnboardingServerFormButtons(onContinue: () -> Unit) {
     val showDialog = volatile(false)
 
     Row(
-        modifier = Modifier.padding(bottom = 32.dp).fillMaxWidth(),
+        modifier = Modifier
+            .padding(bottom = 32.dp)
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.End,
     ) {
         OutlinedButton(
