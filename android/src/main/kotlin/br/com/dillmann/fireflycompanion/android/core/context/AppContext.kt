@@ -33,7 +33,7 @@ object AppContext : ContextProvider {
 
     private fun buildContext(languageId: String): Context {
         val configuration = root.resources.configuration
-        val locale = Locale(languageId)
+        val locale = Locale.forLanguageTag(languageId)
         val localeList = LocaleList(locale)
         configuration.setLocales(localeList)
 
