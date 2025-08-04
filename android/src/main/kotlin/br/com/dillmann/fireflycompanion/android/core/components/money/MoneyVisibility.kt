@@ -12,7 +12,8 @@ object MoneyVisibility {
     private const val DEFAULT_VALUE = true
 
     private lateinit var preferences: SharedPreferences
-    private var state = mutableStateOf(DEFAULT_VALUE)
+    var state = mutableStateOf(DEFAULT_VALUE)
+        private set
 
     fun init(context: Context) {
         preferences = context

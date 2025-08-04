@@ -1,7 +1,10 @@
 package br.com.dillmann.fireflycompanion.android.home.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.activity.persistent
 import br.com.dillmann.fireflycompanion.android.core.activity.volatile
+import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibility
 import br.com.dillmann.fireflycompanion.android.core.components.section.SectionCard
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
@@ -28,6 +32,7 @@ import kotlin.random.Random
 @Composable
 fun HomeAccountsOverview() {
     val useCase = getKoin().get<GetAccountOverviewUseCase>()
+    val monetaryValuesVisible by MoneyVisibility.state
     var overview by persistent { useCase.getOverview() }
 
     OnRefreshEvent {
@@ -47,10 +52,28 @@ fun HomeAccountsOverview() {
         ) {
             if (overview == null) {
                 LoadingIndicator()
+            } else if (!monetaryValuesVisible) {
+                ContentHiddenIcon()
             } else {
                 Graph(overview!!)
             }
         }
+    }
+}
+
+@Composable
+private fun ContentHiddenIcon() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            modifier = Modifier.size(32.dp),
+            contentDescription = "",
+            imageVector = Icons.Filled.VisibilityOff,
+        )
     }
 }
 

@@ -18,8 +18,8 @@ fun MoneyVisibilityToggle(
 ) {
     val visible by MoneyVisibility
     val monetaryVisibilityIcon =
-        if (visible.value) Icons.Filled.VisibilityOff
-        else Icons.Filled.Visibility
+        if (visible.value) Icons.Filled.Visibility
+        else Icons.Filled.VisibilityOff
 
     IconButton(
         onClick = MoneyVisibility::toggle,
