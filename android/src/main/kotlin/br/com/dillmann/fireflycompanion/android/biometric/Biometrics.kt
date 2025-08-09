@@ -25,6 +25,7 @@ object Biometrics {
     private var lockedAt: LocalDateTime? = null
 
     fun lock() {
+        if (locked) return
         locked = true
         lockedAt = LocalDateTime.now()
     }
@@ -33,7 +34,6 @@ object Biometrics {
         if (!locked || isWithinLockTimeout()) {
             locked = false
             lockedAt = null
-
             callback(Outcome.SUCCESS)
             return
         }
