@@ -5,34 +5,39 @@ import androidx.compose.animation.core.tween
 import androidx.compose.ui.unit.IntOffset
 
 object Transitions {
-    private val animationSpec =
-        tween<IntOffset>(durationMillis = 300)
+    private const val ANIMATION_DURATION_MILLIS = 350
+
+    private val offsetSpec =
+        tween<IntOffset>(durationMillis = ANIMATION_DURATION_MILLIS)
+
+    private val floatSpec =
+        tween<Float>(durationMillis = ANIMATION_DURATION_MILLIS)
 
     val pushAnimation =
-        slideInHorizontally(initialOffsetX = { it }, animationSpec = animationSpec) +
-            fadeIn(animationSpec = tween(300, 90)) togetherWith
-            slideOutHorizontally(targetOffsetX = { -it / 4 }, animationSpec = animationSpec) +
-            fadeOut(animationSpec = tween(300))
+        slideInHorizontally(initialOffsetX = { it }, animationSpec = offsetSpec) +
+            fadeIn(animationSpec = floatSpec) togetherWith
+            slideOutHorizontally(targetOffsetX = { -it / 4 }, animationSpec = offsetSpec) +
+            fadeOut(animationSpec = floatSpec)
 
     val popAnimation =
-        slideInHorizontally(initialOffsetX = { -it / 4 }, animationSpec = animationSpec) +
-            fadeIn(animationSpec = tween(300)) togetherWith
-            slideOutHorizontally(targetOffsetX = { it }, animationSpec = animationSpec) +
-            fadeOut(animationSpec = tween(300))
+        slideInHorizontally(initialOffsetX = { -it / 4 }, animationSpec = offsetSpec) +
+            fadeIn(animationSpec = floatSpec) togetherWith
+            slideOutHorizontally(targetOffsetX = { it }, animationSpec = offsetSpec) +
+            fadeOut(animationSpec = floatSpec)
 
     val pushEnter =
-        slideInHorizontally(initialOffsetX = { it }, animationSpec = animationSpec) +
-            fadeIn(animationSpec = tween(300, 90))
+        slideInHorizontally(initialOffsetX = { it }, animationSpec = offsetSpec) +
+            fadeIn(animationSpec = floatSpec)
 
     val pushExit =
-        slideOutHorizontally(targetOffsetX = { -it / 4 }, animationSpec = animationSpec) +
-            fadeOut(animationSpec = tween(300))
+        slideOutHorizontally(targetOffsetX = { -it / 4 }, animationSpec = offsetSpec) +
+            fadeOut(animationSpec = floatSpec)
 
     val popEnter =
-        slideInHorizontally(initialOffsetX = { -it / 4 }, animationSpec = animationSpec) +
-            fadeIn(animationSpec = tween(300))
+        slideInHorizontally(initialOffsetX = { -it / 4 }, animationSpec = offsetSpec) +
+            fadeIn(animationSpec = floatSpec)
 
     val popExit =
-        slideOutHorizontally(targetOffsetX = { it }, animationSpec = animationSpec) +
-            fadeOut(animationSpec = tween(300))
+        slideOutHorizontally(targetOffsetX = { it }, animationSpec = offsetSpec) +
+            fadeOut(animationSpec = floatSpec)
 }

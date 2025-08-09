@@ -16,7 +16,6 @@ import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionList
-import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionListContext
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.refresh.RefreshDispatcher
@@ -35,7 +34,6 @@ fun NavigationContext.AccountForm() {
     var balanceState by volatile(TextFieldValue(account.currentBalance.toString()))
     var showLoading by volatile(false)
 
-    var listContext: TransactionListContext? = null
     val listTransactionsUseCase = getKoin().get<ListTransactionsUseCase>()
     val updateBalanceUseCase = getKoin().get<UpdateAccountBalanceUseCase>()
     val getAccountUseCase = getKoin().get<GetAccountUseCase>()
@@ -53,16 +51,8 @@ fun NavigationContext.AccountForm() {
 
     OnRefreshEvent {
         showLoading = true
-
         account = getAccountUseCase.getAccount(account.id)!!
-        listContext!!.refresh()
-
         showLoading = false
-    }
-
-    LaunchedEffect(Unit) {
-        if (!listContext!!.isLoading() && !listContext!!.containsData())
-            listContext!!.refresh()
     }
 
     LaunchedEffect(account) {
@@ -72,7 +62,7 @@ fun NavigationContext.AccountForm() {
     Scaffold(
         topBar = {
             TopAppBar(
-                modifier = Modifier.padding(end = 8.dp),
+                modifier = Modifier.padding(end = 8.dp, top = 16.dp),
                 title = {
                     Text(text = account.name)
                 },
@@ -105,7 +95,7 @@ fun NavigationContext.AccountForm() {
             Section(
                 title = i18n(R.string.tab_transactions),
             ) {
-                listContext = TransactionList(
+                 TransactionList(
                     showAccountNameOnReconciliation = false,
                     transactionsProvider = { listTransactionsUseCase.list(page = it, accountId = account.id) },
                 )

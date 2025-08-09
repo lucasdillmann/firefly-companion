@@ -114,7 +114,7 @@ fun TransactionDetails(
     Scaffold(
         topBar = {
             TopAppBar(
-                modifier = Modifier.padding(end = 8.dp),
+                modifier = Modifier.padding(end = 8.dp, top = 16.dp),
                 title = {
                     val key =
                         if (editMode) R.string.edit_transaction

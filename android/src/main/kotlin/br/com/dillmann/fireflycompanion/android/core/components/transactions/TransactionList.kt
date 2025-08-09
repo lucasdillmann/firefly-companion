@@ -1,5 +1,6 @@
 package br.com.dillmann.fireflycompanion.android.core.components.transactions
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,30 +13,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
 import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.compose.emptyVolatile
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
-import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
 import br.com.dillmann.fireflycompanion.android.core.extensions.cancel
 import br.com.dillmann.fireflycompanion.android.core.extensions.done
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 import br.com.dillmann.fireflycompanion.core.pagination.Page
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.CompletableFuture
-import java.util.logging.Logger
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun TransactionList(
     showAccountNameOnReconciliation: Boolean,
     modifier: Modifier = Modifier,
-    header: @Composable ((TransactionListContext) -> Unit)? = null,
+    header: (@Composable (Boolean) -> Unit)? = null,
     transactionsProvider: suspend (PageRequest) -> Page<Transaction>,
     dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy"),
-): TransactionListContext {
+) {
     var items by persistent(emptyList<Any>())
     var currentPage by persistent(0)
     var hasMorePages by persistent(true)
@@ -62,19 +63,19 @@ fun TransactionList(
                 lastListDate = lastPageDate
                 hasMorePages = page.hasMorePages
             } catch (e: Exception) {
-                Logger
-                    .getLogger("TransactionsList")
-                    .warning("Error loading transactions: ${e.stackTrace}")
+                Log.w("TransactionsList", "Error loading transactions", e)
             } finally {
                 loadTask = null
             }
         }
     }
 
-    val context = object : TransactionListContext {
-        override fun isLoading() = !loadTask.done()
-        override fun refresh() = loadTransactions(refresh = true)
-        override fun containsData() = items.isNotEmpty()
+    OnRefreshEvent(TransactionListScope) {
+        loadTransactions(refresh = true)
+    }
+
+    LaunchedEffect(Unit) {
+        loadTransactions()
     }
 
     LaunchedEffect(listState) {
@@ -101,7 +102,7 @@ fun TransactionList(
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             if (header != null) {
-                header(context)
+                header(loadTask.done())
             }
 
             if (loadTask.done() && items.isEmpty()) {
@@ -163,8 +164,6 @@ fun TransactionList(
             }
         }
     }
-
-    return context
 }
 
 private fun enrichWithDates(

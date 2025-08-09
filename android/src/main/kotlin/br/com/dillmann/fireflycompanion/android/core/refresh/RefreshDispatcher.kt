@@ -4,20 +4,21 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
 object RefreshDispatcher {
-    private val listeners = mutableSetOf<RefreshListener>()
+    private val listeners = mutableMapOf<RefreshListener, Any?>()
 
-    fun subscribe(listener: RefreshListener) {
-        listeners += listener
+    fun subscribe(listener: RefreshListener, scope: Any?) {
+        listeners += listener to scope
     }
 
     fun unsubscribe(listener: RefreshListener) {
         listeners -= listener
     }
 
-    suspend fun notify() {
+    suspend fun notify(scope: Any? = null) {
         coroutineScope {
-            for (listener in listeners) {
-                async { listener() }
+            for ((handler, supportedScope) in listeners) {
+                if (scope == null || supportedScope == null || scope == supportedScope)
+                    async { handler() }
             }
         }
     }

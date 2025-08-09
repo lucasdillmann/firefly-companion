@@ -5,8 +5,8 @@ import androidx.lifecycle.Lifecycle
 import br.com.dillmann.fireflycompanion.android.core.compose.OnLifecycleEvent
 
 @Composable
-fun OnRefreshEvent(handler: RefreshListener) {
-    RefreshDispatcher.subscribe(handler)
+fun OnRefreshEvent(scope: Any? = null, handler: RefreshListener) {
+    RefreshDispatcher.subscribe(handler, scope)
 
     OnLifecycleEvent(Lifecycle.Event.ON_DESTROY) {
         RefreshDispatcher.unsubscribe(handler)

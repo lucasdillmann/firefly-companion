@@ -1,5 +1,6 @@
 package br.com.dillmann.fireflycompanion.android.home.tabs
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -35,7 +36,6 @@ import br.com.dillmann.fireflycompanion.business.account.usecase.ListAccountsUse
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
 import java.math.BigDecimal
 import java.util.concurrent.CompletableFuture
-import java.util.logging.Logger
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,9 +63,7 @@ fun HomeAccountsTab(
                 accounts += page.content
                 hasMorePages = page.hasMorePages
             } catch (e: Exception) {
-                Logger
-                    .getLogger("HomeAccountsTab")
-                    .warning("Error loading transactions: ${e.stackTrace}")
+                Log.w("HomeAccountsTab", "Error loading accounts", e)
             } finally {
                 loadTask = null
             }
