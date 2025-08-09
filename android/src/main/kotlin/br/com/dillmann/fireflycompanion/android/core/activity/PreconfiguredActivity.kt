@@ -1,22 +1,25 @@
 package br.com.dillmann.fireflycompanion.android.core.activity
 
-import android.app.ComponentCaller
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.luminance
+import androidx.core.view.WindowCompat
 import br.com.dillmann.fireflycompanion.android.biometric.BiometricUnlockActivity
 import br.com.dillmann.fireflycompanion.android.biometric.Biometrics
+import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.context.AppContext
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
-import br.com.dillmann.fireflycompanion.android.core.refresh.RefreshDispatcher
 import br.com.dillmann.fireflycompanion.android.core.theme.AppTheme
 import br.com.dillmann.fireflycompanion.android.core.theme.AppThemeContext
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
@@ -30,7 +33,8 @@ abstract class PreconfiguredActivity(
 
         val preferences = getPreferences()
         if (preferences.requireBiometricLogin && Biometrics.locked && !allowAnonymous) {
-            start<BiometricUnlockActivity>()
+            val intent = Intent(this, BiometricUnlockActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -51,28 +55,39 @@ abstract class PreconfiguredActivity(
         enableEdgeToEdge()
         setContent {
             AppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) {
-                    Content(it)
+                val isDarkTheme = MaterialTheme.colorScheme.surface.luminance() < 0.5f
+
+                SideEffect {
+                    window?.let { window ->
+                        WindowCompat.getInsetsController(window, window.decorView).apply {
+                            isAppearanceLightStatusBars = !isDarkTheme
+                            isAppearanceLightNavigationBars = !isDarkTheme
+                        }
+                    }
+                }
+
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Box(
+                        modifier = Modifier
+                            .windowInsetsTopHeight(WindowInsets.statusBars)
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.surface)
+                    )
+
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        contentWindowInsets = WindowInsets(0)
+                    ) { padding ->
+                        Content(padding)
+                    }
                 }
             }
         }
+
     }
 
     private fun getPreferences(): Preferences =
         async { koin().get<GetPreferencesUseCase>().getPreferences() }.get()
-
-
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?,
-        caller: ComponentCaller,
-    ) {
-        super.onActivityResult(requestCode, resultCode, data, caller)
-
-        if (resultCode == RESULT_OK)
-            async { RefreshDispatcher.notify() }
-    }
 
     @Composable
     abstract fun Content(padding: PaddingValues)

@@ -1,14 +1,15 @@
-package br.com.dillmann.fireflycompanion.android.preferences
+package br.com.dillmann.fireflycompanion.android
 
+import android.content.Intent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
-import br.com.dillmann.fireflycompanion.android.preferences.components.PreferencesForm
 
-class PreferencesActivity : PreconfiguredActivity() {
-
+class SplashActivity : PreconfiguredActivity() {
     @Composable
     override fun Content(padding: PaddingValues) {
-        PreferencesForm(padding)
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

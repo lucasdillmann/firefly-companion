@@ -13,16 +13,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
-import br.com.dillmann.fireflycompanion.android.accounts.AccountFormActivity
-import br.com.dillmann.fireflycompanion.android.core.activity.async
-import br.com.dillmann.fireflycompanion.android.core.activity.emptyVolatile
-import br.com.dillmann.fireflycompanion.android.core.activity.persistent
-import br.com.dillmann.fireflycompanion.android.core.activity.start
+import br.com.dillmann.fireflycompanion.android.core.compose.async
+import br.com.dillmann.fireflycompanion.android.core.compose.emptyVolatile
+import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
@@ -30,6 +27,8 @@ import br.com.dillmann.fireflycompanion.android.core.extensions.cancel
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
+import br.com.dillmann.fireflycompanion.android.core.router.Route
+import br.com.dillmann.fireflycompanion.android.core.router.navigate
 import br.com.dillmann.fireflycompanion.android.home.components.HomeTopActions
 import br.com.dillmann.fireflycompanion.business.account.Account
 import br.com.dillmann.fireflycompanion.business.account.usecase.ListAccountsUseCase
@@ -155,18 +154,11 @@ private fun LoadingIndicator() {
 
 @Composable
 private fun AccountItem(account: Account) {
-    val context = LocalContext.current
-
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        onClick = {
-            context.start<AccountFormActivity>(
-                extras = mapOf("account" to account),
-                requestCode = HomeTabs.ACCOUNTS.ordinal,
-            )
-        }
+        onClick = { navigate(Route.ACCOUNT_FORM, account) },
     ) {
         Row(
             modifier = Modifier
@@ -238,6 +230,7 @@ private fun Account.Type.details(): Pair<ImageVector, String> =
         Account.Type.REVENUE -> Icons.Filled.MonetizationOn to R.string.revenue
         Account.Type.LIABILITY,
         Account.Type.LIABILITIES -> Icons.Filled.Warning to R.string.liability
+
         Account.Type.INITIAL_MINUS_BALANCE -> Icons.Filled.Remove to R.string.initial_balance
         Account.Type.RECONCILIATION -> Icons.Filled.AccountBalance to R.string.reconciliation
     }.let { (icon, stringId) ->

@@ -1,36 +1,37 @@
-package br.com.dillmann.fireflycompanion.android.preferences.components
+package br.com.dillmann.fireflycompanion.android.preferences
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import br.com.dillmann.fireflycompanion.android.core.activity.async
-import br.com.dillmann.fireflycompanion.android.core.activity.start
-import br.com.dillmann.fireflycompanion.android.core.activity.volatile
+import br.com.dillmann.fireflycompanion.android.core.compose.async
+import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.context.AppContext
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.router.NavigationContext
+import br.com.dillmann.fireflycompanion.android.core.router.Route
 import br.com.dillmann.fireflycompanion.android.core.theme.AppThemeContext
-import br.com.dillmann.fireflycompanion.android.home.HomeActivity
+import br.com.dillmann.fireflycompanion.android.preferences.components.PreferencesFormButtons
+import br.com.dillmann.fireflycompanion.android.preferences.components.PreferencesFormFields
+import br.com.dillmann.fireflycompanion.android.preferences.components.PreferencesHeader
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.SavePreferencesUseCase
 import kotlinx.coroutines.runBlocking
 
 @Composable
-fun PreferencesForm(
-    padding: PaddingValues,
-) {
+fun NavigationContext.PreferencesForm() {
     val getPreferences = koin().get<GetPreferencesUseCase>()
-    val context = LocalContext.current
     val currentPreferences = async { getPreferences.getPreferences() }.join()
     val state = volatile(currentPreferences)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(padding)
             .padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start,
@@ -42,8 +43,9 @@ fun PreferencesForm(
         )
         PreferencesFormButtons {
             submitPreferences(state.value)
-            context.start<HomeActivity>(
-                finish = true,
+            open(
+                route = Route.HOME_SCREEN,
+                finishCurrent = true,
                 replacePrevious = true,
             )
         }

@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.core.activity
+package br.com.dillmann.fireflycompanion.android.core.compose
 
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -24,8 +24,6 @@ fun <T> persistent(value: T): MutableState<T> =
 @Composable
 fun <T> volatile(value: T): MutableState<T> =
     remember { mutableStateOf(value) }
-
-
 
 @Composable
 fun <T> volatile(loader: suspend () -> T): MutableState<T> =

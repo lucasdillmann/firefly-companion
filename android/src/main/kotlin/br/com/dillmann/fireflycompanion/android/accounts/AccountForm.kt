@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.accounts.components
+package br.com.dillmann.fireflycompanion.android.accounts
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -12,14 +12,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import br.com.dillmann.fireflycompanion.android.R
-import br.com.dillmann.fireflycompanion.android.core.activity.async
-import br.com.dillmann.fireflycompanion.android.core.activity.volatile
+import br.com.dillmann.fireflycompanion.android.core.compose.async
+import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionList
 import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionListContext
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.refresh.RefreshDispatcher
+import br.com.dillmann.fireflycompanion.android.core.router.NavigationContext
 import br.com.dillmann.fireflycompanion.business.account.Account
 import br.com.dillmann.fireflycompanion.business.account.usecase.GetAccountUseCase
 import br.com.dillmann.fireflycompanion.business.account.usecase.UpdateAccountBalanceUseCase
@@ -29,10 +30,8 @@ import java.math.BigDecimal
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun AccountDetails(
-    state: MutableState<Account>,
-) {
-    var account by state
+fun NavigationContext.AccountForm() {
+    var account by volatile(requireBagValue<Account>())
     var balanceState by volatile(TextFieldValue(account.currentBalance.toString()))
     var showLoading by volatile(false)
 

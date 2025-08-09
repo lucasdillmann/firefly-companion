@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
-import br.com.dillmann.fireflycompanion.android.core.activity.persistent
-import br.com.dillmann.fireflycompanion.android.core.activity.volatile
+import br.com.dillmann.fireflycompanion.android.core.compose.persistent
+import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibility
 import br.com.dillmann.fireflycompanion.android.core.components.section.SectionCard
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n

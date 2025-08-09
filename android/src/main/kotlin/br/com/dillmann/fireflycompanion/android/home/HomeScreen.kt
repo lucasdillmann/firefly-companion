@@ -1,5 +1,6 @@
 package br.com.dillmann.fireflycompanion.android.home
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,8 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -27,69 +28,89 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import br.com.dillmann.fireflycompanion.android.R
-import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
-import br.com.dillmann.fireflycompanion.android.core.activity.start
+import br.com.dillmann.fireflycompanion.android.core.animations.Transitions
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.router.NavigationContext
+import br.com.dillmann.fireflycompanion.android.core.router.Route
 import br.com.dillmann.fireflycompanion.android.home.tabs.*
-import br.com.dillmann.fireflycompanion.android.transaction.TransactionFormActivity
 
-class HomeActivity : PreconfiguredActivity() {
-    @Composable
-    @OptIn(ExperimentalMaterial3Api::class)
-    override fun Content(padding: PaddingValues) {
-        val navController = rememberNavController()
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentDestination = navBackStackEntry?.destination
-        val context = LocalContext.current
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun NavigationContext.HomeScreen() {
+    val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
 
-        Scaffold(
-            floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                        val currentTab = currentDestination?.route?.let { HomeTabs.valueOf(it) }
-                        val requestCode = currentTab?.ordinal ?: -1
-                        context.start<TransactionFormActivity>(requestCode = requestCode)
-                    },
-                    modifier = Modifier
-                        .padding(end = 8.dp, bottom = 4.dp)
-                        .size(56.dp)
-                        .clip(RoundedCornerShape(56.dp)),
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = i18n(R.string.new_transaction),
-                    )
-                }
-            }
-        ) { innerPadding ->
-            Box(
-                modifier = Modifier.padding(innerPadding),
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    open(Route.TRANSACTION_FORM)
+                },
+                modifier = Modifier
+                    .padding(end = 8.dp, bottom = 4.dp)
+                    .size(56.dp)
+                    .clip(RoundedCornerShape(56.dp)),
             ) {
-                NavHost(
-                    navController = navController,
-                    startDestination = HomeTabs.MAIN.name,
-                ) {
-                    composable(HomeTabs.MAIN.name) { HomeMainTab() }
-                    composable(HomeTabs.TRANSACTIONS.name) { HomeTransactionsTab() }
-                    composable(HomeTabs.ACCOUNTS.name) { HomeAccountsTab() }
-                    composable(HomeTabs.ASSISTANT.name) { HomeAssistantTab() }
-                }
-
-                NavigationBar(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .navigationBarsPadding()
-                        .padding(end = 96.dp, start = 24.dp)
-                        .height(64.dp)
-                        .clip(RoundedCornerShape(64.dp)),
-                ) {
-                    HomeTabs.entries.forEach {
-                        NavBarTab(it, navController, currentDestination)
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = i18n(R.string.new_transaction),
+                )
+            }
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier.padding(innerPadding),
+        ) {
+            NavHost(
+                navController = navController,
+                startDestination = HomeTabs.MAIN.name,
+                enterTransition = {
+                    val (initialIndex, targetIndex) = transitionIndexes()
+                    if (targetIndex > initialIndex) {
+                        Transitions.pushEnter
+                    } else {
+                        Transitions.popEnter
                     }
+                },
+                exitTransition = {
+                    val (initialIndex, targetIndex) = transitionIndexes()
+                    if (targetIndex > initialIndex) {
+                        Transitions.pushExit
+                    } else {
+                        Transitions.popExit
+                    }
+                },
+            ) {
+                composable(HomeTabs.MAIN.name) { HomeMainTab() }
+                composable(HomeTabs.TRANSACTIONS.name) { HomeTransactionsTab() }
+                composable(HomeTabs.ACCOUNTS.name) { HomeAccountsTab() }
+                composable(HomeTabs.ASSISTANT.name) { HomeAssistantTab() }
+            }
+
+            NavigationBar(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .navigationBarsPadding()
+                    .padding(end = 96.dp, start = 24.dp)
+                    .height(64.dp)
+                    .clip(RoundedCornerShape(64.dp)),
+            ) {
+                HomeTabs.entries.forEach {
+                    NavBarTab(it, navController, currentDestination)
                 }
             }
         }
     }
+}
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.transitionIndexes(): Pair<Int, Int> {
+    val initialRoute = initialState.destination.route
+    val targetRoute = targetState.destination.route
+    val initialTabIndex = HomeTabs.entries.indexOfFirst { it.name == initialRoute }
+    val targetTabIndex = HomeTabs.entries.indexOfFirst { it.name == targetRoute }
+
+    return initialTabIndex to targetTabIndex
 }
 
 @Composable

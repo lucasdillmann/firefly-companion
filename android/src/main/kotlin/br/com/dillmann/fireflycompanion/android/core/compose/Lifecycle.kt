@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.core.activity
+package br.com.dillmann.fireflycompanion.android.core.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect

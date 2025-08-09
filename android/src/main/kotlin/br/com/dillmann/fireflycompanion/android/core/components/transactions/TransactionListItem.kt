@@ -9,15 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import br.com.dillmann.fireflycompanion.android.core.activity.start
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
+import br.com.dillmann.fireflycompanion.android.core.router.Route
+import br.com.dillmann.fireflycompanion.android.core.router.navigate
 import br.com.dillmann.fireflycompanion.android.core.theme.Colors
-import br.com.dillmann.fireflycompanion.android.home.tabs.HomeTabs
-import br.com.dillmann.fireflycompanion.android.transaction.TransactionFormActivity
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 
 @Composable
@@ -25,7 +23,6 @@ fun TransactionListItem(
     transaction: Transaction,
     showAccountNameOnReconciliation: Boolean,
 ) {
-    val context = LocalContext.current
     val (icon, tint) = when (transaction.type) {
         Transaction.Type.WITHDRAWAL -> Icons.Default.ArrowUpward to Colors.RED
         Transaction.Type.DEPOSIT -> Icons.Default.ArrowDownward to Colors.GREEN
@@ -45,12 +42,7 @@ fun TransactionListItem(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        onClick = {
-            context.start<TransactionFormActivity>(
-                extras = mapOf("transaction" to transaction),
-                requestCode = HomeTabs.TRANSACTIONS.ordinal,
-            )
-        }
+        onClick = { navigate(Route.TRANSACTION_FORM, transaction) },
     ) {
         Row(
             modifier = Modifier

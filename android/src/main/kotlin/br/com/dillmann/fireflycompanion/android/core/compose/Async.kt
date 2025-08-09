@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.core.activity
+package br.com.dillmann.fireflycompanion.android.core.compose
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

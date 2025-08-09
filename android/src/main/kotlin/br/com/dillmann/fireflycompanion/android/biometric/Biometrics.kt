@@ -5,7 +5,7 @@ import android.hardware.biometrics.BiometricManager
 import android.hardware.biometrics.BiometricPrompt
 import android.os.CancellationSignal
 import br.com.dillmann.fireflycompanion.android.R
-import br.com.dillmann.fireflycompanion.android.core.activity.async
+import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
 import org.koin.java.KoinJavaComponent.getKoin

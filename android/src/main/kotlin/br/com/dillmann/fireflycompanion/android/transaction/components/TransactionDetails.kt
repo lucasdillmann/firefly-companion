@@ -1,6 +1,5 @@
 package br.com.dillmann.fireflycompanion.android.transaction.components
 
-import android.app.Activity.RESULT_OK
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,8 +14,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import br.com.dillmann.fireflycompanion.android.R
-import br.com.dillmann.fireflycompanion.android.core.activity.async
-import br.com.dillmann.fireflycompanion.android.core.activity.volatile
+import br.com.dillmann.fireflycompanion.android.core.compose.async
+import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.business.currency.usecase.GetDefaultCurrencyUseCase
@@ -31,10 +30,9 @@ import java.time.OffsetDateTime
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TransactionForm(
+fun TransactionDetails(
     transaction: Transaction?,
     finish: () -> Unit,
-    setResult: (Int) -> Unit,
 ) {
     val editMode = transaction != null
     val scrollState = rememberScrollState()
@@ -71,7 +69,6 @@ fun TransactionForm(
                 )
 
                 saveAction.save(updatedTransaction)
-                setResult(RESULT_OK)
                 finish()
             } catch (ex: ConsistencyException) {
                 validationOutcome.value = ex.outcome
@@ -90,7 +87,6 @@ fun TransactionForm(
         async {
             try {
                 deleteAction.delete(id)
-                setResult(RESULT_OK)
                 finish()
             } finally {
                 showLoading.value = false

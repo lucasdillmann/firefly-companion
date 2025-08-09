@@ -13,7 +13,7 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.Main">
         <activity
-                android:name=".MainActivity"
+                android:name=".SplashActivity"
                 android:exported="true"
                 android:theme="@style/Theme.Splash">
             <intent-filter>
@@ -21,13 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".accounts.AccountFormActivity"/>
+        <activity android:name=".MainActivity"/>
         <activity android:name=".biometric.BiometricUnlockActivity"/>
-        <activity android:name=".home.HomeActivity"/>
-        <activity android:name=".transaction.TransactionFormActivity"/>
-        <activity android:name=".onboarding.OnboardingServerFormActivity"/>
-        <activity android:name=".onboarding.OnboardingStartActivity"/>
-        <activity android:name=".onboarding.OnboardingPreferencesFormActivity"/>
-        <activity android:name=".preferences.PreferencesActivity"/>
     </application>
 </manifest>
