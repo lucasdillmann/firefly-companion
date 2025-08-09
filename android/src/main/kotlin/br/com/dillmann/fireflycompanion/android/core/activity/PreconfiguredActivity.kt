@@ -31,8 +31,11 @@ abstract class PreconfiguredActivity(
     override fun onResume() {
         super.onResume()
 
+        if (allowAnonymous)
+            return
+
         val preferences = getPreferences()
-        if (preferences.requireBiometricLogin && Biometrics.locked && !allowAnonymous) {
+        if (preferences.requireBiometricLogin && Biometrics.locked) {
             val intent = Intent(this, BiometricUnlockActivity::class.java)
             startActivity(intent)
         }

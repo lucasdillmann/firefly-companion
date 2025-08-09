@@ -5,9 +5,7 @@
     <string name="cancel">Cancelar</string>
     <string name="authentication_required">Você precisa fazer login para continuar</string>
     <string name="authentication_failed">Falha no login</string>
-    <string name="authentication_failed_details">Desculpe, mas não foi possível desbloquear o app neste momento: Um erro
-        inesperado foi encontrado enquanto sua biometria era validada. Por favor, tente novamente.
-    </string>
+    <string name="authentication_failed_details">Desculpe, mas não foi possível desbloquear o app neste momento.</string>
     <string name="got_it">Entendi</string>
     <string name="unlock">Desbloquar</string>
     <string name="toggle_money_visibility">Alternar visibilidade do dinheiro</string>
@@ -106,4 +104,5 @@
     <string name="lock_timeout_five_minutes">Depois de 5 minutos</string>
     <string name="lock_timeout_ten_minutes">Depois de 10 minutos</string>
     <string name="accounts_overview">Visão geral das contas</string>
+    <string name="try_again">Tentar novamente</string>
 </resources>

@@ -11,7 +11,7 @@ class BiometricUnlockActivity : PreconfiguredActivity(allowAnonymous = true) {
 
     @Composable
     override fun Content(padding: PaddingValues) {
-        BiometricUnlockForm(padding, errorDialogVisible, ::unlock)
+        BiometricUnlockForm(errorDialogVisible, ::unlock)
     }
 
     override fun onResume() {

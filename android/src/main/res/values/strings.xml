@@ -5,9 +5,7 @@
     <string name="cancel">Cancel</string>
     <string name="authentication_required">You need to authenticate before continuing</string>
     <string name="authentication_failed">Authentication failed</string>
-    <string name="authentication_failed_details">Sorry, but we\'re unable to unlock the app at this moment: An
-        unexpected error was found while checking for your biometrics. Please try again.
-    </string>
+    <string name="authentication_failed_details">Sorry, but we\'re unable to unlock the app at this moment.</string>
     <string name="got_it">Got it</string>
     <string name="unlock">Unlock</string>
     <string name="toggle_money_visibility">Toggle money visibility</string>
@@ -105,4 +103,5 @@
     <string name="lock_timeout_five_minutes">After 5 minutes</string>
     <string name="lock_timeout_ten_minutes">After 10 minutes</string>
     <string name="accounts_overview">Accounts overview</string>
+    <string name="try_again">Try again</string>
 </resources>
