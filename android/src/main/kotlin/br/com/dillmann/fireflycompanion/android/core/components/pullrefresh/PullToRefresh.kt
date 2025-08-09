@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
-import java.lang.Thread.sleep
 
 @Composable
 @ExperimentalMaterial3Api
@@ -31,7 +30,6 @@ fun PullToRefresh(
 
         async {
             onRefresh()
-            sleep(100)
             refreshing = false
         }
     }

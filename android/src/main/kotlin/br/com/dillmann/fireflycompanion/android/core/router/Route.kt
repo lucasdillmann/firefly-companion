@@ -17,5 +17,5 @@ enum class Route(val root: @Composable NavigationContext.() -> Unit) : NavKey {
     ONBOARDING_SERVER_FORM(NavigationContext::OnboardingServerForm),
     ONBOARDING_START_SCREEN(NavigationContext::OnboardingStartScreen),
     PREFERENCES_FORM(NavigationContext::PreferencesForm),
-    TRANSACTION_FORM(NavigationContext::TransactionForm);
+    TRANSACTION_FORM(NavigationContext::TransactionForm),
 }
