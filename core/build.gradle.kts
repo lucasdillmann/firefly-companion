@@ -8,6 +8,8 @@ plugins {
 dependencies {
     api(libs.koin.core)
     api(libs.kotlin.coroutines)
+    api(libs.moshi.kotlin)
+    api(libs.moshi.adapters)
 }
 
 java {

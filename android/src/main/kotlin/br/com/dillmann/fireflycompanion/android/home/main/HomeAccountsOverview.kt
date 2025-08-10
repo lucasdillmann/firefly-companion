@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.home.components
+package br.com.dillmann.fireflycompanion.android.home.main
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -22,8 +22,11 @@ import br.com.dillmann.fireflycompanion.android.core.components.section.SectionC
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.theme.Colors
+import br.com.dillmann.fireflycompanion.android.home.HomeTabs
+import br.com.dillmann.fireflycompanion.android.home.extensions.toDateRange
 import br.com.dillmann.fireflycompanion.business.account.AccountOverview
 import br.com.dillmann.fireflycompanion.business.account.usecase.GetAccountOverviewUseCase
+import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
 import ir.ehsannarmani.compose_charts.LineChart
 import ir.ehsannarmani.compose_charts.models.*
 import org.koin.mp.KoinPlatform.getKoin
@@ -31,13 +34,12 @@ import kotlin.random.Random
 
 @Composable
 fun HomeAccountsOverview() {
-    val useCase = getKoin().get<GetAccountOverviewUseCase>()
     val monetaryValuesVisible by MoneyVisibility.state
-    var overview by persistent { useCase.getOverview() }
+    var overview by persistent(::fetchOverview)
 
-    OnRefreshEvent {
+    OnRefreshEvent(HomeTabs.MAIN) {
         overview = null
-        overview = useCase.getOverview()
+        overview = fetchOverview()
     }
 
     SectionCard(
@@ -153,3 +155,10 @@ private fun randomColor() =
         green = Random.nextFloat(),
         blue = Random.nextFloat(),
     )
+
+private suspend fun fetchOverview(): List<AccountOverview> {
+    val overviewUseCase = getKoin().get<GetAccountOverviewUseCase>()
+    val preferencesUseCase = getKoin().get<GetPreferencesUseCase>()
+    val (startDate, endDate) = preferencesUseCase.getPreferences().homePeriod.toDateRange()
+    return overviewUseCase.getOverview(startDate, endDate)
+}

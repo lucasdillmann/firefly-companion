@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.home.tabs
+package br.com.dillmann.fireflycompanion.android.home.main
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefreshWithScroll
 import br.com.dillmann.fireflycompanion.android.core.refresh.RefreshDispatcher
-import br.com.dillmann.fireflycompanion.android.home.components.*
+import br.com.dillmann.fireflycompanion.android.home.HomeTabs
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -16,7 +16,7 @@ fun HomeMainTab(
     modifier: Modifier = Modifier,
 ) {
     PullToRefreshWithScroll(
-        onRefresh = RefreshDispatcher::notify,
+        onRefresh = { RefreshDispatcher.notify(HomeTabs.MAIN) },
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(bottom = 96.dp),
     ) {

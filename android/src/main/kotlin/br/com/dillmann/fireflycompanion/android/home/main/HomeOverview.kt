@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.home.components
+package br.com.dillmann.fireflycompanion.android.home.main
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -23,19 +23,22 @@ import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.theme.Colors
+import br.com.dillmann.fireflycompanion.android.home.HomeTabs
+import br.com.dillmann.fireflycompanion.android.home.HomeTopActions
+import br.com.dillmann.fireflycompanion.android.home.extensions.toDateRange
+import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
 import br.com.dillmann.fireflycompanion.business.summary.Summary
 import br.com.dillmann.fireflycompanion.business.summary.usecase.GetSummaryUseCase
 import java.math.BigDecimal
 
 @Composable
 fun HomeOverview() {
-    val useCase = koin().get<GetSummaryUseCase>()
-    var summary by persistent { useCase.getSummary() }
+    var summary by persistent(::fetchSummary)
     val scrollState = rememberScrollState()
 
-    OnRefreshEvent {
+    OnRefreshEvent(HomeTabs.MAIN) {
         summary = null
-        summary = useCase.getSummary()
+        summary = fetchSummary()
     }
 
     Section(
@@ -44,6 +47,7 @@ fun HomeOverview() {
             HomeTopActions()
         }
     ) {
+        HomePeriodSelector()
 
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -173,4 +177,11 @@ private fun DetailContent(
         style = labelStyle,
         color = colorSchema.copy(alpha = 0.7f)
     )
+}
+
+private suspend fun fetchSummary(): Summary {
+    val overviewUseCase = koin().get<GetSummaryUseCase>()
+    val preferencesUseCase = koin().get<GetPreferencesUseCase>()
+    val (startDate, endDate) = preferencesUseCase.getPreferences().homePeriod.toDateRange()
+    return overviewUseCase.getSummary(startDate, endDate)
 }

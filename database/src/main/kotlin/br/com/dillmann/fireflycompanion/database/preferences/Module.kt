@@ -5,5 +5,5 @@ import org.koin.dsl.module
 
 internal val PreferencesModule =
     module {
-        single<PreferencesRepository> { PreferencesPreferencesRepository(get()) }
+        single<PreferencesRepository> { PreferencesPreferencesRepository(get(), get()) }
     }

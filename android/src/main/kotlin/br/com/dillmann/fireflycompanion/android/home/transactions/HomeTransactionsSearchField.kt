@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.home.components
+package br.com.dillmann.fireflycompanion.android.home.transactions
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

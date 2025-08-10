@@ -105,4 +105,14 @@
     <string name="lock_timeout_ten_minutes">Depois de 10 minutos</string>
     <string name="accounts_overview">Visão geral das contas</string>
     <string name="try_again">Tentar novamente</string>
+    <string name="last_week">Última semana</string>
+    <string name="last_month">Último mês</string>
+    <string name="last_year">Último ano</string>
+    <string name="week_so_far">Semana atual</string>
+    <string name="month_so_far">Mês atual</string>
+    <string name="year_so_far">Ano atual</string>
+    <string name="all_time">Tudo</string>
+    <string name="deposit">Entrada</string>
+    <string name="withdrawal">Saída</string>
+    <string name="transfer">Transferência</string>
 </resources>

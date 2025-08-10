@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.home.tabs
+package br.com.dillmann.fireflycompanion.android.home.assistant
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api

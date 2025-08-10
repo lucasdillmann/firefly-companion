@@ -104,4 +104,14 @@
     <string name="lock_timeout_ten_minutes">After 10 minutes</string>
     <string name="accounts_overview">Accounts overview</string>
     <string name="try_again">Try again</string>
+    <string name="last_week">Last week</string>
+    <string name="last_month">Last month</string>
+    <string name="last_year">Last year</string>
+    <string name="week_so_far">Week so far</string>
+    <string name="month_so_far">Month so far</string>
+    <string name="year_so_far">Year so far</string>
+    <string name="all_time">All time</string>
+    <string name="deposit">Deposit</string>
+    <string name="withdrawal">Withdrawal</string>
+    <string name="transfer">Transfer</string>
 </resources>

@@ -1,6 +1,7 @@
 [versions]
 agp = "8.10.0"
 kotlin = "2.2.0"
+kotlixMetadata = "0.9.0"
 coreKtx = "1.16.0"
 coreSplashscreen = "1.0.1"
 lifecycleRuntimeKtx = "2.9.2"
@@ -17,8 +18,8 @@ openApiGenerator = "7.14.0"
 kotlinCoroutines = "1.10.2"
 mapstruct = "1.6.3"
 composeCharts = "0.1.8"
-nav3Material = "1.0.0-SNAPSHOT"
 navigation3 = "1.0.0-alpha06"
+ksp = "2.2.0-2.0.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,14 +41,15 @@ koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin"
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp3" }
 moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
+moshi-kotlin-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
 moshi-adapters = { group = "com.squareup.moshi", name = "moshi-adapters", version.ref = "moshi" }
 kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinCoroutines" }
 mapstruct = { group = "org.mapstruct", name = "mapstruct", version.ref = "mapstruct" }
 mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", version.ref = "mapstruct" }
 compose-charts = { group = "io.github.ehsannarmani", name = "compose-charts", version.ref = "composeCharts" }
-androidx-navigation3-adaptive = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation3", version.ref = "nav3Material" }
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
+kotlinx-metadata-jvm = { module = "org.jetbrains.kotlinx:kotlinx-metadata-jvm", version.ref = "kotlixMetadata" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -58,3 +60,4 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 open-api-generator = { id = "org.openapi.generator", version.ref = "openApiGenerator" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

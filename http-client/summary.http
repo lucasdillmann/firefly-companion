@@ -5,3 +5,7 @@ Authorization: Bearer {{token}}
 ### Accounts
 GET {{base-url}}/v1/accounts?type=asset&active=true
 Authorization: Bearer {{token}}
+
+### Expenses by category
+GET {{base-url}}/v1/insight/expense/category?start=2025-07-10&end=2025-08-10
+Authorization: Bearer {{token}}

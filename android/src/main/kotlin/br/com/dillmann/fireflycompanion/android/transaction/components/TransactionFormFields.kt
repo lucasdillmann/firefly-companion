@@ -1,11 +1,8 @@
 package br.com.dillmann.fireflycompanion.android.transaction.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -20,6 +17,7 @@ import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.autocomplete.AutoCompleteOutlinedTextField
 import br.com.dillmann.fireflycompanion.android.core.components.datepicker.DatePicker
 import br.com.dillmann.fireflycompanion.android.core.components.datepicker.DatePickerType
+import br.com.dillmann.fireflycompanion.android.core.components.selectionrow.SelectionRow
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.business.autocomplete.AutoCompleteType
@@ -45,21 +43,14 @@ fun TransactionFormFields(
     val destinationAccountRequiredTypes = listOf(Type.TRANSFER, Type.DEPOSIT, Type.RECONCILIATION)
     val disabled = transactionType.value !in supportedTypes
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 5.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        supportedTypes.forEach { type ->
-            FilterChip(
-                selected = transactionType.value == type,
-                onClick = { transactionType.value = type },
-                label = { Text(type.name) },
-                enabled = !disabled,
-            )
-        }
-    }
+    SelectionRow(
+        options = supportedTypes,
+        textRenderer = ::translate,
+        enabled = !disabled,
+        initialSelection = transactionType.value,
+        onOptionSelected = { transactionType.value = it },
+        modifier = Modifier.padding(start = 0.dp, bottom = 8.dp),
+    )
 
     AutoCompleteOutlinedTextField(
         value = description,
@@ -124,7 +115,7 @@ fun TransactionFormFields(
         label = i18n(R.string.category),
         modifier = Modifier.fillMaxWidth(),
         disabled = disabled,
-        supportingText = { null },
+        supportingText = {},
         suggestionsProvider = {
             autoComplete.getSuggestions(AutoCompleteType.CATEGORY, it)
         },
@@ -176,3 +167,13 @@ fun TransactionFormFields(
         )
     }
 }
+
+private fun translate(type: Type) =
+    when(type) {
+        Type.DEPOSIT -> R.string.deposit
+        Type.WITHDRAWAL -> R.string.withdrawal
+        Type.TRANSFER -> R.string.transfer
+        else -> error("Unsupported type: $type")
+    }.let {
+        i18n(it)
+    }

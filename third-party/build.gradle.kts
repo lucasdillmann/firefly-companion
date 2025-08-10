@@ -15,8 +15,6 @@ dependencies {
     api(project(":business"))
 
     api(libs.okhttp3)
-    api(libs.moshi.kotlin)
-    api(libs.moshi.adapters)
     api(libs.mapstruct)
 
     kapt(libs.mapstruct.processor)
@@ -30,6 +28,7 @@ java {
 kotlin {
     compilerOptions {
         jvmTarget = JvmTarget.JVM_17
+        freeCompilerArgs.add("-Xannotation-default-target=param-property")
     }
 
     sourceSets {

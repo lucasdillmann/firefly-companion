@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.home.tabs
+package br.com.dillmann.fireflycompanion.android.home
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalance

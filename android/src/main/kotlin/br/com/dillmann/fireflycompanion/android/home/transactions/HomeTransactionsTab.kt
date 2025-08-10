@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.home.tabs
+package br.com.dillmann.fireflycompanion.android.home.transactions
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,8 +15,7 @@ import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.android.core.refresh.RefreshDispatcher
-import br.com.dillmann.fireflycompanion.android.home.components.HomeTopActions
-import br.com.dillmann.fireflycompanion.android.home.components.HomeTransactionsSearchField
+import br.com.dillmann.fireflycompanion.android.home.HomeTopActions
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.ListTransactionsUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.SearchTransactionsUseCase
 

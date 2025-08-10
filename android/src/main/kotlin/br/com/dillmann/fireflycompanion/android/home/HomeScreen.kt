@@ -32,7 +32,10 @@ import br.com.dillmann.fireflycompanion.android.core.animations.Transitions
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.router.NavigationContext
 import br.com.dillmann.fireflycompanion.android.core.router.Route
-import br.com.dillmann.fireflycompanion.android.home.tabs.*
+import br.com.dillmann.fireflycompanion.android.home.accounts.HomeAccountsTab
+import br.com.dillmann.fireflycompanion.android.home.assistant.HomeAssistantTab
+import br.com.dillmann.fireflycompanion.android.home.main.HomeMainTab
+import br.com.dillmann.fireflycompanion.android.home.transactions.HomeTransactionsTab
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)

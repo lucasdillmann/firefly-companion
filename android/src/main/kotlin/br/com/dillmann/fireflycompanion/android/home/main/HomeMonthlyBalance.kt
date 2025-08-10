@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.home.components
+package br.com.dillmann.fireflycompanion.android.home.main
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
@@ -10,9 +10,9 @@ import br.com.dillmann.fireflycompanion.android.core.components.section.SectionC
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 
 @Composable
-fun HomeGoals() {
+fun HomeMonthlyBalance() {
     SectionCard(
-        title = i18n(R.string.goals)
+        title = i18n(R.string.monthly_balance)
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),

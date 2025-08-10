@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.home.components
+package br.com.dillmann.fireflycompanion.android.home
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons

@@ -1,4 +1,4 @@
-package br.com.dillmann.fireflycompanion.android.home.tabs
+package br.com.dillmann.fireflycompanion.android.home.accounts
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
@@ -30,7 +30,7 @@ import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.router.Route
 import br.com.dillmann.fireflycompanion.android.core.router.navigate
-import br.com.dillmann.fireflycompanion.android.home.components.HomeTopActions
+import br.com.dillmann.fireflycompanion.android.home.HomeTopActions
 import br.com.dillmann.fireflycompanion.business.account.Account
 import br.com.dillmann.fireflycompanion.business.account.usecase.ListAccountsUseCase
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
