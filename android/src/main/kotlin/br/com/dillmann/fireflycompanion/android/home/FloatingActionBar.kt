@@ -43,7 +43,7 @@ fun FloatingActionBar(
 ) {
     Box(modifier = modifier) {
         NavigationBar(
-            modifier = modifier
+            modifier = Modifier
                 .align(Alignment.BottomStart)
                 .navigationBarsPadding()
                 .padding(end = 96.dp, start = 24.dp)

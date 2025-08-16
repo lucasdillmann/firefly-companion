@@ -2,16 +2,20 @@ package br.com.dillmann.fireflycompanion.android.core.animations
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 
 object Transitions {
     private const val ANIMATION_DURATION_MILLIS = 350
 
-    private val offsetSpec =
+    val offsetSpec =
         tween<IntOffset>(durationMillis = ANIMATION_DURATION_MILLIS)
 
-    private val floatSpec =
+    val floatSpec =
         tween<Float>(durationMillis = ANIMATION_DURATION_MILLIS)
+
+    val dpSpec =
+        tween<Dp>(durationMillis = ANIMATION_DURATION_MILLIS)
 
     val pushAnimation =
         slideInHorizontally(initialOffsetX = { it }, animationSpec = offsetSpec) +

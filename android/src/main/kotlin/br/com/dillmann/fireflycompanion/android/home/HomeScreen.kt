@@ -1,6 +1,8 @@
 package br.com.dillmann.fireflycompanion.android.home
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -10,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -55,12 +59,34 @@ fun NavigationContext.HomeScreen() {
             composable(HomeTabs.ASSISTANT.name) { HomeAssistantTab() }
         }
 
-        FloatingActionBar(
-            navController = navController,
-            currentDestination = currentDestination,
-            modifier = Modifier.align(Alignment.BottomCenter),
+        ActionBar(
+            navController,
+            currentDestination,
+            Modifier.align(Alignment.BottomCenter),
         )
     }
+}
+
+@Composable
+private fun ActionBar(
+    navController: NavController,
+    currentDestination: NavDestination?,
+    modifier: Modifier,
+) {
+    val paddingAmount =
+        if (currentDestination?.route == HomeTabs.ASSISTANT.name) 76.dp
+        else 8.dp
+
+    val padding by animateDpAsState(
+        targetValue = paddingAmount,
+        animationSpec = Transitions.dpSpec,
+    )
+
+    FloatingActionBar(
+        navController = navController,
+        currentDestination = currentDestination,
+        modifier = modifier.padding(bottom = padding),
+    )
 }
 
 private fun AnimatedContentTransitionScope<NavBackStackEntry>.transitionIndexes(): Pair<Int, Int> {
