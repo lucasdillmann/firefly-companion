@@ -20,6 +20,7 @@ mapstruct = "1.6.3"
 composeCharts = "0.1.8"
 navigation3 = "1.0.0-alpha06"
 ksp = "2.2.0-2.0.2"
+googleGuava = "33.4.8-android"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,6 +51,7 @@ compose-charts = { group = "io.github.ehsannarmani", name = "compose-charts", ve
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
 kotlinx-metadata-jvm = { module = "org.jetbrains.kotlinx:kotlinx-metadata-jvm", version.ref = "kotlixMetadata" }
+google-guava = { module = "com.google.guava:guava", version.ref = "googleGuava" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

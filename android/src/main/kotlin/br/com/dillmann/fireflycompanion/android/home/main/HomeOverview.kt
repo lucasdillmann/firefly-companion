@@ -32,10 +32,9 @@ import br.com.dillmann.fireflycompanion.business.overview.usecase.SummaryOvervie
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
 import java.math.BigDecimal
 
-private val queue = ActionQueue()
-
 @Composable
 fun HomeOverview() {
+    val queue by persistent(ActionQueue())
     var summary by persistent(::fetchSummary)
     val scrollState = rememberScrollState()
 

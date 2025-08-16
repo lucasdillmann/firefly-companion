@@ -38,10 +38,9 @@ import ir.ehsannarmani.compose_charts.ColumnChart
 import ir.ehsannarmani.compose_charts.models.*
 import org.koin.java.KoinJavaComponent.getKoin
 
-private val queue = ActionQueue()
-
 @Composable
 fun HomeExpensesByCategory() {
+    val queue by persistent(ActionQueue())
     val monetaryValuesVisible by MoneyVisibility.state
     val currency by persistent { getKoin().get<GetDefaultCurrencyUseCase>().getDefault() }
     var overview by persistent(::fetchOverview)

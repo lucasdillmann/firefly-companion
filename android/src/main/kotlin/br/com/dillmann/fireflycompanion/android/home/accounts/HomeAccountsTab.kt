@@ -37,13 +37,12 @@ import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
 import java.math.BigDecimal
 import java.util.concurrent.CompletableFuture
 
-private val queue = ActionQueue()
-
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun HomeAccountsTab(
     modifier: Modifier = Modifier,
 ) {
+    val queue by persistent(ActionQueue())
     val listUseCase = koin().get<ListAccountsUseCase>()
     var accounts by persistent(emptyList<Account>())
     var currentPage by persistent(0)

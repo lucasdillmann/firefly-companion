@@ -4,7 +4,6 @@ import br.com.dillmann.fireflycompanion.android.core.compose.async
 
 
 object RefreshDispatcher {
-    private val lockHolder = Any()
     private val listeners = mutableMapOf<RefreshListener, Any?>()
 
     @Synchronized
@@ -18,12 +17,8 @@ object RefreshDispatcher {
     }
 
     fun notify(scope: Any? = null) {
-        synchronized(lockHolder) {
-            async {
-                listeners
-                    .filter { (_, supportedScope) -> scope == null || supportedScope == scope }
-                    .map { (handler, _) -> handler() }
-            }.join()
-        }
+        listeners
+            .filter { (_, supportedScope) -> scope == null || supportedScope == scope }
+            .map { (handler, _) -> async { handler() } }
     }
 }

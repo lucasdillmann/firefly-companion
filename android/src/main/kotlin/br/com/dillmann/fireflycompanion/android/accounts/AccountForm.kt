@@ -18,6 +18,7 @@ import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionList
 import br.com.dillmann.fireflycompanion.android.core.compose.async
+import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
@@ -31,11 +32,10 @@ import br.com.dillmann.fireflycompanion.business.transaction.usecase.ListTransac
 import org.koin.java.KoinJavaComponent.getKoin
 import java.math.BigDecimal
 
-private val queue = ActionQueue()
-
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavigationContext.AccountForm() {
+    val queue by persistent(ActionQueue())
     var account by volatile(requireBagValue<Account>())
     var balanceState by volatile(TextFieldValue(account.currentBalance.toString()))
     var showLoading by volatile(false)

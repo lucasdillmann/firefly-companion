@@ -28,7 +28,7 @@ dependencies {
     implementation(libs.compose.charts)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
-//    implementation(libs.androidx.navigation3.adaptive)
+    implementation(libs.google.guava)
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)

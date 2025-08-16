@@ -34,10 +34,9 @@ import ir.ehsannarmani.compose_charts.LineChart
 import ir.ehsannarmani.compose_charts.models.*
 import org.koin.mp.KoinPlatform.getKoin
 
-private val queue = ActionQueue()
-
 @Composable
 fun HomeAccountsOverview() {
+    val queue by persistent(ActionQueue())
     val monetaryValuesVisible by MoneyVisibility.state
     var overview by persistent(::fetchOverview)
 
