@@ -15,18 +15,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
-import br.com.dillmann.fireflycompanion.android.core.compose.async
-import br.com.dillmann.fireflycompanion.android.core.compose.emptyVolatile
-import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
-import br.com.dillmann.fireflycompanion.android.core.extensions.cancel
+import br.com.dillmann.fireflycompanion.android.core.compose.persistent
+import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.router.Route
 import br.com.dillmann.fireflycompanion.android.core.router.navigate
@@ -37,6 +37,8 @@ import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
 import java.math.BigDecimal
 import java.util.concurrent.CompletableFuture
 
+private val queue = ActionQueue()
+
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun HomeAccountsTab(
@@ -46,18 +48,18 @@ fun HomeAccountsTab(
     var accounts by persistent(emptyList<Account>())
     var currentPage by persistent(0)
     var hasMorePages by persistent(true)
+    var loading by volatile(false)
     val listState = rememberLazyListState()
-    var loadTask by emptyVolatile<CompletableFuture<Unit>>()
 
     fun loadAccounts(pageNumber: Int = 0, refresh: Boolean = false) {
-        loadTask.cancel()
-        if (refresh) {
-            hasMorePages = true
-            currentPage = 0
-            accounts = emptyList()
-        }
+        queue.add {
+            loading = true
+            if (refresh) {
+                hasMorePages = true
+                currentPage = 0
+                accounts = emptyList()
+            }
 
-        loadTask = async {
             try {
                 val page = listUseCase.listAccounts(page = PageRequest(pageNumber))
                 accounts += page.content
@@ -65,7 +67,7 @@ fun HomeAccountsTab(
             } catch (e: Exception) {
                 Log.w("HomeAccountsTab", "Error loading accounts", e)
             } finally {
-                loadTask = null
+                loading = false
             }
         }
     }
@@ -75,18 +77,14 @@ fun HomeAccountsTab(
     }
 
     LaunchedEffect(Unit) {
-        if (accounts.isEmpty() && loadTask.done())
+        if (accounts.isEmpty() && !loading)
             loadAccounts()
-    }
-
-    DisposableEffect(Unit) {
-        onDispose { loadTask.cancel() }
     }
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .collect { lastVisibleIndex ->
-                if (lastVisibleIndex != null && loadTask.done()) {
+                if (lastVisibleIndex != null && !loading) {
                     val totalItems = accounts.size
                     if (lastVisibleIndex >= totalItems - 3 && totalItems > 0 && hasMorePages) {
                         currentPage++
@@ -98,7 +96,7 @@ fun HomeAccountsTab(
 
     PullToRefresh(
         onRefresh = { loadAccounts(refresh = true) },
-        enabled = loadTask.done(),
+        enabled = !loading,
         modifier = modifier.fillMaxSize(),
     ) {
         Section(
@@ -107,11 +105,22 @@ fun HomeAccountsTab(
                 HomeTopActions()
             }
         ) {
-            if (loadTask.done() && accounts.isEmpty()) {
+            if (!loading && accounts.isEmpty()) {
                 Text(
-                    text = i18n(R.string.not_implemented),
+                    text = i18n(R.string.no_data_yet),
+                    style = MaterialTheme.typography.headlineMedium,
+                    modifier = Modifier
+                        .padding(top = 96.dp)
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    text = i18n(R.string.click_the_button_bellow_to_add),
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center,
                 )
             } else {
                 LazyColumn(
@@ -124,7 +133,7 @@ fun HomeAccountsTab(
                         AccountItem(transaction)
                     }
 
-                    if (!loadTask.done()) {
+                    if (loading) {
                         item {
                             LoadingIndicator()
                         }

@@ -92,7 +92,7 @@
     <string name="source_account">Source account</string>
     <string name="destination_account">Destination account</string>
     <string name="date">Date</string>
-    <string name="no_transactions_yet">There\'s no transactions. Yet.</string>
+    <string name="no_data_yet">There\'s nothing here. Yet.</string>
     <string name="click_the_button_bellow_to_add">Click the add button bellow to create your first</string>
     <string name="lock_timeout">Lock the app</string>
     <string name="lock_timeout_immediately">Immediately</string>

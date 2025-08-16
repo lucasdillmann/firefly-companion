@@ -23,6 +23,7 @@ import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 fun <T> SelectionRow(
     options: List<T>,
     modifier: Modifier = Modifier,
+    pinSelectionToStart: Boolean = false,
     textRenderer: (T) -> String,
     onOptionSelected: (T) -> Unit,
     initialSelection: T? = options.first(),
@@ -36,14 +37,14 @@ fun <T> SelectionRow(
         horizontalArrangement = Arrangement.Absolute.Left,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        selectedItem?.let {
+        if (pinSelectionToStart && selectedItem != null) {
             ChipOption(
-                text = textRenderer(it),
+                text = textRenderer(selectedItem!!),
                 selected = true,
                 enabled = enabled,
                 onClick = {
                     if (enabled) {
-                        onOptionSelected(it)
+                        onOptionSelected(selectedItem!!)
                     }
                 }
             )
@@ -55,11 +56,11 @@ fun <T> SelectionRow(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             options
-                .filter { it != selectedItem }
+                .filter { !pinSelectionToStart || it != selectedItem }
                 .forEach { option ->
                     ChipOption(
                         text = textRenderer(option),
-                        selected = false,
+                        selected = selectedItem == option,
                         enabled = enabled,
                         onClick = {
                             if (enabled) {

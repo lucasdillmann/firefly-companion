@@ -1,10 +1,9 @@
 package br.com.dillmann.fireflycompanion.android.home.main
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,11 +14,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
-import br.com.dillmann.fireflycompanion.android.core.compose.persistent
-import br.com.dillmann.fireflycompanion.android.core.compose.volatile
+import br.com.dillmann.fireflycompanion.android.core.components.colorpool.ColorPool
+import br.com.dillmann.fireflycompanion.android.core.components.contenthidden.ContentHiddenIcon
+import br.com.dillmann.fireflycompanion.android.core.components.loading.LoadingIndicator
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibility
 import br.com.dillmann.fireflycompanion.android.core.components.section.SectionCard
+import br.com.dillmann.fireflycompanion.android.core.compose.persistent
+import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.theme.Colors
 import br.com.dillmann.fireflycompanion.android.home.HomeTabs
@@ -30,7 +33,8 @@ import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferen
 import ir.ehsannarmani.compose_charts.LineChart
 import ir.ehsannarmani.compose_charts.models.*
 import org.koin.mp.KoinPlatform.getKoin
-import kotlin.random.Random
+
+private val queue = ActionQueue()
 
 @Composable
 fun HomeAccountsOverview() {
@@ -38,8 +42,10 @@ fun HomeAccountsOverview() {
     var overview by persistent(::fetchOverview)
 
     OnRefreshEvent(HomeTabs.MAIN) {
-        overview = null
-        overview = fetchOverview()
+        queue.add {
+            overview = null
+            overview = fetchOverview()
+        }
     }
 
     SectionCard(
@@ -64,37 +70,13 @@ fun HomeAccountsOverview() {
 }
 
 @Composable
-private fun ContentHiddenIcon() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        Icon(
-            modifier = Modifier.size(32.dp),
-            contentDescription = "",
-            imageVector = Icons.Filled.VisibilityOff,
-        )
-    }
-}
-
-@Composable
-private fun LoadingIndicator() {
-    CircularProgressIndicator(
-        modifier = Modifier.size(24.dp),
-        strokeWidth = 2.dp
-    )
-}
-
-@Composable
 private fun Graph(overview: List<AccountOverview>) {
     val data by volatile {
-        overview.map {
-            val baseColor = randomColor()
+        overview.mapIndexed { index, item ->
+            val baseColor = ColorPool.indexed(index)
             Line(
-                label = it.name,
-                values = it.balanceHistory.values.map { it.toDouble() },
+                label = item.name,
+                values = item.balanceHistory.values.map { it.toDouble() },
                 curvedEdges = true,
                 color = SolidColor(baseColor),
                 firstGradientFillColor = baseColor.copy(alpha = 0.25f),
@@ -148,13 +130,6 @@ private fun Graph(overview: List<AccountOverview>) {
         )
     )
 }
-
-private fun randomColor() =
-    Color(
-        red = Random.nextFloat(),
-        green = Random.nextFloat(),
-        blue = Random.nextFloat(),
-    )
 
 private suspend fun fetchOverview(): List<AccountOverview> {
     val overviewUseCase = getKoin().get<GetAccountOverviewUseCase>()

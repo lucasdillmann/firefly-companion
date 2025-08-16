@@ -14,19 +14,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.pullrefresh.PullToRefresh
-import br.com.dillmann.fireflycompanion.android.core.compose.async
-import br.com.dillmann.fireflycompanion.android.core.compose.emptyVolatile
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
-import br.com.dillmann.fireflycompanion.android.core.extensions.cancel
-import br.com.dillmann.fireflycompanion.android.core.extensions.done
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 import br.com.dillmann.fireflycompanion.core.pagination.Page
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.concurrent.CompletableFuture
+
+private val queue = ActionQueue()
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,18 +40,18 @@ fun TransactionList(
     var hasMorePages by persistent(true)
     var lastListDate by persistent<LocalDate?>(null)
     val listState = rememberLazyListState()
-    var loadTask by emptyVolatile<CompletableFuture<Unit>>()
+    var loading by persistent(false)
 
     fun loadTransactions(pageNumber: Int = 0, refresh: Boolean = false) {
-        loadTask.cancel()
-        if (refresh) {
-            currentPage = 0
-            hasMorePages = true
-            items = emptyList()
-            lastListDate = null
-        }
+        queue.add {
+            loading = true
+            if (refresh) {
+                currentPage = 0
+                hasMorePages = true
+                items = emptyList()
+                lastListDate = null
+            }
 
-        loadTask = async {
             try {
                 val pageRequest = PageRequest(pageNumber)
                 val page = transactionsProvider(pageRequest)
@@ -65,7 +63,7 @@ fun TransactionList(
             } catch (e: Exception) {
                 Log.w("TransactionsList", "Error loading transactions", e)
             } finally {
-                loadTask = null
+                loading = false
             }
         }
     }
@@ -81,7 +79,7 @@ fun TransactionList(
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .collect { lastVisibleIndex ->
-                if (lastVisibleIndex != null && loadTask.done()) {
+                if (lastVisibleIndex != null && !loading) {
                     val totalItems = items.size
                     if (lastVisibleIndex >= totalItems - 3 && totalItems > 0 && hasMorePages) {
                         currentPage++
@@ -91,23 +89,19 @@ fun TransactionList(
             }
     }
 
-    DisposableEffect(Unit) {
-        onDispose { loadTask.cancel() }
-    }
-
     PullToRefresh(
         onRefresh = { loadTransactions(refresh = true) },
-        enabled = loadTask.done(),
+        enabled = !loading,
         modifier = modifier.fillMaxSize(),
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             if (header != null) {
-                header(loadTask.done())
+                header(!loading)
             }
 
-            if (loadTask.done() && items.isEmpty()) {
+            if (!loading && items.isEmpty()) {
                 Text(
-                    text = i18n(R.string.no_transactions_yet),
+                    text = i18n(R.string.no_data_yet),
                     style = MaterialTheme.typography.headlineMedium,
                     modifier = Modifier
                         .padding(top = 96.dp)
@@ -155,7 +149,7 @@ fun TransactionList(
                         }
                     }
 
-                    if (!loadTask.done()) {
+                    if (loading) {
                         item {
                             TransactionListLoadingIndicator()
                         }

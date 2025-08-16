@@ -93,7 +93,7 @@
     <string name="source_account">Conta de origem</string>
     <string name="destination_account">Conta de destino</string>
     <string name="date">Data</string>
-    <string name="no_transactions_yet">Nenhuma transação encontrada</string>
+    <string name="no_data_yet">Nada por aqui (ainda)</string>
     <string name="click_the_button_bellow_to_add">Toque no adicionar abaixo para criar a sua primeira</string>
     <string name="lock_timeout">Bloquear o app</string>
     <string name="lock_timeout_immediately">Imediatamente</string>

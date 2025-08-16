@@ -10,10 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.TextFieldValue
 import br.com.dillmann.fireflycompanion.android.core.compose.async
-import br.com.dillmann.fireflycompanion.android.core.compose.emptyVolatile
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
-import br.com.dillmann.fireflycompanion.android.core.extensions.cancel
-import java.util.concurrent.CompletableFuture
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,13 +25,16 @@ fun AutoCompleteOutlinedTextField(
 ) {
     var expanded by persistent(false)
     var suggestions by persistent(emptyList<String>())
-    var searchJob by emptyVolatile<CompletableFuture<Unit>>()
+    var loading by persistent(false)
     val showDropdown = suggestions.isNotEmpty() && expanded
 
-    fun fetchSuggestions() {
-        searchJob.cancel()
-        searchJob = async {
+    suspend fun fetchSuggestions() {
+        loading = true
+
+        try {
             suggestions = suggestionsProvider(value.value.text)
+        } finally {
+            loading = false
         }
     }
 
@@ -47,7 +47,7 @@ fun AutoCompleteOutlinedTextField(
             value = value.value,
             onValueChange = {
                 value.value = it
-                fetchSuggestions()
+                async { fetchSuggestions() }.join()
                 expanded = true
             },
             isError = isError,
@@ -59,7 +59,7 @@ fun AutoCompleteOutlinedTextField(
                 .menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryEditable)
                 .onFocusChanged {
                     if (it.isFocused) {
-                        fetchSuggestions()
+                        async { fetchSuggestions() }.join()
                         expanded = true
                     }
                 },
@@ -74,7 +74,6 @@ fun AutoCompleteOutlinedTextField(
                     text = { Text(it) },
                     onClick = {
                         value.value = TextFieldValue(it)
-                        searchJob.cancel()
                         expanded = false
                     }
                 )

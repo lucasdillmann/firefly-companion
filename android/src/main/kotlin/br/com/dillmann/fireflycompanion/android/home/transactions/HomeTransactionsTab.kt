@@ -10,7 +10,6 @@ import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionList
 import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionListScope
-import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
@@ -42,9 +41,7 @@ fun HomeTransactionsTab(
                     searchTerms = searchTerms,
                     onChange = { searchTerms = it },
                     enabled = ready,
-                    refresh = {
-                        async { RefreshDispatcher.notify(TransactionListScope) }
-                    },
+                    refresh = { RefreshDispatcher.notify(TransactionListScope) },
                 )
             },
             transactionsProvider = {
@@ -56,6 +53,6 @@ fun HomeTransactionsTab(
 
     BackHandler(enabled = searchTerms.isNotBlank()) {
         searchTerms = ""
-        async { RefreshDispatcher.notify(TransactionListScope) }
+        RefreshDispatcher.notify(TransactionListScope)
     }
 }

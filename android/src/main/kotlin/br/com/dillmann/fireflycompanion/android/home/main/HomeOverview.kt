@@ -16,20 +16,23 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
-import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
+import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.theme.Colors
 import br.com.dillmann.fireflycompanion.android.home.HomeTabs
 import br.com.dillmann.fireflycompanion.android.home.HomeTopActions
 import br.com.dillmann.fireflycompanion.android.home.extensions.toDateRange
+import br.com.dillmann.fireflycompanion.business.overview.model.SummaryOverview
+import br.com.dillmann.fireflycompanion.business.overview.usecase.SummaryOverviewUseCase
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
-import br.com.dillmann.fireflycompanion.business.summary.Summary
-import br.com.dillmann.fireflycompanion.business.summary.usecase.GetSummaryUseCase
 import java.math.BigDecimal
+
+private val queue = ActionQueue()
 
 @Composable
 fun HomeOverview() {
@@ -37,8 +40,10 @@ fun HomeOverview() {
     val scrollState = rememberScrollState()
 
     OnRefreshEvent(HomeTabs.MAIN) {
-        summary = null
-        summary = fetchSummary()
+        queue.add {
+            summary = null
+            summary = fetchSummary()
+        }
     }
 
     Section(
@@ -111,10 +116,10 @@ fun HomeOverview() {
 @Composable
 private fun DetailBlock(
     title: String,
-    summary: Summary?,
+    summary: SummaryOverview?,
     modifier: Modifier = Modifier,
     tintColor: Color? = null,
-    valueProvider: (Summary) -> BigDecimal?,
+    valueProvider: (SummaryOverview) -> BigDecimal?,
 ) {
     val baseColor = MaterialTheme.colorScheme.secondaryContainer
     val compositeColor = tintColor
@@ -150,11 +155,11 @@ private fun DetailBlock(
 @Composable
 private fun DetailContent(
     title: String,
-    summary: Summary?,
+    summary: SummaryOverview?,
     colorSchema: Color,
     valueStyle: TextStyle,
     labelStyle: TextStyle,
-    valueProvider: (Summary) -> BigDecimal?,
+    valueProvider: (SummaryOverview) -> BigDecimal?,
 ) {
     if (summary == null) {
         CircularProgressIndicator(
@@ -179,8 +184,8 @@ private fun DetailContent(
     )
 }
 
-private suspend fun fetchSummary(): Summary {
-    val overviewUseCase = koin().get<GetSummaryUseCase>()
+private suspend fun fetchSummary(): SummaryOverview {
+    val overviewUseCase = koin().get<SummaryOverviewUseCase>()
     val preferencesUseCase = koin().get<GetPreferencesUseCase>()
     val (startDate, endDate) = preferencesUseCase.getPreferences().homePeriod.toDateRange()
     return overviewUseCase.getSummary(startDate, endDate)

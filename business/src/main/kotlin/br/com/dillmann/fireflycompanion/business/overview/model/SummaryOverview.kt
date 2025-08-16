@@ -1,10 +1,10 @@
-package br.com.dillmann.fireflycompanion.business.summary
+package br.com.dillmann.fireflycompanion.business.overview.model
 
 import br.com.dillmann.fireflycompanion.business.currency.Currency
 import java.io.Serializable
 import java.math.BigDecimal
 
-data class Summary(
+data class SummaryOverview(
     val currency: Currency,
     val netWorth: BigDecimal = BigDecimal.ZERO,
     val earned: BigDecimal? = null,

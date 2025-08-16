@@ -22,6 +22,7 @@ fun HomePeriodSelector() {
         textRenderer = ::translate,
         onOptionSelected = ::saveSelection,
         initialSelection = getPreferences().homePeriod,
+        pinSelectionToStart = true,
         modifier = Modifier.padding(bottom = 8.dp),
     )
 }

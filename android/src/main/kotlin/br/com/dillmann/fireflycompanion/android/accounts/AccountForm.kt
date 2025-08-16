@@ -3,7 +3,10 @@ package br.com.dillmann.fireflycompanion.android.accounts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -12,11 +15,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import br.com.dillmann.fireflycompanion.android.R
-import br.com.dillmann.fireflycompanion.android.core.compose.async
-import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionList
+import br.com.dillmann.fireflycompanion.android.core.compose.async
+import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.refresh.RefreshDispatcher
 import br.com.dillmann.fireflycompanion.android.core.router.NavigationContext
@@ -27,13 +31,14 @@ import br.com.dillmann.fireflycompanion.business.transaction.usecase.ListTransac
 import org.koin.java.KoinJavaComponent.getKoin
 import java.math.BigDecimal
 
+private val queue = ActionQueue()
+
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavigationContext.AccountForm() {
     var account by volatile(requireBagValue<Account>())
     var balanceState by volatile(TextFieldValue(account.currentBalance.toString()))
     var showLoading by volatile(false)
-
     val listTransactionsUseCase = getKoin().get<ListTransactionsUseCase>()
     val updateBalanceUseCase = getKoin().get<UpdateAccountBalanceUseCase>()
     val getAccountUseCase = getKoin().get<GetAccountUseCase>()
@@ -50,9 +55,11 @@ fun NavigationContext.AccountForm() {
     }
 
     OnRefreshEvent {
-        showLoading = true
-        account = getAccountUseCase.getAccount(account.id)!!
-        showLoading = false
+        queue.add {
+            showLoading = true
+            account = getAccountUseCase.getAccount(account.id)!!
+            showLoading = false
+        }
     }
 
     LaunchedEffect(account) {

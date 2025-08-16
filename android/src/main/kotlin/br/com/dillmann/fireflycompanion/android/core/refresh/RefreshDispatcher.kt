@@ -1,10 +1,10 @@
 package br.com.dillmann.fireflycompanion.android.core.refresh
 
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
+import br.com.dillmann.fireflycompanion.android.core.compose.async
+
 
 object RefreshDispatcher {
+    private val lockHolder = Any()
     private val listeners = mutableMapOf<RefreshListener, Any?>()
 
     @Synchronized
@@ -17,12 +17,13 @@ object RefreshDispatcher {
         listeners -= listener
     }
 
-    suspend fun notify(scope: Any? = null) {
-        coroutineScope {
-            listeners
-                .filter {(_, supportedScope) -> scope == null || supportedScope == scope }
-                .map { (handler, _) -> async { handler()} }
-                .awaitAll()
+    fun notify(scope: Any? = null) {
+        synchronized(lockHolder) {
+            async {
+                listeners
+                    .filter { (_, supportedScope) -> scope == null || supportedScope == scope }
+                    .map { (handler, _) -> handler() }
+            }.join()
         }
     }
 }

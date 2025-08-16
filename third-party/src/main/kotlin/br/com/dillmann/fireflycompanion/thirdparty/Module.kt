@@ -7,6 +7,7 @@ import br.com.dillmann.fireflycompanion.thirdparty.charts.ChartsModule
 import br.com.dillmann.fireflycompanion.thirdparty.connectiontest.ConnectionTestModule
 import br.com.dillmann.fireflycompanion.thirdparty.core.CoreModule
 import br.com.dillmann.fireflycompanion.thirdparty.currency.CurrencyModule
+import br.com.dillmann.fireflycompanion.thirdparty.insight.InsightModule
 import br.com.dillmann.fireflycompanion.thirdparty.search.SearchModule
 import br.com.dillmann.fireflycompanion.thirdparty.summary.SummaryModule
 import br.com.dillmann.fireflycompanion.thirdparty.transaction.TransactionModule
@@ -23,6 +24,7 @@ val ThirdPartyModule =
         loadKoinModules(ChartsModule)
         loadKoinModules(ConnectionTestModule)
         loadKoinModules(CurrencyModule)
+        loadKoinModules(InsightModule)
         loadKoinModules(SummaryModule)
         loadKoinModules(SearchModule)
         loadKoinModules(TransactionModule)

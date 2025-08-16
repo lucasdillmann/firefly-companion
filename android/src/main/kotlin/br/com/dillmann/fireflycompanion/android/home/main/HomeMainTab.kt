@@ -22,8 +22,8 @@ fun HomeMainTab(
     ) {
         item { HomeOverview() }
         item { HomeAccountsOverview() }
-        item { HomeCreditCards() }
         item { HomeExpensesByCategory() }
+        item { HomeCreditCards() }
         item { HomeBudgets() }
         item { HomeMonthlySavings() }
         item { HomeSpendFrequency() }
