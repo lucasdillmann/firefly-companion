@@ -55,9 +55,15 @@ openApiGenerate {
     generatorName = "kotlin"
     configOptions.putAll(
         mapOf(
+            "serializationLibrary" to "gson",
             "dateLibrary" to "java8",
             "modelMutable" to "true",
             "enumPropertyNaming" to "UPPERCASE",
+        )
+    )
+    additionalProperties.putAll(
+        mapOf(
+        "serializationLibrary" to "gson",
         )
     )
     typeMappings.putAll(

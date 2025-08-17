@@ -7,22 +7,15 @@ data class LLMResponse(
     val timestamp: OffsetDateTime,
     val messages: List<Message>,
 ) {
-    enum class Type {
-        SIMPLE_TEXT,
-        FUNCTION_CALL,
-    }
-
-    data class Message(
-        val type: Type,
-        val content: Any?,
-    )
+    sealed interface Message
 
     data class FunctionCall(
         val name: String,
+        val callId: String,
         val arguments: Map<String, Any?>? = null,
-    )
+    ) : Message
 
     data class SimpleText(
         val content: String,
-    )
+    ) : Message
 }

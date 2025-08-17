@@ -29,6 +29,8 @@ import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.context.AppContext
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
+import br.com.dillmann.fireflycompanion.business.assistant.AssistantSession
+import br.com.dillmann.fireflycompanion.business.assistant.AssistantSession.State
 import br.com.dillmann.fireflycompanion.business.assistant.model.AssistantMessage
 import br.com.dillmann.fireflycompanion.business.assistant.usecase.StartAssistantSessionUseCase
 import kotlinx.coroutines.launch
@@ -49,7 +51,7 @@ fun HomeAssistantTab() {
 
     val queue by persistent(ActionQueue())
     var input by volatile(TextFieldValue(""))
-    var thinking by persistent(false)
+    var state by persistent(State.IDLE)
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
@@ -66,39 +68,46 @@ fun HomeAssistantTab() {
         )
     }
 
-    fun appendMessages(newMessages: List<AssistantMessage>, forceScroll: Boolean = false) =
+    fun appendMessage(message: AssistantMessage, forceScroll: Boolean = false) =
         scope.launch {
             val lastVisible = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1
             val wasAtBottom = lastVisible >= (messages.size - 1)
 
-            messages += newMessages
+            messages += message
 
             if (wasAtBottom || forceScroll) {
                 listState.animateScrollBy(listState.layoutInfo.viewportSize.height.toFloat())
             }
         }
 
-    fun appendMessage(newMessage: AssistantMessage, forceScroll: Boolean = false) =
-        appendMessages(listOf(newMessage), forceScroll)
+    val callback = object: AssistantSession.Callback {
+        override suspend fun message(response: AssistantMessage) {
+            appendMessage(response)
+        }
+
+        override suspend fun state(newState: State) {
+            state = newState
+        }
+    }
 
     fun sendMessageIfAble() {
-        val canSend = input.text.isNotBlank() && !thinking
+        val canSend = input.text.isNotBlank() && state == State.IDLE
         if (!canSend) return
+
         val content = input.text.trim()
         input = TextFieldValue("")
         appendMessage(
-            newMessage = AssistantMessage(
+            message = AssistantMessage(
                 timestamp = OffsetDateTime.now(),
                 sender = AssistantMessage.Sender.USER,
                 content = content,
             ),
             forceScroll = true,
         )
-        thinking = true
+
         queue.add {
             try {
-                val replies = session.sendMessage(content)
-                appendMessages(replies)
+                session.sendMessage(content, callback)
             } catch (ex: Exception) {
                 Log.w("HomeAssistantTab", "Error sending assistant message", ex)
                 appendMessage(
@@ -108,8 +117,7 @@ fun HomeAssistantTab() {
                         content = i18n(R.string.assistant_generic_error_response),
                     )
                 )
-            } finally {
-                thinking = false
+                state = State.IDLE
             }
         }
     }
@@ -131,9 +139,9 @@ fun HomeAssistantTab() {
                     MessageBubble(message = msg)
                     Spacer(modifier = Modifier.height(8.dp))
                 }
-                if (thinking) {
+                if (state != State.IDLE) {
                     item {
-                        ThinkingBubble()
+                        ThinkingBubble(state)
                         Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
@@ -180,7 +188,7 @@ fun HomeAssistantTab() {
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
-                val canSend = input.text.isNotBlank() && !thinking
+                val canSend = input.text.isNotBlank() && state == State.IDLE
 
                 Button(
                     modifier = Modifier
@@ -245,21 +253,26 @@ private fun MessageBubble(message: AssistantMessage) {
 }
 
 @Composable
-private fun ThinkingBubble() {
-    val transition = rememberInfiniteTransition(label = "thinking")
+private fun ThinkingBubble(state: State) {
+    val label =
+        if (state == State.GATHERING_DATA) i18n(R.string.assistant_gathering_data)
+        else i18n(R.string.assistant_thinking)
+
+    val transition = rememberInfiniteTransition(label = label)
     val phase by transition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(900, easing = LinearEasing),
+            animation = tween(1500, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "phase"
     )
+
     val dots = when {
-        phase < 0.33f -> ""
-        phase < 0.66f -> "."
-        else -> ".."
+        phase < 0.33f -> "."
+        phase < 0.66f -> ".."
+        else -> "..."
     }
 
     val containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -281,7 +294,7 @@ private fun ThinkingBubble() {
                 .widthIn(max = 320.dp),
         ) {
             ProvideTextStyle(MaterialTheme.typography.bodyMedium.copy(color = contentColor)) {
-                Text(text = i18n(R.string.assistant_thinking) + dots)
+                Text(text = label + dots)
             }
         }
     }

@@ -4,5 +4,5 @@ import org.koin.dsl.module
 
 internal val JsonModule =
     module {
-        single<JsonConverter> { MoshiJsonConverter() }
+        single<JsonConverter> { GsonJsonConverter() }
     }

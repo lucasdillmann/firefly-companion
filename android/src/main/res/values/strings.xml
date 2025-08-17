@@ -130,4 +130,5 @@
     <string name="assistant_generic_error_response">Oops, I ran into an error and I\'m unable to reply to you right now
         😅. Please try again, but if the error persists try checking the app preferences is sound.
     </string>
+    <string name="assistant_gathering_data">Gathering data</string>
 </resources>

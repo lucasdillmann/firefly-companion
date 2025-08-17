@@ -1,15 +1,19 @@
 package br.com.dillmann.fireflycompanion.business.assistant
 
+import br.com.dillmann.fireflycompanion.business.assistant.functions.AssistantFunction
 import br.com.dillmann.fireflycompanion.business.assistant.session.DefaultAssistantSession
 import br.com.dillmann.fireflycompanion.business.assistant.session.UnconfiguredAssistantSession
 import br.com.dillmann.fireflycompanion.business.assistant.usecase.GetAvailableModelsUseCase
 import br.com.dillmann.fireflycompanion.business.assistant.usecase.StartAssistantSessionUseCase
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
+import br.com.dillmann.fireflycompanion.core.json.JsonConverter
 
 internal class AssistantService(
     private val repositoryProvider: AssistantRepositoryProvider,
     private val preferencesUseCase: GetPreferencesUseCase,
+    private val functions: List<AssistantFunction>,
+    private val converter: JsonConverter,
 ) : StartAssistantSessionUseCase, GetAvailableModelsUseCase {
     override suspend fun startSession(
         userLanguage: String,
@@ -22,6 +26,8 @@ internal class AssistantService(
             repository = resolveRepository(preferences),
             userLanguage = userLanguage,
             model = preferences.model!!,
+            functions = functions,
+            converter = converter,
         )
     }
 

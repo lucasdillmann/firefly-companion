@@ -1,9 +1,7 @@
 package br.com.dillmann.fireflycompanion.business.preferences
 
-import com.squareup.moshi.JsonClass
 import java.io.Serializable
 
-@JsonClass(generateAdapter = true)
 data class Preferences(
     val requireBiometricLogin: Boolean = false,
     val theme: Theme = Theme.AUTO,

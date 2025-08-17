@@ -131,4 +131,5 @@
     <string name="assistant_generic_error_response">Oops, buguei e não consigo te responder neste momento 😅. Por favor
         tente novamente, mas se o erro persistir tente confirmar se está tudo certo nas preferências do app.
     </string>
+    <string name="assistant_gathering_data">Coletando informações</string>
 </resources>

@@ -16,34 +16,30 @@ internal class OpenAiConverter(
         input.data.map { it.id }
 
     fun toDomain(input: MessageResponse): LLMResponse {
-        val messages = input.output.flatMap { output ->
-            val results = mutableListOf<LLMResponse.Message>()
+        val messages = input.output.orEmpty().flatMap { output ->
+            when (output.type) {
+                "message" ->
+                    output.content.orEmpty().map {
+                        LLMResponse.SimpleText(
+                            content = it.text,
+                        )
+                    }
 
-            output.content.orEmpty()
-                .filter { it.type.lowercase() in listOf("output_text", "text") }
-                .mapTo(results) {
-                    LLMResponse.Message(
-                        type = LLMResponse.Type.SIMPLE_TEXT,
-                        content = LLMResponse.SimpleText(content = it.text)
-                    )
-                }
-
-            output.content.orEmpty()
-                .filter { it.type.lowercase() == "function_call" }
-                .mapTo(results) {
+                "function_call" -> {
                     val args =
                         runCatching { jsonConverter.parse<Map<String, Any?>>(output.arguments!!) }.getOrNull()
 
-                    LLMResponse.Message(
-                        type = LLMResponse.Type.FUNCTION_CALL,
-                        content = LLMResponse.FunctionCall(
+                    listOf(
+                        LLMResponse.FunctionCall(
                             name = output.name!!,
+                            callId = output.callId!!,
                             arguments = args,
-                        )
+                        ),
                     )
                 }
 
-            results
+                else -> emptyList()
+            }
         }
 
         return LLMResponse(
@@ -53,17 +49,32 @@ internal class OpenAiConverter(
         )
     }
 
-    fun toDto(request: LLMRequest) =
-        MessageRequest(
+    fun toDto(request: LLMRequest): MessageRequest {
+        val input = mutableListOf<MessageRequest.Input>()
+        input +=
+            when (request.type) {
+                LLMRequest.Type.USER_PROMPT ->
+                    MessageRequest.Input(
+                        role = "user",
+                        content = listOf(MessageRequest.InputContent(
+                            type = "input_text",
+                            text = request.content,
+                        )),
+                    )
+
+                LLMRequest.Type.FUNCTION_CALL_OUTPUT ->
+                    MessageRequest.Input(
+                        type = "function_call_output",
+                        callId = request.callId,
+                        output = request.content,
+                    )
+            }
+
+        return MessageRequest(
             model = request.model,
             instructions = request.instructions,
-            previousResponseId = request.previousResponseId,
-            input = listOf(
-                MessageRequest.Input(
-                    role = "user",
-                    content = listOf(MessageRequest.InputContent(text = request.prompt)),
-                )
-            ),
+            previousResponseId = request.previousId,
+            input = input,
             tools = request.functions.map { function ->
                 MessageRequest.Tool(
                     name = function.name,
@@ -80,4 +91,5 @@ internal class OpenAiConverter(
                 )
             },
         )
+    }
 }
