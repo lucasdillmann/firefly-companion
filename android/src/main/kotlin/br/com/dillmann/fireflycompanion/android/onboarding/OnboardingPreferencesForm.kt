@@ -3,6 +3,7 @@ package br.com.dillmann.fireflycompanion.android.onboarding
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -43,7 +44,12 @@ fun NavigationContext.OnboardingPreferencesForm() {
             state = preferences,
             onChange = { submitPreferences(preferences.value) }
         )
-        PreferencesFormButtons(saveText = i18n(R.string.finish)) {
+        PreferencesFormButtons(
+            modifier = Modifier
+                .padding(bottom = 32.dp)
+                .fillMaxWidth(),
+            saveText = i18n(R.string.finish),
+        ) {
             submitPreferences(preferences.value)
             open(route = Route.HOME_SCREEN, finishCurrent = true)
         }

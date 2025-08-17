@@ -14,13 +14,12 @@ import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 
 @Composable
 fun PreferencesFormButtons(
+    modifier: Modifier = Modifier,
     saveText: String = i18n(R.string.save),
     onSave: () -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .padding(bottom = 32.dp)
-            .fillMaxWidth(),
+        modifier = modifier,
         horizontalArrangement = Arrangement.End,
     ) {
         Button(onClick = onSave) {

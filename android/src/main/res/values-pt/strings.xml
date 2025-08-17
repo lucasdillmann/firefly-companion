@@ -115,4 +115,11 @@
     <string name="deposit">Entrada</string>
     <string name="withdrawal">Saída</string>
     <string name="transfer">Transferência</string>
+    <string name="assistant_provider">Fornecedor</string>
+    <string name="assistant_model">Modelo</string>
+    <string name="assistant_access_key">Chave de acesso</string>
+    <string name="assistant_provider_disabled">Desativado</string>
+    <string name="assistant_provider_open_ai">ChatGPT</string>
+    <string name="assistant_provider_open_ai_compatible">Personalizado (OpenAI compatível)</string>
+    <string name="general">Geral</string>
 </resources>

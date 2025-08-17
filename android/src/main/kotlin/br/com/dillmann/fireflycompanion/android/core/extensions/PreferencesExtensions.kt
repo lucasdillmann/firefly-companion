@@ -28,3 +28,10 @@ fun Preferences.LockTimeout.description(): String =
         Preferences.LockTimeout.FIVE_MINUTES -> i18n(R.string.lock_timeout_five_minutes)
         Preferences.LockTimeout.TEN_MINUTES -> i18n(R.string.lock_timeout_ten_minutes)
     }
+
+fun Preferences.AssistantProvider.description(): String =
+    when (this) {
+        Preferences.AssistantProvider.DISABLED -> i18n(R.string.assistant_provider_disabled)
+        Preferences.AssistantProvider.OPEN_AI -> i18n(R.string.assistant_provider_open_ai)
+        Preferences.AssistantProvider.OPEN_AI_COMPATIBLE -> i18n(R.string.assistant_provider_open_ai_compatible)
+    }
