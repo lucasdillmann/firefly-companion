@@ -1,8 +1,10 @@
 package br.com.dillmann.fireflycompanion.android.preferences
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -27,26 +29,33 @@ import kotlinx.coroutines.runBlocking
 fun NavigationContext.PreferencesForm() {
     val getPreferences = koin().get<GetPreferencesUseCase>()
     val currentPreferences = async { getPreferences.getPreferences() }.join()
-    val state = volatile(currentPreferences)
+    val preferencesState = volatile(currentPreferences)
+    val scrollState = rememberScrollState()
 
-    Section(
-        modifier = Modifier.padding(top = 32.dp),
-        title = i18n(R.string.preferences),
-        rightContent = {
-            PreferencesFormButtons {
-                submitPreferences(state.value)
-                open(
-                    route = Route.HOME_SCREEN,
-                    finishCurrent = true,
-                    replacePrevious = true,
-                )
-            }
-        }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState),
     ) {
-        PreferencesFormFields(
-            state = state,
-            onChange = { submitPreferences(state.value) }
-        )
+        Section(
+            modifier = Modifier.padding(top = 32.dp).fillMaxSize(),
+            title = i18n(R.string.preferences),
+            rightContent = {
+                PreferencesFormButtons {
+                    submitPreferences(preferencesState.value)
+                    open(
+                        route = Route.HOME_SCREEN,
+                        finishCurrent = true,
+                        replacePrevious = true,
+                    )
+                }
+            }
+        ) {
+            PreferencesFormFields(
+                state = preferencesState,
+                onChange = { submitPreferences(preferencesState.value) }
+            )
+        }
     }
 }
 

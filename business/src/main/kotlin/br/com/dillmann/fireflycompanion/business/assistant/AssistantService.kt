@@ -33,7 +33,7 @@ internal class AssistantService(
         if (preferences.provider == Preferences.AssistantProvider.DISABLED)
             return emptyList()
 
-        return resolveRepository(preferences).getAvailableModels()
+        return resolveRepository(preferences).getAvailableModels().sortedBy { it }
     }
 
     private suspend fun resolveRepository(preferences: Preferences.Assistant): AssistantRepository {

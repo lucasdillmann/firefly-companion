@@ -1,14 +1,21 @@
 package br.com.dillmann.fireflycompanion.android.preferences.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.extensions.description
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
@@ -26,16 +33,17 @@ fun PreferencesFormAssistantField(
 
     ProviderSelector(state, onChange)
 
-    if (assistant.provider != Preferences.AssistantProvider.DISABLED) {
-        PreferencesFormSpacer()
-        ModelSelector(state, onChange)
-        PreferencesFormSpacer()
-        AccessToken(state, onChange)
-    }
-
     if (assistant.provider == Preferences.AssistantProvider.OPEN_AI_COMPATIBLE) {
         PreferencesFormSpacer()
         ApiUrl(state, onChange)
+    }
+
+    if (assistant.provider != Preferences.AssistantProvider.DISABLED) {
+        PreferencesFormSpacer()
+        AccessToken(state, onChange)
+
+        PreferencesFormSpacer()
+        ModelSelector(state, onChange)
     }
 }
 
@@ -93,19 +101,71 @@ private fun ModelSelector(
     state: MutableState<Preferences>,
     onChange: () -> Unit,
 ) {
-    val assistant = state.value.assistant
-    if (assistant.accessToken.isNullOrBlank()) {
-        // TODO: Disabled selector telling to fill the token first
-        return
+    val preferences by state
+    val assistant = preferences.assistant
+
+    val missingRequirements = assistant.accessToken.isNullOrBlank() ||
+        (assistant.provider == Preferences.AssistantProvider.OPEN_AI_COMPATIBLE && assistant.url.isNullOrBlank())
+
+    var expanded by volatile(false)
+    var models by volatile(emptyList<String>())
+
+    LaunchedEffect("${assistant.provider}${assistant.url}") {
+        models = emptyList()
+
+        if (missingRequirements)
+            return@LaunchedEffect
+
+        async {
+            models = getKoin().get<GetAvailableModelsUseCase>().getAvailableModels()
+        }
     }
 
-    if (assistant.provider == Preferences.AssistantProvider.OPEN_AI_COMPATIBLE && assistant.url.isNullOrBlank()) {
-        // TODO: Disabled selector telling to fill the url first
-        return
-    }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = i18n(R.string.assistant_model),
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(1f),
+        )
 
-    val useCase = getKoin().get<GetAvailableModelsUseCase>()
-    // TODO: Selector with values from the use case
+        Box {
+            val currentText =
+                if (missingRequirements) i18n(R.string.assistant_model_fill_required_fields)
+                else assistant.model ?: models.firstOrNull() ?: i18n(R.string.loading)
+
+            Button(
+                onClick = { if (!missingRequirements && models.isNotEmpty()) expanded = !expanded },
+                enabled = !missingRequirements && models.isNotEmpty(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                ),
+                content = { Text(text = currentText) },
+            )
+
+            if (!missingRequirements) {
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                ) {
+                    models.forEach { model ->
+                        DropdownMenuItem(
+                            text = { Text(text = model) },
+                            onClick = {
+                                val updatedAssistant = assistant.copy(model = model)
+                                state.value = preferences.copy(assistant = updatedAssistant)
+                                onChange()
+                                expanded = false
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -113,7 +173,36 @@ private fun AccessToken(
     state: MutableState<Preferences>,
     onChange: () -> Unit,
 ) {
-    // TODO: Access token input field
+    val preferences by state
+    val assistant = preferences.assistant
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = i18n(R.string.assistant_access_key),
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(1f),
+        )
+
+        OutlinedTextField(
+            value = assistant.accessToken ?: "",
+            onValueChange = { newValue ->
+                val updated = assistant.copy(accessToken = newValue.ifBlank { null })
+                state.value = preferences.copy(assistant = updated)
+                onChange()
+            },
+            placeholder = { Text(text = i18n(R.string.assistant_access_key)) },
+            modifier = Modifier.weight(2f),
+            textStyle = MaterialTheme.typography.bodyLarge,
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Password,
+            ),
+            singleLine = true,
+        )
+    }
 }
 
 @Composable
@@ -121,5 +210,30 @@ private fun ApiUrl(
     state: MutableState<Preferences>,
     onChange: () -> Unit,
 ) {
-    // TODO: Api url input field
+    val preferences by state
+    val assistant = preferences.assistant
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = i18n(R.string.server_url),
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(1f),
+        )
+
+        OutlinedTextField(
+            value = assistant.url ?: "",
+            onValueChange = { newValue ->
+                val updated = assistant.copy(url = newValue.ifBlank { null })
+                state.value = preferences.copy(assistant = updated)
+                onChange()
+            },
+            placeholder = { Text(text = i18n(R.string.server_url)) },
+            modifier = Modifier.weight(2f),
+            textStyle = MaterialTheme.typography.bodyLarge,
+            singleLine = true,
+        )
+    }
 }
