@@ -1,0 +1,7 @@
+### Open AI Models
+GET https://api.openai.com/v1/models
+Authorization: Bearer {{open-ai-api-key}}
+
+### Open Router models
+GET https://openrouter.ai/api/v1/models
+Authorization: Bearer {{open-router-api-key}}

@@ -10,6 +10,7 @@ data class Preferences(
     val language: Language = Language.AUTO,
     val lockTimeout: LockTimeout = LockTimeout.IMMEDIATELY,
     val homePeriod: HomePeriod = HomePeriod.LAST_MONTH,
+    val assistant: Assistant = Assistant(),
 ) : Serializable {
     enum class Theme {
         AUTO,
@@ -41,5 +42,18 @@ data class Preferences(
         TWO_MINUTES(120),
         FIVE_MINUTES(300),
         TEN_MINUTES(600),
+    }
+
+    data class Assistant(
+        val provider: AssistantProvider = AssistantProvider.DISABLED,
+        val model: String? = null,
+        val accessToken: String? = null,
+        val url: String? = null,
+    )
+
+    enum class AssistantProvider {
+        DISABLED,
+        OPEN_AI,
+        OPEN_AI_COMPATIBLE,
     }
 }

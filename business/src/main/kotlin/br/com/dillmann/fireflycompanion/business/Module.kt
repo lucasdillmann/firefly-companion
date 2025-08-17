@@ -1,6 +1,7 @@
 package br.com.dillmann.fireflycompanion.business
 
 import br.com.dillmann.fireflycompanion.business.account.AccountModule
+import br.com.dillmann.fireflycompanion.business.assistant.AssistantModule
 import br.com.dillmann.fireflycompanion.business.autocomplete.AutoCompleteModule
 import br.com.dillmann.fireflycompanion.business.connectiontest.ConnectionTestModule
 import br.com.dillmann.fireflycompanion.business.currency.CurrencyModule
@@ -15,6 +16,7 @@ import org.koin.dsl.module
 val BusinessModule =
     module {
         loadKoinModules(AccountModule)
+        loadKoinModules(AssistantModule)
         loadKoinModules(AutoCompleteModule)
         loadKoinModules(ConnectionTestModule)
         loadKoinModules(CurrencyModule)
