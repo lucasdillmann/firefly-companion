@@ -83,7 +83,11 @@ fun NavigationContext.AccountForm() {
             )
         }
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .imePadding(),
+        ) {
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -102,7 +106,7 @@ fun NavigationContext.AccountForm() {
             Section(
                 title = i18n(R.string.tab_transactions),
             ) {
-                 TransactionList(
+                TransactionList(
                     showAccountNameOnReconciliation = false,
                     transactionsProvider = { listTransactionsUseCase.list(page = it, accountId = account.id) },
                 )

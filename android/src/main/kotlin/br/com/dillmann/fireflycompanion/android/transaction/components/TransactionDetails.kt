@@ -148,6 +148,7 @@ fun TransactionDetails(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
+                .imePadding()
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start,

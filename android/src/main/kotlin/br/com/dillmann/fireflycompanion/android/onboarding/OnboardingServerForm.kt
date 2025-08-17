@@ -44,6 +44,7 @@ fun NavigationContext.OnboardingServerForm() {
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 24.dp)
+            .imePadding()
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start,
