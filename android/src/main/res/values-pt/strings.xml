@@ -123,4 +123,12 @@
     <string name="assistant_provider_open_ai_compatible">Personalizado (OpenAI compatível)</string>
     <string name="general">Geral</string>
     <string name="assistant_model_fill_required_fields">Preencha todos os campos</string>
+    <string name="assistant_initial_message">Olá 👋, sou seu assistente de finanças pessoas. Como posso te ajudar?
+    </string>
+    <string name="assistant_input_hint">Digite uma mensagem</string>
+    <string name="assistant_send">Enviar</string>
+    <string name="assistant_thinking">Pensando</string>
+    <string name="assistant_generic_error_response">Oops, buguei e não consigo te responder neste momento 😅. Por favor
+        tente novamente, mas se o erro persistir tente confirmar se está tudo certo nas preferências do app.
+    </string>
 </resources>

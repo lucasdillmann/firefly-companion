@@ -1,6 +1,5 @@
 package br.com.dillmann.fireflycompanion.business.assistant
 
-import br.com.dillmann.fireflycompanion.business.assistant.model.AssistantMessage
 import br.com.dillmann.fireflycompanion.business.assistant.session.DefaultAssistantSession
 import br.com.dillmann.fireflycompanion.business.assistant.session.UnconfiguredAssistantSession
 import br.com.dillmann.fireflycompanion.business.assistant.usecase.GetAvailableModelsUseCase
@@ -14,17 +13,15 @@ internal class AssistantService(
 ) : StartAssistantSessionUseCase, GetAvailableModelsUseCase {
     override suspend fun startSession(
         userLanguage: String,
-        responseHandler: suspend (AssistantMessage) -> Unit,
     ): AssistantSession {
         val preferences = preferencesUseCase.getPreferences().assistant
         if (preferences.provider == Preferences.AssistantProvider.DISABLED)
-            return UnconfiguredAssistantSession(responseHandler)
+            return UnconfiguredAssistantSession()
 
         return DefaultAssistantSession(
             repository = resolveRepository(preferences),
             userLanguage = userLanguage,
             model = preferences.model!!,
-            responseHandler = responseHandler,
         )
     }
 

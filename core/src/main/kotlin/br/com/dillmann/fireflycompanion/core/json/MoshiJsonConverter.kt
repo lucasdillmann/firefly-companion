@@ -9,7 +9,7 @@ internal class MoshiJsonConverter : JsonConverter {
     private val delegate = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
 
     override fun <T : Any> parse(json: String, targetClass: KClass<T>): T =
-        delegate.adapter(targetClass.java).fromJson(json)!!
+        delegate.adapter(targetClass.java).lenient().fromJson(json)!!
 
     override fun <T : Any> toJson(content: T): String {
         val adapter = delegate.adapter(content::class.java) as JsonAdapter<T>

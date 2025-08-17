@@ -1,9 +1,13 @@
 package br.com.dillmann.fireflycompanion.android.home
 
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -32,7 +36,7 @@ fun NavigationContext.HomeScreen() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    Box(modifier = Modifier.padding(top = 32.dp)) {
+    Box(modifier = Modifier.padding(top = 32.dp).imePadding()) {
         NavHost(
             navController = navController,
             startDestination = HomeTabs.MAIN.name,
@@ -73,20 +77,17 @@ private fun ActionBar(
     currentDestination: NavDestination?,
     modifier: Modifier,
 ) {
-    val paddingAmount =
-        if (currentDestination?.route == HomeTabs.ASSISTANT.name) 76.dp
-        else 8.dp
-
-    val padding by animateDpAsState(
-        targetValue = paddingAmount,
-        animationSpec = Transitions.dpSpec,
-    )
-
-    FloatingActionBar(
-        navController = navController,
-        currentDestination = currentDestination,
-        modifier = modifier.padding(bottom = padding),
-    )
+    AnimatedVisibility(
+        modifier = modifier,
+        visible = currentDestination?.route != HomeTabs.ASSISTANT.name,
+        enter = slideInHorizontally { -it } + fadeIn(),
+        exit = slideOutHorizontally { -it } + fadeOut(),
+    ) {
+        FloatingActionBar(
+            navController = navController,
+            currentDestination = currentDestination,
+        )
+    }
 }
 
 private fun AnimatedContentTransitionScope<NavBackStackEntry>.transitionIndexes(): Pair<Int, Int> {

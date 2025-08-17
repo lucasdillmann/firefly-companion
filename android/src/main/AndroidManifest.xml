@@ -21,7 +21,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:exported="false" android:name=".MainActivity"/>
-        <activity android:exported="false" android:name=".biometric.BiometricUnlockActivity"/>
+        <activity
+                android:exported="false"
+                android:name=".MainActivity"
+                android:windowSoftInputMode="adjustResize"
+        />
+        <activity
+                android:exported="false"
+                android:name=".biometric.BiometricUnlockActivity"
+                android:windowSoftInputMode="adjustResize"
+        />
     </application>
 </manifest>

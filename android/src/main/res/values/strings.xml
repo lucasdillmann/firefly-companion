@@ -122,4 +122,12 @@
     <string name="assistant_provider_open_ai_compatible">Custom (OpenAI compatible)</string>
     <string name="general">General</string>
     <string name="assistant_model_fill_required_fields">Fill required fields</string>
+    <string name="assistant_initial_message">Hi 👋, I\'m your personal finances assistant. How can I help you?
+    </string>
+    <string name="assistant_input_hint">Type a message</string>
+    <string name="assistant_send">Send</string>
+    <string name="assistant_thinking">Thinking</string>
+    <string name="assistant_generic_error_response">Oops, I ran into an error and I\'m unable to reply to you right now
+        😅. Please try again, but if the error persists try checking the app preferences is sound.
+    </string>
 </resources>

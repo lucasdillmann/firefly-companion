@@ -11,11 +11,10 @@ internal class DefaultAssistantSession(
     private val repository: AssistantRepository,
     private val model: String,
     private val userLanguage: String,
-    private val responseHandler: suspend (AssistantMessage) -> Unit,
 ) : AssistantSession {
     private var previousResponseId: String? = null
 
-    override suspend fun sendMessage(message: String) {
+    override suspend fun sendMessage(message: String): List<AssistantMessage> {
         val request = LLMRequest(
             model = model,
             instructions = buildInstructions(),
@@ -27,16 +26,16 @@ internal class DefaultAssistantSession(
         val response = repository.getResponse(request)
         previousResponseId = response.id
 
-        response
+        return response
             .messages
             .filter { it.type == LLMResponse.Type.SIMPLE_TEXT }
-            .forEach {
+            .map {
                 val content = it.content as LLMResponse.SimpleText
-                val message = AssistantMessage(
+                AssistantMessage(
                     timestamp = OffsetDateTime.now(),
+                    sender = AssistantMessage.Sender.ASSISTANT,
                     content = content.content,
                 )
-                responseHandler(message)
             }
     }
 
@@ -48,9 +47,6 @@ internal class DefaultAssistantSession(
             - Reply in the user's language, $userLanguage
             - Keep the responses concise but with all the important details
             - Be polite and friendly
-            - Reply using a simple and direct language
             - Keep in the context/subject of personal finances. Politely refuse to reply if user changes the subject.
-            - You can make financial suggestions and predictions, but always state that those aren't investment 
-              advisories and that the user is fully responsible for their decisions.
         """.trimIndent()
 }

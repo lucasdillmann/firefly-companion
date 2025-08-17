@@ -11,24 +11,15 @@ internal data class MessageRequest(
     val tools: List<Tool> = emptyList(),
     @Json(name = "instructions")
     val instructions: String? = null,
-    @Json(name = "format")
-    val format: Format = Format("text"),
     @Json(name = "previous_response_id")
     val previousResponseId: String? = null,
     @Json(name = "temperature")
-    val temperature: Double = 0.5,
+    val temperature: Double? = null,
     @Json(name = "background")
     val background: Boolean = false,
     @Json(name = "stream")
     val stream: Boolean = false,
 ) {
-    data class Format(
-        @Json(name = "type")
-        val type: String,
-        @Json(name = "value")
-        val value: String? = null,
-    )
-
     data class Input(
         @Json(name = "role")
         val role: String,
