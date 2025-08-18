@@ -50,31 +50,34 @@ internal class OpenAiConverter(
     }
 
     fun toDto(request: LLMRequest): MessageRequest {
-        val input = mutableListOf<MessageRequest.Input>()
-        input +=
-            when (request.type) {
-                LLMRequest.Type.USER_PROMPT ->
-                    MessageRequest.Input(
-                        role = "user",
-                        content = listOf(MessageRequest.InputContent(
-                            type = "input_text",
-                            text = request.content,
-                        )),
-                    )
+        val inputs =
+            request.inputs.map { input ->
+                when (input.type) {
+                    LLMRequest.Type.USER_PROMPT ->
+                        MessageRequest.Input(
+                            role = "user",
+                            content = listOf(
+                                MessageRequest.InputContent(
+                                    type = "input_text",
+                                    text = input.content,
+                                )
+                            ),
+                        )
 
-                LLMRequest.Type.FUNCTION_CALL_OUTPUT ->
-                    MessageRequest.Input(
-                        type = "function_call_output",
-                        callId = request.callId,
-                        output = request.content,
-                    )
+                    LLMRequest.Type.FUNCTION_CALL_OUTPUT ->
+                        MessageRequest.Input(
+                            type = "function_call_output",
+                            callId = input.callId,
+                            output = input.content,
+                        )
+                }
             }
 
         return MessageRequest(
             model = request.model,
             instructions = request.instructions,
-            previousResponseId = request.previousId,
-            input = input,
+            previousResponseId = request.previousResponseId,
+            input = inputs,
             tools = request.functions.map { function ->
                 MessageRequest.Tool(
                     name = function.name,

@@ -2,7 +2,6 @@ package br.com.dillmann.fireflycompanion.thirdparty.openai.dto
 
 import com.google.gson.annotations.SerializedName
 
-
 internal data class MessageResponse(
     val id: String,
     val status: String,

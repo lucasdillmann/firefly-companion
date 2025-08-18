@@ -2,12 +2,10 @@ package br.com.dillmann.fireflycompanion.business.assistant.model
 
 data class LLMRequest(
     val model: String,
-    val content: String,
-    val type: Type,
     val functions: List<Function>,
+    val inputs: List<Input>,
     val instructions: String? = null,
-    val previousId: String? = null,
-    val callId: String? = null,
+    val previousResponseId: String? = null,
 ) {
     enum class Type {
         FUNCTION_CALL_OUTPUT,
@@ -25,5 +23,11 @@ data class LLMRequest(
         val type: Any,
         val description: String,
         val required: Boolean,
+    )
+
+    data class Input(
+        val type: Type,
+        val content: String,
+        val callId: String? = null,
     )
 }
