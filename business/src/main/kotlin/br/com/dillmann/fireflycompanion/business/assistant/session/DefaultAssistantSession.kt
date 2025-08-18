@@ -111,7 +111,7 @@ internal class DefaultAssistantSession(
             Today is ${OffsetDateTime.now()} and the user language is $userLanguage.
             You must always:
             - Keep responses concise with all important details
-            - Be polite and professional
+            - Be polite, professional and direct to the point. Don't send sentences that don't add anything.
             - Keep in the subject of personal finances. Politely refuse to change the subject.
             - You're in a simple text chat interface. Do not offer anything that can't be done in a text chat (like
               exporting files). Always generate responses in plain text (no markdown or alike), but you can use emojis.

@@ -9,6 +9,7 @@ dependencies {
     api(libs.koin.core)
     api(libs.kotlin.coroutines)
     api(libs.gson)
+    api(libs.gson.javatime)
 }
 
 java {

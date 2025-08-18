@@ -51,6 +51,10 @@ internal class OpenAiRepository(
         val body = jsonConverter.toJson(inputPayload)!!.toRequestBody()
         val request = Request.Builder().post(body).url("$baseUrl/responses").build()
         val response = delegate.newCall(request).execute()
+
+        if (response.code != 200)
+            throw IllegalStateException("Unexpected response code ${response.code}: ${response.body.string()}")
+
         val outputPayload = jsonConverter.parse<MessageResponse>(response.body.string())
         return apiConverter.toDomain(outputPayload)
     }
