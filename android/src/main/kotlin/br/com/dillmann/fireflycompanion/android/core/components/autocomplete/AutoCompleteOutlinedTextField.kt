@@ -1,5 +1,6 @@
 package br.com.dillmann.fireflycompanion.android.core.components.autocomplete
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -11,6 +12,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.TextFieldValue
 import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
+import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,32 +25,31 @@ fun AutoCompleteOutlinedTextField(
     supportingText: @Composable (() -> Unit)? = null,
     suggestionsProvider: suspend (query: String) -> List<String>,
 ) {
+    val queue by persistent(ActionQueue())
     var expanded by persistent(false)
     var suggestions by persistent(emptyList<String>())
-    var loading by persistent(false)
-    val showDropdown = suggestions.isNotEmpty() && expanded
 
     suspend fun fetchSuggestions() {
-        loading = true
+        if (disabled) return
 
-        try {
-            suggestions = suggestionsProvider(value.value.text)
-        } finally {
-            loading = false
-        }
+        suggestions = suggestionsProvider(value.value.text)
+        expanded = suggestions.isNotEmpty()
+    }
+
+    BackHandler(enabled = expanded) {
+        expanded = false
     }
 
     ExposedDropdownMenuBox(
         modifier = modifier,
-        expanded = showDropdown,
+        expanded = expanded,
         onExpandedChange = { expanded = it },
     ) {
         OutlinedTextField(
             value = value.value,
             onValueChange = {
                 value.value = it
-                async { fetchSuggestions() }.join()
-                expanded = true
+                queue.add { fetchSuggestions() }
             },
             isError = isError,
             label = { Text(label) },
@@ -66,7 +67,7 @@ fun AutoCompleteOutlinedTextField(
         )
 
         ExposedDropdownMenu(
-            expanded = showDropdown && !disabled,
+            expanded = expanded && !disabled,
             onDismissRequest = { expanded = false },
         ) {
             suggestions.forEach {
