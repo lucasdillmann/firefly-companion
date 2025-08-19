@@ -11,8 +11,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
+import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 
 @Composable
 @ExperimentalMaterial3Api
@@ -22,13 +22,14 @@ fun PullToRefresh(
     enabled: Boolean = true,
     content: @Composable () -> Unit,
 ) {
+    val queue by persistent(ActionQueue())
     val pullState = rememberPullToRefreshState()
     var refreshing by persistent(false)
 
     fun handleRefresh() {
         refreshing = true
 
-        async {
+        queue.add {
             onRefresh()
             refreshing = false
         }

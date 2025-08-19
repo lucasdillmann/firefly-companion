@@ -10,7 +10,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.TextFieldValue
-import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 
@@ -60,8 +59,7 @@ fun AutoCompleteOutlinedTextField(
                 .menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryEditable)
                 .onFocusChanged {
                     if (it.isFocused) {
-                        async { fetchSuggestions() }.join()
-                        expanded = true
+                        queue.add { fetchSuggestions() }
                     }
                 },
         )

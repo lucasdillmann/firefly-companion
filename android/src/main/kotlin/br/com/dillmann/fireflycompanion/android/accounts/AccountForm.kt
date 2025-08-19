@@ -17,7 +17,6 @@ import androidx.compose.ui.window.Dialog
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionList
-import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
@@ -46,7 +45,7 @@ fun NavigationContext.AccountForm() {
     fun updateBalance() {
         showLoading = true
 
-        async {
+        queue.add {
             val newBalance = BigDecimal(balanceState.text)
             updateBalanceUseCase.updateBalance(account.id, newBalance)
 
