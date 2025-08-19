@@ -132,4 +132,7 @@
         tente novamente, mas se o erro persistir tente confirmar se está tudo certo nas preferências do app.
     </string>
     <string name="assistant_gathering_data">Coletando informações</string>
+    <string name="current_week">Semana atual</string>
+    <string name="current_month">Mês atual</string>
+    <string name="current_year">Ano atual</string>
 </resources>

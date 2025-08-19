@@ -9,10 +9,13 @@ fun HomePeriod.toDateRange(): Pair<LocalDate, LocalDate> =
     when (this) {
         HomePeriod.WEEK_SO_FAR -> weekSoFar()
         HomePeriod.LAST_WEEK -> lastWeek()
+        HomePeriod.CURRENT_WEEK -> currentWeek()
         HomePeriod.MONTH_SO_FAR -> monthSoFar()
         HomePeriod.LAST_MONTH -> lastMonth()
+        HomePeriod.CURRENT_MONTH -> currentMonth()
         HomePeriod.YEAR_SO_FAR -> yearSoFar()
         HomePeriod.LAST_YEAR -> lastYear()
+        HomePeriod.CURRENT_YEAR -> currentYear()
         HomePeriod.ALL_TIME -> allTime()
     }
 
@@ -28,6 +31,13 @@ private fun lastWeek(): Pair<LocalDate, LocalDate> {
     return start to now
 }
 
+private fun currentWeek(): Pair<LocalDate, LocalDate> {
+    val now = LocalDate.now()
+    val start = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
+    val end = now.with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY))
+    return start to end
+}
+
 private fun monthSoFar(): Pair<LocalDate, LocalDate> {
     val now = LocalDate.now()
     val start = now.with(TemporalAdjusters.firstDayOfMonth())
@@ -41,10 +51,24 @@ private fun lastMonth(): Pair<LocalDate, LocalDate> {
     return start to end
 }
 
+private fun currentMonth(): Pair<LocalDate, LocalDate> {
+    val now = LocalDate.now()
+    val start = now.with(TemporalAdjusters.firstDayOfMonth())
+    val end = now.with(TemporalAdjusters.lastDayOfMonth())
+    return start to end
+}
+
 private fun yearSoFar(): Pair<LocalDate, LocalDate> {
     val now = LocalDate.now()
     val start = now.with(TemporalAdjusters.firstDayOfYear())
     return start to now
+}
+
+private fun currentYear(): Pair<LocalDate, LocalDate> {
+    val now = LocalDate.now()
+    val start = now.with(TemporalAdjusters.firstDayOfYear())
+    val end = now.with(TemporalAdjusters.lastDayOfYear())
+    return start to end
 }
 
 private fun lastYear(): Pair<LocalDate, LocalDate> {

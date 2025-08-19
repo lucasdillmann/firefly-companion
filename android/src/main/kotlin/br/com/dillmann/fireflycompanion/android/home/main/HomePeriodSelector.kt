@@ -32,6 +32,9 @@ private fun translate(option: HomePeriod) =
         HomePeriod.LAST_WEEK -> R.string.last_week
         HomePeriod.LAST_MONTH -> R.string.last_month
         HomePeriod.LAST_YEAR -> R.string.last_year
+        HomePeriod.CURRENT_WEEK -> R.string.current_week
+        HomePeriod.CURRENT_MONTH -> R.string.current_month
+        HomePeriod.CURRENT_YEAR -> R.string.current_year
         HomePeriod.WEEK_SO_FAR -> R.string.week_so_far
         HomePeriod.MONTH_SO_FAR -> R.string.month_so_far
         HomePeriod.YEAR_SO_FAR -> R.string.year_so_far

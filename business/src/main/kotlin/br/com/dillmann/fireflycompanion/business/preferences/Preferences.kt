@@ -6,8 +6,8 @@ data class Preferences(
     val requireBiometricLogin: Boolean = false,
     val theme: Theme = Theme.AUTO,
     val language: Language = Language.AUTO,
-    val lockTimeout: LockTimeout = LockTimeout.IMMEDIATELY,
-    val homePeriod: HomePeriod = HomePeriod.LAST_MONTH,
+    val lockTimeout: LockTimeout = LockTimeout.FIFTEEN_SECONDS,
+    val homePeriod: HomePeriod = HomePeriod.CURRENT_MONTH,
     val assistant: Assistant = Assistant(),
 ) : Serializable {
     enum class Theme {
@@ -25,10 +25,13 @@ data class Preferences(
     enum class HomePeriod {
         WEEK_SO_FAR,
         LAST_WEEK,
+        CURRENT_WEEK,
         MONTH_SO_FAR,
         LAST_MONTH,
+        CURRENT_MONTH,
         YEAR_SO_FAR,
         LAST_YEAR,
+        CURRENT_YEAR,
         ALL_TIME,
     }
 
