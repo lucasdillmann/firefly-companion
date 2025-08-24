@@ -1,6 +1,7 @@
 package br.com.dillmann.fireflycompanion.android.home.assistant
 
 import android.util.Log
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.animateScrollBy
@@ -18,12 +19,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
+import br.com.dillmann.fireflycompanion.android.core.components.textfield.AppTextField
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.context.AppContext
@@ -80,7 +81,7 @@ fun HomeAssistantTab() {
             }
         }
 
-    val callback = object: AssistantSession.Callback {
+    val callback = object : AssistantSession.Callback {
         override suspend fun message(response: AssistantMessage) {
             appendMessage(response)
         }
@@ -149,36 +150,22 @@ fun HomeAssistantTab() {
 
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(bottom = 16.dp)
                     .height(50.dp),
                 verticalAlignment = Alignment.Bottom,
             ) {
-                OutlinedTextField(
+                AppTextField(
                     value = input,
-                    onValueChange = { input = it },
-                    placeholder = {
-                        Text(
-                            text = i18n(R.string.assistant_input_hint),
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                    },
+                    onChange = { input = it },
+                    label = i18n(R.string.assistant_input_hint),
                     singleLine = true,
+                    stickyLabel = false,
+                    containerModifier = Modifier
+                        .weight(2f)
+                        .padding(end = 8.dp),
                     modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(50))
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .height(50.dp),
-                    textStyle = MaterialTheme.typography.bodyMedium,
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
-                        cursorColor = MaterialTheme.colorScheme.primary,
-                    ),
+                        .padding(0.dp)
+                        .fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Send
                     ),
@@ -187,16 +174,12 @@ fun HomeAssistantTab() {
                     ),
                 )
 
-                Spacer(modifier = Modifier.width(8.dp))
                 val canSend = input.text.isNotBlank() && state == State.IDLE
-
                 Button(
-                    modifier = Modifier
-                        .height(50.dp)
-                        .width(50.dp),
+                    modifier = Modifier.size(50.dp),
                     contentPadding = PaddingValues(0.dp),
                     enabled = canSend,
-                    onClick = { sendMessageIfAble() },
+                    onClick = ::sendMessageIfAble,
                 ) {
                     Icon(
                         contentDescription = i18n(R.string.assistant_send),
@@ -263,15 +246,16 @@ private fun ThinkingBubble(state: State) {
         initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1500, easing = LinearEasing),
+            animation = tween(2000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "phase"
     )
 
     val dots = when {
-        phase < 0.33f -> "."
-        phase < 0.66f -> ".."
+        phase < 0.25f -> ""
+        phase < 0.5f -> "."
+        phase < 0.75f -> ".."
         else -> "..."
     }
 
@@ -291,7 +275,10 @@ private fun ThinkingBubble(state: State) {
                 )
                 .background(containerColor)
                 .padding(horizontal = 12.dp, vertical = 8.dp)
-                .widthIn(max = 320.dp),
+                .widthIn(max = 320.dp)
+                .animateContentSize(
+                    animationSpec = tween(150, easing = FastOutSlowInEasing)
+                ),
         ) {
             ProvideTextStyle(MaterialTheme.typography.bodyMedium.copy(color = contentColor)) {
                 Text(text = label + dots)

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
+import br.com.dillmann.fireflycompanion.android.core.components.textfield.AppTextField
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -24,7 +25,7 @@ fun DatePicker(
     type: DatePickerType,
     label: String,
     modifier: Modifier = Modifier,
-    supportingText: (@Composable () -> Unit)? = null,
+    errorMessage: String? = null,
     enabled: Boolean = true,
     readOnly: Boolean = false,
 ) {
@@ -42,11 +43,11 @@ fun DatePicker(
             DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT)
     }
 
-    OutlinedTextField(
+    AppTextField(
         value = TextFieldValue(formatter.format(dateTime)),
-        onValueChange = { /* Value is changed through pickers, not direct input */ },
-        label = { Text(label) },
-        supportingText = supportingText,
+        onChange = {},
+        label = label,
+        errorMessage = errorMessage,
         readOnly = true,
         enabled = enabled && !readOnly,
         modifier = modifier

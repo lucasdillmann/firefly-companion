@@ -18,6 +18,7 @@ import br.com.dillmann.fireflycompanion.android.core.components.autocomplete.Aut
 import br.com.dillmann.fireflycompanion.android.core.components.datepicker.DatePicker
 import br.com.dillmann.fireflycompanion.android.core.components.datepicker.DatePickerType
 import br.com.dillmann.fireflycompanion.android.core.components.selectionrow.SelectionRow
+import br.com.dillmann.fireflycompanion.android.core.components.textfield.AppTextField
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.business.autocomplete.AutoCompleteType
@@ -58,40 +59,20 @@ fun TransactionFormFields(
         label = i18n(R.string.description),
         modifier = Modifier.fillMaxWidth(),
         disabled = disabled,
-        isError = validationOutcome?.messageFor("description") != null,
+        errorMessage = validationOutcome?.messageFor("description"),
         suggestionsProvider = {
             autoComplete.getSuggestions(AutoCompleteType.DESCRIPTION, it)
         },
-        supportingText = {
-            val message = validationOutcome?.messageFor("description")
-            if (message != null) {
-                Text(
-                    text = message,
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
-        }
     )
 
-    OutlinedTextField(
+    AppTextField(
         value = amount.value,
-        onValueChange = { amount.value = it },
-        label = { Text(text = i18n(R.string.amount)) },
+        onChange = { amount.value = it },
+        label = i18n(R.string.amount),
         modifier = Modifier.fillMaxWidth(),
         enabled = !disabled,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-        isError = validationOutcome?.messageFor("amount") != null,
-        supportingText = {
-            val message = validationOutcome?.messageFor("amount")
-            if (message != null) {
-                Text(
-                    text = message,
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
-        }
+        errorMessage = validationOutcome?.messageFor("amount"),
     )
 
     DatePicker(
@@ -99,16 +80,7 @@ fun TransactionFormFields(
         type = DatePickerType.DATE_ONLY,
         label = i18n(R.string.date),
         enabled = !disabled,
-        supportingText = {
-            val message = validationOutcome?.messageFor("dateTime")
-            if (message != null) {
-                Text(
-                    text = message,
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
-        }
+        errorMessage = validationOutcome?.messageFor("dateTime"),
     )
 
     AutoCompleteOutlinedTextField(
@@ -116,7 +88,7 @@ fun TransactionFormFields(
         label = i18n(R.string.category),
         modifier = Modifier.fillMaxWidth(),
         disabled = disabled,
-        supportingText = {},
+        errorMessage = validationOutcome?.messageFor("category"),
         suggestionsProvider = {
             autoComplete.getSuggestions(AutoCompleteType.CATEGORY, it)
         },
@@ -128,17 +100,7 @@ fun TransactionFormFields(
             label = i18n(R.string.source_account),
             modifier = Modifier.fillMaxWidth(),
             disabled = disabled,
-            isError = validationOutcome?.messageFor("sourceAccountName") != null,
-            supportingText = {
-                val message = validationOutcome?.messageFor("sourceAccountName")
-                if (message != null) {
-                    Text(
-                        text = message,
-                        color = Color.Red,
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                }
-            },
+            errorMessage = validationOutcome?.messageFor("sourceAccountName"),
             suggestionsProvider = {
                 autoComplete.getSuggestions(AutoCompleteType.ACCOUNT, it)
             },
@@ -151,17 +113,7 @@ fun TransactionFormFields(
             label = i18n(R.string.destination_account),
             modifier = Modifier.fillMaxWidth(),
             disabled = disabled,
-            isError = validationOutcome?.messageFor("destinationAccountName") != null,
-            supportingText = {
-                val message = validationOutcome?.messageFor("destinationAccountName")
-                if (message != null) {
-                    Text(
-                        text = message,
-                        color = Color.Red,
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                }
-            },
+            errorMessage = validationOutcome?.messageFor("destinationAccountName"),
             suggestionsProvider = {
                 autoComplete.getSuggestions(AutoCompleteType.ACCOUNT, it)
             },
@@ -173,17 +125,7 @@ fun TransactionFormFields(
         label = i18n(R.string.tag),
         modifier = Modifier.fillMaxWidth(),
         disabled = disabled,
-        isError = validationOutcome?.messageFor("tag") != null,
-        supportingText = {
-            val message = validationOutcome?.messageFor("tag")
-            if (message != null) {
-                Text(
-                    text = message,
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
-        },
+        errorMessage = validationOutcome?.messageFor("tag"),
         suggestionsProvider = {
             autoComplete.getSuggestions(AutoCompleteType.TAG, it)
         },

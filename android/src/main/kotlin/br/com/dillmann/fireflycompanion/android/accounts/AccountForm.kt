@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
+import br.com.dillmann.fireflycompanion.android.core.components.textfield.AppTextField
 import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionList
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
@@ -24,6 +25,7 @@ import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.refresh.RefreshDispatcher
 import br.com.dillmann.fireflycompanion.android.core.router.NavigationContext
+import br.com.dillmann.fireflycompanion.android.core.theme.AppTextFieldDefaults
 import br.com.dillmann.fireflycompanion.business.account.Account
 import br.com.dillmann.fireflycompanion.business.account.usecase.GetAccountUseCase
 import br.com.dillmann.fireflycompanion.business.account.usecase.UpdateAccountBalanceUseCase
@@ -87,14 +89,14 @@ fun NavigationContext.AccountForm() {
                 .padding(innerPadding)
                 .imePadding(),
         ) {
-            OutlinedTextField(
+            AppTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 16.dp),
                 value = balanceState,
-                onValueChange = { balanceState = it },
-                label = { Text(i18n(R.string.balance)) },
-                textStyle = LocalTextStyle.current.copy(
+                onChange = { balanceState = it },
+                label = i18n(R.string.balance),
+                textStyle = AppTextFieldDefaults.textStyle.copy(
                     textAlign = TextAlign.Center,
                     fontSize = LocalTextStyle.current.fontSize.times(2),
                 ),

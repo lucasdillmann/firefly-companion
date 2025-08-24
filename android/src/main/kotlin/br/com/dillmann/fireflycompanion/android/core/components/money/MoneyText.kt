@@ -7,7 +7,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.TextStyle
 import br.com.dillmann.fireflycompanion.business.currency.Currency
 import java.math.BigDecimal
@@ -18,7 +17,7 @@ fun MoneyText(
     modifier: Modifier = Modifier,
     style: TextStyle = MaterialTheme.typography.bodyMedium,
     dynamicColors: Boolean = false,
-    baseColor: Color = MaterialTheme.colorScheme.primary,
+    baseColor: Color = MoneyColor.base(),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
     currency: Currency,
 ) {
@@ -27,13 +26,10 @@ fun MoneyText(
         if (visible.value) currency.format(value ?: BigDecimal.ZERO)
         else "${currency.symbol} •••"
 
-    val tintColor = baseColor.copy(alpha = 0.5f)
     val color =
         when  {
             !dynamicColors || value == null || !visible.value -> baseColor
-            value.compareTo(BigDecimal.ZERO) == 0 -> tintColor.compositeOver(Color.Gray)
-            value < BigDecimal.ZERO -> tintColor.compositeOver(Color.Red)
-            else -> tintColor.compositeOver(Color.Green)
+            else -> MoneyColor.of(value, baseColor)
         }
 
     Row(

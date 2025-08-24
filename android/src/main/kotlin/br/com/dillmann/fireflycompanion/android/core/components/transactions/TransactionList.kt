@@ -73,7 +73,8 @@ fun TransactionList(
     }
 
     LaunchedEffect(Unit) {
-        loadTransactions()
+        if (items.isEmpty() && !loading)
+            loadTransactions()
     }
 
     LaunchedEffect(listState) {

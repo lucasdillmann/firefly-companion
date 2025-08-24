@@ -23,7 +23,7 @@ import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
-import br.com.dillmann.fireflycompanion.android.core.theme.Colors
+import br.com.dillmann.fireflycompanion.android.core.theme.AppColors
 import br.com.dillmann.fireflycompanion.android.home.HomeTabs
 import br.com.dillmann.fireflycompanion.android.home.HomeTopActions
 import br.com.dillmann.fireflycompanion.android.home.extensions.toDateRange
@@ -88,19 +88,19 @@ fun HomeOverview() {
             DetailBlock(
                 title = i18n(R.string.earned),
                 summary = summary,
-                tintColor = Colors.GREEN,
+                tintColor = AppColors.Green,
                 valueProvider = { it.earned },
             )
             DetailBlock(
                 title = i18n(R.string.spent),
                 summary = summary,
-                tintColor = Colors.RED,
+                tintColor = AppColors.Red,
                 valueProvider = { it.spent?.abs() },
             )
             DetailBlock(
                 title = i18n(R.string.left_to_spend),
                 summary = summary,
-                tintColor = Colors.BLUE,
+                tintColor = AppColors.Blue,
                 valueProvider = { it.leftToSpend },
             )
             DetailBlock(

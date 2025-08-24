@@ -24,7 +24,7 @@ import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
-import br.com.dillmann.fireflycompanion.android.core.theme.Colors
+import br.com.dillmann.fireflycompanion.android.core.theme.AppColors
 import br.com.dillmann.fireflycompanion.android.home.HomeTabs
 import br.com.dillmann.fireflycompanion.android.home.extensions.toDateRange
 import br.com.dillmann.fireflycompanion.business.account.AccountOverview
@@ -91,7 +91,7 @@ private fun Graph(overview: List<AccountOverview>) {
         data = data,
         zeroLineProperties = ZeroLineProperties(
             enabled = true,
-            color = SolidColor(Colors.RED),
+            color = SolidColor(AppColors.Red),
         ),
         animationMode = AnimationMode.Together(
             delayBuilder = { it.toLong() * 100 },

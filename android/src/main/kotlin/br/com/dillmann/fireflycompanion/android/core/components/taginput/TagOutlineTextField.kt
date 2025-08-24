@@ -23,6 +23,7 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import br.com.dillmann.fireflycompanion.android.core.components.textfield.AppTextField
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
@@ -34,8 +35,7 @@ fun TagOutlineTextField(
     label: String,
     modifier: Modifier = Modifier,
     disabled: Boolean = false,
-    isError: Boolean = false,
-    supportingText: @Composable (() -> Unit)? = null,
+    errorMessage: String? = null,
     suggestionsProvider: suspend (query: String) -> List<String>,
 ) {
     val queue by persistent(ActionQueue())
@@ -93,17 +93,16 @@ fun TagOutlineTextField(
         onExpandedChange = { expanded = it && !disabled },
         modifier = modifier,
     ) {
-        OutlinedTextField(
+        AppTextField(
             value = input,
-            onValueChange = {
+            onChange = {
                 input = it
                 fetchSuggestions()
             },
-            isError = isError,
+            errorMessage = errorMessage,
             enabled = !disabled,
             singleLine = false,
-            label = { Text(label) },
-            supportingText = supportingText,
+            label = label,
             modifier = Modifier
                 .fillMaxWidth()
                 .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)

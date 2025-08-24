@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.TextFieldValue
+import br.com.dillmann.fireflycompanion.android.core.components.textfield.AppTextField
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 
@@ -20,8 +21,7 @@ fun AutoCompleteOutlinedTextField(
     label: String,
     modifier: Modifier = Modifier,
     disabled: Boolean = false,
-    isError: Boolean = false,
-    supportingText: @Composable (() -> Unit)? = null,
+    errorMessage: String? = null,
     suggestionsProvider: suspend (query: String) -> List<String>,
 ) {
     val queue by persistent(ActionQueue())
@@ -44,16 +44,15 @@ fun AutoCompleteOutlinedTextField(
         expanded = expanded,
         onExpandedChange = { expanded = it },
     ) {
-        OutlinedTextField(
+        AppTextField(
             value = value.value,
-            onValueChange = {
+            onChange = {
                 value.value = it
                 queue.add { fetchSuggestions() }
             },
-            isError = isError,
-            label = { Text(label) },
+            label = label,
             enabled = !disabled,
-            supportingText = supportingText,
+            errorMessage = errorMessage,
             modifier = Modifier
                 .fillMaxWidth()
                 .menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryEditable)

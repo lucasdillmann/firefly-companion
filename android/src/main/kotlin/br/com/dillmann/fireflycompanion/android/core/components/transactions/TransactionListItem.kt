@@ -8,14 +8,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyColor
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.router.Route
 import br.com.dillmann.fireflycompanion.android.core.router.navigate
-import br.com.dillmann.fireflycompanion.android.core.theme.Colors
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 
 @Composable
@@ -24,18 +23,18 @@ fun TransactionListItem(
     showAccountNameOnReconciliation: Boolean,
 ) {
     val (icon, tint) = when (transaction.type) {
-        Transaction.Type.WITHDRAWAL -> Icons.Default.ArrowUpward to Colors.RED
-        Transaction.Type.DEPOSIT -> Icons.Default.ArrowDownward to Colors.GREEN
-        Transaction.Type.TRANSFER -> Icons.Default.SwapHoriz to Colors.BLUE
+        Transaction.Type.WITHDRAWAL -> Icons.Default.ArrowUpward to MoneyColor.negative()
+        Transaction.Type.DEPOSIT -> Icons.Default.ArrowDownward to MoneyColor.positive()
+        Transaction.Type.TRANSFER -> Icons.Default.SwapHoriz to MoneyColor.internal()
         Transaction.Type.RECONCILIATION -> {
             val icon = Icons.Default.Build
             if (transaction.destinationAccountName!!.contains("reconciliation"))
-                icon to Colors.RED
+                icon to MoneyColor.negative()
             else
-                icon to Colors.GREEN
+                icon to MoneyColor.positive()
         }
 
-        else -> Icons.Default.QuestionMark to Color.Unspecified
+        else -> Icons.Default.QuestionMark to MoneyColor.base()
     }
 
     Card(
@@ -97,7 +96,6 @@ fun TransactionListItem(
 
                             else ->
                                 ""
-
                         }
 
                     Text(
@@ -116,6 +114,7 @@ fun TransactionListItem(
                     currency = transaction.currency,
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     baseColor = tint,
+                    dynamicColors = false,
                     horizontalArrangement = Arrangement.End,
                 )
             }

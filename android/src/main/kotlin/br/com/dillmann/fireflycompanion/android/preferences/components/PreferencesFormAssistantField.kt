@@ -14,7 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.components.textfield.AppTextField
 import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.extensions.description
@@ -186,16 +188,14 @@ private fun AccessToken(
             modifier = Modifier.weight(1f),
         )
 
-        OutlinedTextField(
-            value = assistant.accessToken ?: "",
-            onValueChange = { newValue ->
-                val updated = assistant.copy(accessToken = newValue.ifBlank { null })
+        AppTextField(
+            value = TextFieldValue(assistant.accessToken ?: ""),
+            onChange = { newValue ->
+                val updated = assistant.copy(accessToken = newValue.text.ifBlank { null })
                 state.value = preferences.copy(assistant = updated)
                 onChange()
             },
-            placeholder = { Text(text = i18n(R.string.assistant_access_key)) },
-            modifier = Modifier.weight(2f),
-            textStyle = MaterialTheme.typography.bodyLarge,
+            containerModifier = Modifier.weight(2f),
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Password,
@@ -223,16 +223,15 @@ private fun ApiUrl(
             modifier = Modifier.weight(1f),
         )
 
-        OutlinedTextField(
-            value = assistant.url ?: "",
-            onValueChange = { newValue ->
-                val updated = assistant.copy(url = newValue.ifBlank { null })
+        AppTextField(
+            value = TextFieldValue(assistant.url ?: ""),
+            onChange = { newValue ->
+                val updated = assistant.copy(url = newValue.text.ifBlank { null })
                 state.value = preferences.copy(assistant = updated)
                 onChange()
             },
-            placeholder = { Text(text = i18n(R.string.server_url)) },
+            label = i18n(R.string.server_url),
             modifier = Modifier.weight(2f),
-            textStyle = MaterialTheme.typography.bodyLarge,
             singleLine = true,
         )
     }

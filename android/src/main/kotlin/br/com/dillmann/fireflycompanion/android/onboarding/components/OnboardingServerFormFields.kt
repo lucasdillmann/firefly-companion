@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.components.textfield.AppTextField
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.core.validation.ValidationOutcome
@@ -44,33 +45,23 @@ fun OnboardingServerFormFields(
         }
     }
 
-    OutlinedTextField(
+    AppTextField(
         value = serverUrl.value,
-        onValueChange = { serverUrl.value = it },
-        label = { Text(text = i18n(R.string.server_url)) },
+        onChange = { serverUrl.value = it },
+        label = i18n(R.string.server_url),
         modifier = Modifier
             .padding(top = 32.dp, bottom = 0.dp)
             .focusRequester(serverUrlFocusRequester)
             .onFocusChanged { serverUrlFocused.value = it.isFocused }
             .fillMaxWidth(),
         textStyle = MaterialTheme.typography.bodyLarge,
-        isError = validationOutcome?.messageFor("url") != null,
-        supportingText = {
-            val message = validationOutcome?.messageFor("url")
-            if (message != null) {
-                Text(
-                    text = message,
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
-        }
+        errorMessage = validationOutcome?.messageFor("url"),
     )
 
-    OutlinedTextField(
+    AppTextField(
         value = accessToken.value,
-        onValueChange = { accessToken.value = it },
-        label = { Text(text = i18n(R.string.personal_access_token)) },
+        onChange = { accessToken.value = it },
+        label = i18n(R.string.personal_access_token),
         modifier = Modifier
             .padding(top = 0.dp, bottom = 32.dp)
             .focusRequester(accessTokenFocusRequester)
@@ -81,16 +72,6 @@ fun OnboardingServerFormFields(
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = androidx.compose.ui.text.input.KeyboardType.Password,
         ),
-        isError = validationOutcome?.messageFor("token") != null,
-        supportingText = {
-            val message = validationOutcome?.messageFor("token")
-            if (message != null) {
-                Text(
-                    text = message,
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
-        }
+        errorMessage = validationOutcome?.messageFor("token"),
     )
 }
