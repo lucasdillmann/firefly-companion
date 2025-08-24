@@ -22,9 +22,7 @@ fun MoneyText(
     currency: Currency,
 ) {
     val visible by MoneyVisibility
-    val text =
-        if (visible.value) currency.format(value ?: BigDecimal.ZERO)
-        else "${currency.symbol} •••"
+    val text = MoneyVisibility.format(value ?: BigDecimal.ZERO, currency)
 
     val color =
         when  {

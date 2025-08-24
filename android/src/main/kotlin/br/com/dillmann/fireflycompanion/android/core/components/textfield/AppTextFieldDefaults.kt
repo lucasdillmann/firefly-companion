@@ -1,13 +1,8 @@
-package br.com.dillmann.fireflycompanion.android.core.theme
+package br.com.dillmann.fireflycompanion.android.core.components.textfield
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 
 object AppTextFieldDefaults {
@@ -26,10 +21,4 @@ object AppTextFieldDefaults {
     val textStyle
         @Composable get() =
             MaterialTheme.typography.bodyMedium
-
-    @Composable
-    fun Modifier.textFieldDefaults() =
-        fillMaxHeight()
-            .clip(RoundedCornerShape(25))
-            .background(MaterialTheme.colorScheme.surfaceVariant)
 }

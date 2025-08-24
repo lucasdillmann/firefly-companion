@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import br.com.dillmann.fireflycompanion.business.currency.Currency
+import java.math.BigDecimal
 import kotlin.reflect.KProperty
 
 object MoneyVisibility {
@@ -38,4 +40,8 @@ object MoneyVisibility {
     ): State<Boolean> {
         return state
     }
+
+    fun format(value: BigDecimal, currency: Currency): String =
+        if (state.value) currency.format(value)
+        else "${currency.symbol} •••"
 }

@@ -4,10 +4,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,7 +23,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import br.com.dillmann.fireflycompanion.android.core.theme.AppTextFieldDefaults
 
 @Composable
 fun AppTextField(
@@ -48,34 +44,43 @@ fun AppTextField(
 ) {
     val shape = RoundedCornerShape(percent = 50)
 
-    Box(modifier = containerModifier) {
-        TextField(
-            value = value,
-            onValueChange = onChange,
-            enabled = enabled,
-            readOnly = readOnly,
-            singleLine = singleLine,
-            colors = AppTextFieldDefaults.colors,
-            textStyle = textStyle,
-            isError = errorMessage != null,
-            supportingText = errorMessage.asText(color = Color.Red),
-            placeholder = label.asText(style = textStyle),
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions,
-            prefix = prefix,
-            visualTransformation = visualTransformation,
-            modifier = modifier
-                .clip(shape)
-                .background(
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = shape,
-                ),
-        )
+    Column(modifier = containerModifier) {
+        Box {
+            TextField(
+                value = value,
+                onValueChange = onChange,
+                enabled = enabled,
+                readOnly = readOnly,
+                singleLine = singleLine,
+                colors = AppTextFieldDefaults.colors,
+                textStyle = textStyle,
+                placeholder = label.asText(style = textStyle),
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
+                prefix = prefix,
+                visualTransformation = visualTransformation,
+                modifier = modifier
+                    .clip(shape)
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = shape,
+                    ),
+            )
 
-        if (stickyLabel && label != null) {
-            Label(
-                label = label,
-                visible = value.text.isNotBlank(),
+            if (stickyLabel && label != null) {
+                Label(
+                    label = label,
+                    visible = value.text.isNotBlank(),
+                )
+            }
+        }
+
+        if (errorMessage?.isNotBlank() == true) {
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                style = MaterialTheme.typography.labelSmall,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
             )
         }
     }
@@ -93,19 +98,16 @@ private fun BoxScope.Label(
     val offsetY by animateDpAsState(
         targetValue = if (visible) (-8).dp else 16.dp,
         animationSpec = tween(durationMillis = duration),
-        label = "labelOffsetY"
     )
 
     val offsetX by animateDpAsState(
         targetValue = if (visible) (-4).dp else 16.dp,
         animationSpec = tween(durationMillis = duration),
-        label = "labelOffsetX"
     )
 
     val alpha by animateFloatAsState(
         targetValue = if (visible) 1f else 0f,
         animationSpec = tween(durationMillis = duration),
-        label = "labelAlpha"
     )
 
     Box(

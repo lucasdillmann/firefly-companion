@@ -34,7 +34,7 @@ fun TransactionDetails(
     transaction: Transaction?,
     finish: () -> Unit,
 ) {
-    val editMode = transaction != null
+    val editMode = transaction?.id != null
     val scrollState = rememberScrollState()
     val validationOutcome = volatile<ValidationOutcome?>(null)
     val showLoading = volatile(false)

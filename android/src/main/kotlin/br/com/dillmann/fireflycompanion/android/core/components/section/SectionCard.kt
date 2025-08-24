@@ -13,11 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import br.com.dillmann.fireflycompanion.android.core.components.animations.TransitionContainer
+import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibility
 
 @Composable
 fun SectionCard(
     title: String,
     modifier: Modifier = Modifier,
+    targetState: Any? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Section(title, modifier) {
@@ -32,7 +35,11 @@ fun SectionCard(
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center
             ) {
-                content()
+                TransitionContainer(
+                    state = listOf(targetState, MoneyVisibility.state.value),
+                ) {
+                    content()
+                }
             }
         }
     }

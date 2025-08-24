@@ -1,9 +1,11 @@
 package br.com.dillmann.fireflycompanion.android.home.main
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CreditCard
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -49,7 +52,8 @@ fun HomeCreditCards() {
     }
 
     SectionCard(
-        title = i18n(R.string.credit_cards)
+        title = i18n(R.string.credit_cards),
+        targetState = creditCards,
     ) {
         Box(
             modifier = Modifier.fillMaxWidth(),
@@ -81,8 +85,16 @@ private fun CreditCardList(creditCards: List<Account>) {
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        creditCards.forEach { creditCard ->
+        creditCards.forEachIndexed{ index, creditCard ->
             CreditCardDetails(creditCard)
+
+            if (index < creditCards.lastIndex) {
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 4.dp, horizontal = 0.dp),
+                    thickness = 0.2.dp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
     }
 }
@@ -100,7 +112,9 @@ private fun CreditCardDetails(creditCard: Account) {
             Icon(
                 imageVector = Icons.Filled.CreditCard,
                 contentDescription = i18n(R.string.credit_cards),
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable(onClick = { openAccountForm(creditCard) }),
             )
         }
 
@@ -108,6 +122,7 @@ private fun CreditCardDetails(creditCard: Account) {
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 8.dp)
+                .clickable(onClick = { openAccountForm(creditCard) }),
         ) {
             Text(
                 text = creditCard.name,
@@ -151,6 +166,10 @@ private fun openTransactionsForm(account: Account) {
         )
 
     navigate(Route.TRANSACTION_FORM, transaction)
+}
+
+private fun openAccountForm(account: Account) {
+    navigate(Route.ACCOUNT_FORM, account)
 }
 
 private suspend fun fetchCreditCards(): List<Account> {

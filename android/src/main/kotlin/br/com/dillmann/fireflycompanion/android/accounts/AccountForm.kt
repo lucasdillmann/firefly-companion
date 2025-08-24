@@ -25,7 +25,7 @@ import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.refresh.RefreshDispatcher
 import br.com.dillmann.fireflycompanion.android.core.router.NavigationContext
-import br.com.dillmann.fireflycompanion.android.core.theme.AppTextFieldDefaults
+import br.com.dillmann.fireflycompanion.android.core.components.textfield.AppTextFieldDefaults
 import br.com.dillmann.fireflycompanion.business.account.Account
 import br.com.dillmann.fireflycompanion.business.account.usecase.GetAccountUseCase
 import br.com.dillmann.fireflycompanion.business.account.usecase.UpdateAccountBalanceUseCase
@@ -92,10 +92,9 @@ fun NavigationContext.AccountForm() {
             AppTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                    .padding(horizontal = 16.dp, vertical = 0.dp),
                 value = balanceState,
                 onChange = { balanceState = it },
-                label = i18n(R.string.balance),
                 textStyle = AppTextFieldDefaults.textStyle.copy(
                     textAlign = TextAlign.Center,
                     fontSize = LocalTextStyle.current.fontSize.times(2),

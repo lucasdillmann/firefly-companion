@@ -1,5 +1,6 @@
 package br.com.dillmann.fireflycompanion.android.home.main
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,7 +38,6 @@ import org.koin.mp.KoinPlatform.getKoin
 @Composable
 fun HomeAccountsOverview() {
     val queue by persistent(ActionQueue())
-    val monetaryValuesVisible by MoneyVisibility.state
     var overview by persistent(::fetchOverview)
 
     OnRefreshEvent(HomeTabs.MAIN) {
@@ -50,6 +50,7 @@ fun HomeAccountsOverview() {
     SectionCard(
         modifier = Modifier.fillMaxWidth(),
         title = i18n(R.string.accounts_overview),
+        targetState = overview,
     ) {
         Box(
             modifier = Modifier
@@ -59,8 +60,6 @@ fun HomeAccountsOverview() {
         ) {
             if (overview == null) {
                 LoadingIndicator()
-            } else if (!monetaryValuesVisible) {
-                ContentHiddenIcon()
             } else {
                 Graph(overview!!)
             }
@@ -80,6 +79,9 @@ private fun Graph(overview: List<AccountOverview>) {
                 color = SolidColor(baseColor),
                 firstGradientFillColor = baseColor.copy(alpha = 0.25f),
                 secondGradientFillColor = Color.Transparent,
+                gradientAnimationSpec = tween(0),
+                strokeAnimationSpec = tween(0),
+                gradientAnimationDelay = 0,
             )
         }
     }
@@ -93,9 +95,8 @@ private fun Graph(overview: List<AccountOverview>) {
             enabled = true,
             color = SolidColor(AppColors.Red),
         ),
-        animationMode = AnimationMode.Together(
-            delayBuilder = { it.toLong() * 100 },
-        ),
+        animationDelay = 0,
+        animationMode = AnimationMode.Together(),
         gridProperties = GridProperties(
             enabled = false,
         ),
@@ -106,7 +107,7 @@ private fun Graph(overview: List<AccountOverview>) {
             ),
             contentBuilder = {
                 val currency = overview.first().currency
-                currency.format(it.toBigDecimal())
+                MoneyVisibility.format(it.toBigDecimal(), currency)
             },
         ),
         popupProperties = PopupProperties(
@@ -116,7 +117,7 @@ private fun Graph(overview: List<AccountOverview>) {
             ),
             contentBuilder = { index, _, value ->
                 val item = overview[index]
-                val value = item.currency.format(value.toBigDecimal())
+                val value = MoneyVisibility.format(value.toBigDecimal(), item.currency)
 
                 "${item.name}: $value"
             },
@@ -126,7 +127,7 @@ private fun Graph(overview: List<AccountOverview>) {
             textStyle = MaterialTheme.typography.bodySmall.copy(
                 color = MaterialTheme.colorScheme.primary,
             ),
-        )
+        ),
     )
 }
 

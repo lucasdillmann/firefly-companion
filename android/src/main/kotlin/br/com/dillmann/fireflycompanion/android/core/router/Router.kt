@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import br.com.dillmann.fireflycompanion.android.core.animations.Transitions
+import br.com.dillmann.fireflycompanion.android.core.components.animations.Transitions
 
 @Composable
 fun Router(initialRoute: Route) {

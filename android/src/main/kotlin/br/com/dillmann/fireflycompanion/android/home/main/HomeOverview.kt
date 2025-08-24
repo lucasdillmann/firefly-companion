@@ -16,6 +16,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
+import br.com.dillmann.fireflycompanion.android.core.components.animations.TransitionContainer
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
@@ -65,7 +66,7 @@ fun HomeOverview() {
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.Start,
             ) {
-                DetailContent(
+                SummaryDetailsCards(
                     title = i18n(R.string.net_worth),
                     summary = summary,
                     colorSchema = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -139,7 +140,7 @@ private fun DetailBlock(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center
         ) {
-            DetailContent(
+            SummaryDetailsCards(
                 title = title,
                 summary = summary,
                 colorSchema = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -152,7 +153,7 @@ private fun DetailBlock(
 }
 
 @Composable
-private fun DetailContent(
+private fun SummaryDetailsCards(
     title: String,
     summary: SummaryOverview?,
     colorSchema: Color,
@@ -160,20 +161,24 @@ private fun DetailContent(
     labelStyle: TextStyle,
     valueProvider: (SummaryOverview) -> BigDecimal?,
 ) {
-    if (summary == null) {
-        CircularProgressIndicator(
-            modifier = Modifier.size(valueStyle.lineHeight.value.dp - 8.dp),
-            color = colorSchema.copy(alpha = 0.5f),
-            strokeWidth = 2.dp,
-        )
-        Spacer(modifier = Modifier.size(8.dp))
-    } else {
-        MoneyText(
-            value = valueProvider(summary) ?: BigDecimal.ZERO,
-            currency = summary.currency,
-            style = valueStyle.copy(fontWeight = FontWeight.SemiBold),
-            baseColor = colorSchema,
-        )
+    TransitionContainer(
+        state = summary,
+    ) {
+        if (summary == null) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(valueStyle.lineHeight.value.dp - 8.dp),
+                color = colorSchema.copy(alpha = 0.5f),
+                strokeWidth = 2.dp,
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+        } else {
+            MoneyText(
+                value = valueProvider(summary) ?: BigDecimal.ZERO,
+                currency = summary.currency,
+                style = valueStyle.copy(fontWeight = FontWeight.SemiBold),
+                baseColor = colorSchema,
+            )
+        }
     }
 
     Text(

@@ -22,7 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import br.com.dillmann.fireflycompanion.android.core.animations.Transitions
+import br.com.dillmann.fireflycompanion.android.core.components.animations.Transitions
 import br.com.dillmann.fireflycompanion.android.core.router.NavigationContext
 import br.com.dillmann.fireflycompanion.android.home.accounts.HomeAccountsTab
 import br.com.dillmann.fireflycompanion.android.home.assistant.HomeAssistantTab

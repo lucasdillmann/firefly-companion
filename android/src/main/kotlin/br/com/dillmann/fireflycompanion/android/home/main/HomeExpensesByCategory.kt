@@ -1,7 +1,6 @@
 package br.com.dillmann.fireflycompanion.android.home.main
 
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,7 +40,6 @@ import org.koin.java.KoinJavaComponent.getKoin
 @Composable
 fun HomeExpensesByCategory() {
     val queue by persistent(ActionQueue())
-    val monetaryValuesVisible by MoneyVisibility.state
     val currency by persistent { getKoin().get<GetDefaultCurrencyUseCase>().getDefault() }
     var overview by persistent(::fetchOverview)
 
@@ -55,6 +53,7 @@ fun HomeExpensesByCategory() {
     SectionCard(
         modifier = Modifier.fillMaxWidth(),
         title = i18n(R.string.expenses_by_category),
+        targetState = overview,
     ) {
         Box(
             modifier = Modifier
@@ -64,8 +63,6 @@ fun HomeExpensesByCategory() {
         ) {
             if (overview == null || currency == null) {
                 LoadingIndicator()
-            } else if (!monetaryValuesVisible) {
-                ContentHiddenIcon()
             } else if (overview!!.isEmpty()) {
                 Text(
                     text = i18n(R.string.no_data_yet),
@@ -98,7 +95,7 @@ private fun Graph(overview: List<ExpensesByCategoryOverview>, currency: Currency
                                 color,
                                 color.copy(alpha = 0.5f),
                             )
-                        )
+                        ),
                     )
                 ),
             )
@@ -115,10 +112,9 @@ private fun Graph(overview: List<ExpensesByCategoryOverview>, currency: Currency
             spacing = 3.dp,
             thickness = 20.dp,
         ),
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
-        ),
+        animationDelay = 0,
+        animationSpec = tween(0),
+        animationMode = AnimationMode.Together(),
         gridProperties = GridProperties(enabled = false),
         labelProperties = LabelProperties(enabled = false),
         indicatorProperties = HorizontalIndicatorProperties(
@@ -127,7 +123,7 @@ private fun Graph(overview: List<ExpensesByCategoryOverview>, currency: Currency
                 color = MaterialTheme.colorScheme.primary,
             ),
             contentBuilder = {
-                currency.format(it.toBigDecimal())
+                MoneyVisibility.format(it.toBigDecimal(), currency)
             },
         ),
         popupProperties = PopupProperties(
@@ -137,7 +133,7 @@ private fun Graph(overview: List<ExpensesByCategoryOverview>, currency: Currency
             ),
             contentBuilder = { index, _, value ->
                 val item = overview[index]
-                val value = currency.format(value.toBigDecimal())
+                val value = MoneyVisibility.format(value.toBigDecimal(), currency)
 
                 "${item.name}: $value"
             },
