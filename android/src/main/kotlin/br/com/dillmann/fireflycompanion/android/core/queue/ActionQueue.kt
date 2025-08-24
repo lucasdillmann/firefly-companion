@@ -1,5 +1,6 @@
 package br.com.dillmann.fireflycompanion.android.core.queue
 
+import android.util.Log
 import br.com.dillmann.fireflycompanion.android.core.compose.async
 import com.google.common.cache.CacheBuilder
 import com.google.common.cache.CacheLoader
@@ -26,7 +27,13 @@ class ActionQueue : Serializable {
         executors
             .get(this)
             .execute {
-                async { action() }.join()
+                async {
+                    try {
+                        action()
+                    } catch (ex: Throwable) {
+                        Log.w("ActionQueue", "Task failed with an unexpected error", ex)
+                    }
+                }.join()
             }
     }
 }

@@ -12,7 +12,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -34,8 +33,6 @@ import br.com.dillmann.fireflycompanion.android.home.HomeTopActions
 import br.com.dillmann.fireflycompanion.business.account.Account
 import br.com.dillmann.fireflycompanion.business.account.usecase.ListAccountsUseCase
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
-import java.math.BigDecimal
-import java.util.concurrent.CompletableFuture
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -219,7 +216,7 @@ private fun AccountItem(account: Account) {
                     value = account.currentBalance,
                     currency = account.currency,
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                    color = if (account.currentBalance > BigDecimal.ZERO) Color.Green else Color.Red,
+                    dynamicColors = true,
                     horizontalArrangement = Arrangement.End,
                 )
             }
@@ -236,12 +233,8 @@ private fun Account.Type.details(): Pair<ImageVector, String> =
         Account.Type.REVENUE -> Icons.Filled.MonetizationOn to R.string.revenue
         Account.Type.LIABILITY,
         Account.Type.LIABILITIES -> Icons.Filled.Warning to R.string.liability
-
         Account.Type.INITIAL_MINUS_BALANCE -> Icons.Filled.Remove to R.string.initial_balance
         Account.Type.RECONCILIATION -> Icons.Filled.AccountBalance to R.string.reconciliation
     }.let { (icon, stringId) ->
         icon to i18n(stringId)
     }
-
-private fun CompletableFuture<out Any>?.done() =
-    this == null || isDone

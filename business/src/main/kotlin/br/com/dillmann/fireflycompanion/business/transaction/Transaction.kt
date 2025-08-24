@@ -23,6 +23,14 @@ data class Transaction(
         RECONCILIATION,
         OPENING_BALANCE,
     }
+
+    val reconciliationType: String? =
+        when {
+            type != Type.RECONCILIATION -> null
+            sourceAccountName == null || destinationAccountName == null -> null
+            sourceAccountName.contains("reconciliation", ignoreCase = true) -> Type.DEPOSIT.name
+            else -> Type.WITHDRAWAL.name
+        }
 }
 
 

@@ -1,8 +1,0 @@
-### Balance
-GET {{base-url}}/v2/chart/balance/balance?start=2025-07-02&end=2025-08-02&accounts[]=714&period=1D
-Authorization: Bearer {{token}}
-
-### Account overview
-GET {{base-url}}/v1/chart/account/overview?start=2025-07-02&end=2025-08-02
-Authorization: Bearer {{token}}
-Accept: application/json

@@ -1,3 +1,0 @@
-### Accounts
-GET {{base-url}}/v1/autocomplete/accounts?query=bank&types=Asset account
-Authorization: Bearer {{token}}

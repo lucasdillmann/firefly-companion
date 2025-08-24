@@ -172,7 +172,7 @@ private fun DetailContent(
             value = valueProvider(summary) ?: BigDecimal.ZERO,
             currency = summary.currency,
             style = valueStyle.copy(fontWeight = FontWeight.SemiBold),
-            color = colorSchema,
+            baseColor = colorSchema,
         )
     }
 

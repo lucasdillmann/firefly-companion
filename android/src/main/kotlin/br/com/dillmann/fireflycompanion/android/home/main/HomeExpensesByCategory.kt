@@ -85,26 +85,24 @@ fun HomeExpensesByCategory() {
 @Composable
 private fun Graph(overview: List<ExpensesByCategoryOverview>, currency: Currency) {
     var data by volatile {
-        overview
-            .sortedBy { it.amount }
-            .mapIndexed { index, item ->
-                val color = ColorPool.indexed(index)
-                Bars(
-                    label = item.name,
-                    values = listOf(
-                        Bars.Data(
-                            label = item.name,
-                            value = item.amount.abs().toDouble(),
-                            color = Brush.verticalGradient(
-                                listOf(
-                                    color,
-                                    color.copy(alpha = 0.5f),
-                                )
+        overview.mapIndexed { index, item ->
+            val color = ColorPool.indexed(index)
+            Bars(
+                label = item.name,
+                values = listOf(
+                    Bars.Data(
+                        label = item.name,
+                        value = item.amount.abs().toDouble(),
+                        color = Brush.verticalGradient(
+                            listOf(
+                                color,
+                                color.copy(alpha = 0.5f),
                             )
                         )
-                    ),
-                )
-            }
+                    )
+                ),
+            )
+        }
     }
 
     ColumnChart(
@@ -155,5 +153,8 @@ private fun Graph(overview: List<ExpensesByCategoryOverview>, currency: Currency
 
 private suspend fun fetchOverview(): List<ExpensesByCategoryOverview> {
     val (startDate, endDate) = getKoin().get<GetPreferencesUseCase>().getPreferences().homePeriod.toDateRange()
-    return getKoin().get<ExpensesByCategoryOverviewUseCase>().getExpensesByCategory(startDate, endDate)
+    return getKoin()
+        .get<ExpensesByCategoryOverviewUseCase>()
+        .getExpensesByCategory(startDate, endDate)
+        .sortedBy { it.amount }
 }

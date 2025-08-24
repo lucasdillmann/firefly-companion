@@ -1,0 +1,63 @@
+### Accounts
+GET {{base-url}}/v1/autocomplete/accounts?query=bank&types=Asset account
+Authorization: Bearer {{token}}
+
+### Account balance
+GET {{base-url}}/v1/summary/basic?start=2025-07-01&end=2025-07-31
+Authorization: Bearer {{token}}
+
+### Accounts
+GET {{base-url}}/v1/accounts?type=asset&active=true
+Authorization: Bearer {{token}}
+
+### Expenses by category
+GET {{base-url}}/v1/insight/expense/category?start=2025-08-01&end=2025-08-30
+Authorization: Bearer {{token}}
+
+### Balance
+GET {{base-url}}/v2/chart/balance/balance?start=2025-07-02&end=2025-08-02&accounts[]=714&period=1D
+Authorization: Bearer {{token}}
+
+### Account overview
+GET {{base-url}}/v1/chart/account/overview?start=2025-07-02&end=2025-08-02
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### Get transaction by ID
+GET {{base-url}}/v1/transactions/12564
+Authorization: Bearer {{token}}
+
+### Delete transaction by ID
+DELETE {{base-url}}/v1/transactions/12573
+Authorization: Bearer {{token}}
+
+### Create transaction
+POST {{base-url}}/v1/transactions
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/vnd.api+json, application/json
+
+{
+  "apply_rules": true,
+  "fire_webhooks": true,
+  "transactions": [
+    {
+      "type": "reconciliation",
+      "date": "2025-07-27T00:00:00-03:00",
+      "amount": "0.01",
+      "description": "Reconciliation",
+      "currency_id": "13",
+      "source_name": "XP (investimentos)",
+      "destination_name": "XP (investimentos) reconciliation (BRL)",
+      "reconciled": true,
+      "tags": [],
+      "notes": "Reconciliation",
+      "order": 0
+    }
+  ]
+}
+
+### Default currency
+GET  {{base-url}}/v1/currencies/native
+Authorization: Bearer {{token}}
+Accept: application/vnd.api+json, application/json

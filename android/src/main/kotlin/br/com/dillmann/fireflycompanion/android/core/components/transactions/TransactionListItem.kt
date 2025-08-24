@@ -115,7 +115,7 @@ fun TransactionListItem(
                     value = transaction.amount,
                     currency = transaction.currency,
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                    color = tint,
+                    baseColor = tint,
                     horizontalArrangement = Arrangement.End,
                 )
             }

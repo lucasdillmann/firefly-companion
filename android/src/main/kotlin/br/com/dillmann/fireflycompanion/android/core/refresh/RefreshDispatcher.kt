@@ -2,7 +2,6 @@ package br.com.dillmann.fireflycompanion.android.core.refresh
 
 import br.com.dillmann.fireflycompanion.android.core.compose.async
 
-
 object RefreshDispatcher {
     private val listeners = mutableMapOf<RefreshListener, Any?>()
 

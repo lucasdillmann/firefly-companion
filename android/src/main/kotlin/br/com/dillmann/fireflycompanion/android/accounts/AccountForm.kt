@@ -107,7 +107,9 @@ fun NavigationContext.AccountForm() {
             ) {
                 TransactionList(
                     showAccountNameOnReconciliation = false,
-                    transactionsProvider = { listTransactionsUseCase.list(page = it, accountId = account.id) },
+                    transactionsProvider = {
+                        listTransactionsUseCase.list(page = it, accountId = account.id)
+                    },
                 )
             }
         }
