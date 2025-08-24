@@ -12,5 +12,6 @@ internal class AutoCompleteService(private val repository: AutoCompleteRepositor
             AutoCompleteType.ACCOUNT -> repository.findAccountSuggestions(searchTerms, limit, listOf("Asset account"))
             AutoCompleteType.CATEGORY -> repository.findCategorySuggestions(searchTerms, limit)
             AutoCompleteType.DESCRIPTION -> repository.findDescriptionSuggestions(searchTerms, limit)
+            AutoCompleteType.TAG -> repository.findTagSuggestions(searchTerms, limit)
         }
 }

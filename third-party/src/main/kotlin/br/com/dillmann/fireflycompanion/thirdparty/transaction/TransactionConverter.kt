@@ -17,6 +17,7 @@ internal interface TransactionConverter {
     @Mapping(target = "category", expression = "java(value(input, TransactionSplit::getCategoryName))")
     @Mapping(target = "sourceAccountName", expression = "java(value(input, TransactionSplit::getSourceName))")
     @Mapping(target = "destinationAccountName", expression = "java(value(input, TransactionSplit::getDestinationName))")
+    @Mapping(target = "tags", expression = "java(toSet(value(input, TransactionSplit::getTags)))")
     @Mapping(target = "currency", expression = "java(value(input, this::toDomain))")
     fun toDomain(input: TransactionRead): Transaction
 
@@ -32,12 +33,14 @@ internal interface TransactionConverter {
     @Mapping(target = "sourceName", source = "sourceAccountName")
     @Mapping(target = "destinationName", source = "destinationAccountName")
     @Mapping(target = "categoryName", source = "category")
+    @Mapping(target = "tags", expression = "java(toList(input.getTags()))")
     fun toApiSplitStore(input: Transaction): TransactionSplitStore
 
     @Mapping(target = "currencyCode", source = "currency.code")
     @Mapping(target = "sourceName", source = "sourceAccountName")
     @Mapping(target = "destinationName", source = "destinationAccountName")
     @Mapping(target = "categoryName", source = "category")
+    @Mapping(target = "tags", expression = "java(toList(input.getTags()))")
     fun toApiSplitUpdate(input: Transaction): TransactionSplitUpdate
 
     fun toApiStore(input: Transaction): TransactionStore =
@@ -55,4 +58,10 @@ internal interface TransactionConverter {
 
     fun <I, O> value(transaction: TransactionRead, selector: (TransactionSplit) -> I?, transformer: (I) -> O): O? =
         value(transaction, selector)?.let(transformer)
+
+    fun toSet(value: List<String>) =
+        value.toSet()
+
+    fun toList(value: Set<String>) =
+        value.toList()
 }

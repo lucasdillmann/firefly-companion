@@ -19,4 +19,7 @@ internal class AutoCompleteHttpRepository(private val api: AutocompleteApi) : Au
 
     override suspend fun findDescriptionSuggestions(searchTerms: String, limit: Int): List<String> =
         api.getTransactionsAC(query = searchTerms, limit = limit).map { it.description }.sorted()
+
+    override suspend fun findTagSuggestions(searchTerms: String, limit: Int): List<String> =
+        api.getTagAC(query = searchTerms, limit = limit).map { it.name }.sorted()
 }

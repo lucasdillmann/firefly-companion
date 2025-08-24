@@ -4,4 +4,5 @@ enum class AutoCompleteType {
     ACCOUNT,
     CATEGORY,
     DESCRIPTION,
+    TAG,
 }

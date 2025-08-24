@@ -15,6 +15,7 @@ data class Transaction(
     val type: Type,
     val sourceAccountName: String?,
     val destinationAccountName: String?,
+    val tags: Set<String> = emptySet(),
 ) : Serializable {
     enum class Type : Serializable {
         WITHDRAWAL,

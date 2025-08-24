@@ -134,4 +134,6 @@
     <string name="current_week">Current week</string>
     <string name="current_month">Current month</string>
     <string name="current_year">Current year</string>
+    <string name="tags">Tags</string>
+    <string name="tag">Tag</string>
 </resources>

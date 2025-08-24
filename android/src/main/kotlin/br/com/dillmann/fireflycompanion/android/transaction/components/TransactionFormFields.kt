@@ -36,6 +36,7 @@ fun TransactionFormFields(
     destinationAccount: MutableState<TextFieldValue>,
     transactionType: MutableState<Type>,
     validationOutcome: ValidationOutcome?,
+    tag: MutableState<TextFieldValue>,
 ) {
     val autoComplete = koin().get<AutoCompleteUseCase>()
     val supportedTypes = listOf(Type.DEPOSIT, Type.WITHDRAWAL, Type.TRANSFER)
@@ -166,6 +167,27 @@ fun TransactionFormFields(
             },
         )
     }
+
+    AutoCompleteOutlinedTextField(
+        value = tag,
+        label = i18n(R.string.tag),
+        modifier = Modifier.fillMaxWidth(),
+        disabled = disabled,
+        isError = validationOutcome?.messageFor("tag") != null,
+        supportingText = {
+            val message = validationOutcome?.messageFor("tag")
+            if (message != null) {
+                Text(
+                    text = message,
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
+        },
+        suggestionsProvider = {
+            autoComplete.getSuggestions(AutoCompleteType.TAG, it)
+        },
+    )
 }
 
 private fun translate(type: Type) =

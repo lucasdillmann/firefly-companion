@@ -14,7 +14,7 @@ dependencies {
 
 android {
     namespace = "br.com.dillmann.fireflycompanion.database"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 35

@@ -46,6 +46,7 @@ fun TransactionDetails(
     val sourceAccount = volatile(TextFieldValue(transaction?.sourceAccountName ?: ""))
     val destinationAccount = volatile(TextFieldValue(transaction?.destinationAccountName ?: ""))
     val transactionType = volatile(transaction?.type ?: Transaction.Type.WITHDRAWAL)
+    val tag = volatile(TextFieldValue(transaction?.tags?.firstOrNull() ?: ""))
 
     fun handleSave() {
         val saveAction = koin().get<SaveTransactionUseCase>()
@@ -65,7 +66,8 @@ fun TransactionDetails(
                     currency = transaction?.currency ?: getCurrencyAction.getDefault(),
                     type = transactionType.value,
                     sourceAccountName = sourceAccount.value.text.takeIf { it.isNotBlank() },
-                    destinationAccountName = destinationAccount.value.text.takeIf { it.isNotBlank() }
+                    destinationAccountName = destinationAccount.value.text.takeIf { it.isNotBlank() },
+                    tags = setOfNotNull(tag.value.text.takeIf { it.isNotBlank() }),
                 )
 
                 saveAction.save(updatedTransaction)
@@ -161,7 +163,8 @@ fun TransactionDetails(
                 sourceAccount = sourceAccount,
                 destinationAccount = destinationAccount,
                 transactionType = transactionType,
-                validationOutcome = validationOutcome.value
+                validationOutcome = validationOutcome.value,
+                tag = tag,
             )
         }
     }
