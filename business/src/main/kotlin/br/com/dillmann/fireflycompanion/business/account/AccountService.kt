@@ -18,8 +18,8 @@ internal class AccountService(
     private val defaultCurrency: GetDefaultCurrencyUseCase,
     private val saveTransaction: SaveTransactionUseCase,
 ) : ListAccountsUseCase, UpdateAccountBalanceUseCase, GetAccountUseCase, GetAccountOverviewUseCase {
-    override suspend fun listAccounts(page: PageRequest): Page<Account> =
-        repository.findAccounts(page, "asset").filter { it.active }
+    override suspend fun listAccounts(page: PageRequest, type: Account.Type?): Page<Account> =
+        repository.findAccounts(page, type).filter { it.active }
 
     override suspend fun getAccount(id: String): Account? =
         repository.findById(id)

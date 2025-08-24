@@ -21,9 +21,9 @@ fun HomeMainTab(
         contentPadding = PaddingValues(bottom = 96.dp),
     ) {
         item { HomeOverview() }
-        item { HomeAccountsOverview() }
-        item { HomeExpensesByCategory() }
         item { HomeCreditCards() }
+        item { HomeExpensesByCategory() }
+        item { HomeAccountsOverview() }
         item { HomeBudgets() }
         item { HomeMonthlySavings() }
         item { HomeSpendFrequency() }

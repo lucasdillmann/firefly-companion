@@ -1,8 +1,10 @@
 package br.com.dillmann.fireflycompanion.thirdparty.account
 
 import br.com.dillmann.fireflycompanion.business.account.Account
+import br.com.dillmann.fireflycompanion.business.account.Account.Role
 import br.com.dillmann.fireflycompanion.business.account.AccountOverview
 import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.AccountRead
+import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.AccountRoleProperty
 import br.com.dillmann.fireflycompanion.thirdparty.firefly.models.ChartDataSet
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
@@ -33,6 +35,7 @@ internal interface AccountConverter {
     @Mapping(target = "currency.code", source = "attributes.currencyCode", defaultValue = "USD")
     @Mapping(target = "currency.symbol", source = "attributes.currencySymbol", defaultValue = "$")
     @Mapping(target = "currency.decimalPlaces", source = "attributes.currencyDecimalPlaces", defaultValue = "2")
+    @Mapping(target = "role", source = "attributes.accountRole", qualifiedByName = ["toDomainRole"])
     fun toDomain(account: AccountRead): Account
 
     @Mapping(target = "name", source = "label")
@@ -49,4 +52,15 @@ internal interface AccountConverter {
             .propertyEntries
             ?.mapKeys { OffsetDateTime.parse(it.key) }
             ?: emptyMap()
+
+    @Named("toDomainRole")
+    fun toDomainRole(role: AccountRoleProperty?): Role =
+        when (role) {
+            null -> Role.UNKNOWN
+            AccountRoleProperty.DEFAULT_ASSET -> Role.DEFAULT
+            AccountRoleProperty.SHARED_ASSET -> Role.SHARED
+            AccountRoleProperty.SAVING_ASSET -> Role.SAVINGS
+            AccountRoleProperty.CC_ASSET -> Role.CREDIT_CARD
+            AccountRoleProperty.CASH_WALLET_ASSET -> Role.CASH
+        }
 }

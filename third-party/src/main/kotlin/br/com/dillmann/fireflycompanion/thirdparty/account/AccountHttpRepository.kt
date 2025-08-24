@@ -16,11 +16,11 @@ internal class AccountHttpRepository(
     private val chartsApi: ChartsApi,
     private val converter: AccountConverter,
 ) : AccountRepository {
-    override suspend fun findAccounts(page: PageRequest, type: String?): Page<Account> {
+    override suspend fun findAccounts(page: PageRequest, type: Account.Type?): Page<Account> {
         val response = accountsApi.listAccount(
             page = page.number + 1,
             limit = page.size,
-            type = AccountTypeFilter.decode(type),
+            type = type?.name?.let(AccountTypeFilter::decode) ?: AccountTypeFilter.ALL,
         )
 
         return response.meta.toPage(

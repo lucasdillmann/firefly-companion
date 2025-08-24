@@ -5,5 +5,8 @@ import br.com.dillmann.fireflycompanion.core.pagination.Page
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
 
 interface ListAccountsUseCase {
-    suspend fun listAccounts(page: PageRequest): Page<Account>
+    suspend fun listAccounts(
+        page: PageRequest,
+        type: Account.Type? = Account.Type.ASSET,
+    ): Page<Account>
 }

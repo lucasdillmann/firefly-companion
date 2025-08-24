@@ -12,9 +12,10 @@ data class Account(
     val openingBalance: BigDecimal,
     val currentBalance: BigDecimal,
     val type: Type,
+    val role: Role,
     val includeInNetWorth: Boolean,
 ) : Serializable {
-    enum class Type : Serializable {
+    enum class Type {
         ASSET,
         EXPENSE,
         IMPORT,
@@ -24,5 +25,14 @@ data class Account(
         LIABILITIES,
         INITIAL_MINUS_BALANCE,
         RECONCILIATION,
+    }
+
+    enum class Role {
+        DEFAULT,
+        SHARED,
+        SAVINGS,
+        CASH,
+        CREDIT_CARD,
+        UNKNOWN,
     }
 }
