@@ -5,12 +5,16 @@ servers:
   - description: "Local development server (do not use)"
     url: http://firefly.sd.internal/api
 info:
-  title: Firefly III API v6.2.13
+  title: Firefly III API v6.3.0
   description: |
-    This is the documentation of the Firefly III API. You can find accompanying documentation on the website of Firefly III itself (see below). Please report any bugs or issues. You may use the "Authorize" button to try the API below. This file was last generated on 2025-05-24T04:32:40+00:00
-    Please keep in mind that the demo site does not accept requests from curl, colly, wget, etc. You must use a browser or a tool like Postman to make requests. Too many script kiddies out there, sorry about that.
-
-  version: "v6.2.13"
+    This is the documentation of the Firefly III API. Please report any bugs or issues. You may use the "Authorize" button to try the API below.
+    <br><br>
+    Please keep in mind that the demo site does **not** accept requests from `curl`, `colly`, `wget`, etc. You must use a browser or a tool like Insomnia to make your test requests.
+    <br><br>
+    To learn more about the idiosyncrasies of this API, please read about the API in the [Firefly III API documentation](https://docs.firefly-iii.org/references/firefly-iii/api/).
+    <br><br>
+    <small>This file was last generated on 2025-08-16 @ 20:21:49 (Europe/Amsterdam)</small>
+  version: "v6.3.0"
   contact:
     name: James Cole
     email: james@firefly-iii.org
@@ -141,7 +145,7 @@ paths:
           schema:
             type: string
             format: string
-          example: "2020-09-17"
+          example: "2025-08-01"
           description: If the account is an asset account or a liability, the autocomplete will also return the balance of the account on this date.
         - in: query
           name: types
@@ -1219,8 +1223,221 @@ paths:
         - charts
       summary: Dashboard chart with asset account balance information.
       description: |
-        This endpoint returns the data required to generate a chart with basic asset account balance information.
+        This endpoint returns the data required to generate a chart with basic asset account balance information. This is used on the dashboard.
       operationId: getChartAccountOverview
+      parameters:
+        - name: X-Trace-Id
+          in: header
+          description: Unique identifier associated with this request.
+          required: false
+          example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
+          schema:
+            type: string
+            format: uuid
+            example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
+        - in: query
+          name: start
+          description: |
+            A date formatted YYYY-MM-DD.
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: end
+          description: |
+            A date formatted YYYY-MM-DD.
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        "401":
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+        "404":
+          description: Page not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        "422":
+          description: 'Validation error. The body will have the exact details.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        "500":
+          description: Internal exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalExceptionResponse'
+        "200":
+          description: Line chart oriented chart information. Check out the model for more details. Each entry is a line (or bar) in the chart.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChartLine'
+  /v1/chart/balance/balance:
+    get:
+      tags:
+        - charts
+      summary: Dashboard chart with balance information.
+      description: |
+        This endpoint returns the data required to generate a chart with balance information.
+      operationId: getChartBalance
+      parameters:
+        - name: X-Trace-Id
+          in: header
+          description: Unique identifier associated with this request.
+          required: false
+          example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
+          schema:
+            type: string
+            format: uuid
+            example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
+        - in: query
+          name: start
+          description: |
+            A date formatted YYYY-MM-DD.
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: end
+          description: |
+            A date formatted YYYY-MM-DD.
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        "401":
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+        "404":
+          description: Page not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        "422":
+          description: 'Validation error. The body will have the exact details.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        "500":
+          description: Internal exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalExceptionResponse'
+        "200":
+          description: Line chart oriented chart information. Check out the model for more details. Each entry is a line (or bar) in the chart.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChartLine'
+  /v1/chart/budget/overview:
+    get:
+      tags:
+        - charts
+      summary: Dashboard chart with budget information.
+      description: |
+        This endpoint returns the data required to generate a chart with basic budget information.
+      operationId: getChartBudgetOverview
+      parameters:
+        - name: X-Trace-Id
+          in: header
+          description: Unique identifier associated with this request.
+          required: false
+          example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
+          schema:
+            type: string
+            format: uuid
+            example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
+        - in: query
+          name: start
+          description: |
+            A date formatted YYYY-MM-DD.
+          required: true
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: end
+          description: |
+            A date formatted YYYY-MM-DD.
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        "401":
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+        "404":
+          description: Page not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        "422":
+          description: 'Validation error. The body will have the exact details.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        "500":
+          description: Internal exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalExceptionResponse'
+        "200":
+          description: Bar chart oriented chart information. Check out the model for more details. Each entry is a line (or bar) in the chart.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChartLine'
+  /v1/chart/category/overview:
+    get:
+      tags:
+        - charts
+      summary: Dashboard chart with category information.
+      description: |
+        This endpoint returns the data required to generate a chart with basic category information.
+      operationId: getChartCategoryOverview
       parameters:
         - name: X-Trace-Id
           in: header
@@ -2051,7 +2268,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ValidationErrorResponse'
         "200":
-          description: 'A list of expense accounts and expense details. Each expense acccount has one row per currency.'
+          description: 'A list of expense accounts and expense details. Each expense account has one row per currency.'
           content:
             application/json:
               schema:
@@ -2221,7 +2438,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ValidationErrorResponse'
         "200":
-          description: 'A list of revenue accounts and income details. Each revenue acccount has one row per currency.'
+          description: 'A list of revenue accounts and income details. Each revenue account has one row per currency.'
           content:
             application/json:
               schema:
@@ -4135,7 +4352,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -4144,7 +4361,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-31"
         - in: query
           name: type
           description: Optional filter on the transaction type(s) returned.
@@ -4563,7 +4780,7 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/AccountUpdate'
-        description: JSON array or formdata with updated account information. See the model for the exact specifications.
+        description: JSON array or form-data with updated account information. See the model for the exact specifications.
         required: true
       responses:
         "401":
@@ -5085,8 +5302,8 @@ paths:
     get:
       summary: List all available budget amounts.
       description: |
-        Firefly III allows users to set the amount that is available to be budgeted in so-called "available budgets". For example, the user could have 1200,- available to be divided during the coming month. This amount is used on the /budgets page. This endpoint returns all of these amounts and the periods for which they are set.
-      operationId: listAvailableBudget
+        Firefly III calculates the total amount of money budgeted in so-called "available budgets". This endpoint returns all of these amounts and the periods for which they are calculated.
+      operationId: listAvailableBudgets
       tags:
         - available_budgets
       parameters:
@@ -5123,7 +5340,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -5132,7 +5349,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-12-31"
+            example: "2025-08-31"
       responses:
         "401":
           description: Unauthenticated
@@ -5393,7 +5610,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -5402,7 +5619,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-12-31"
+            example: "2025-08-31"
         - in: query
           name: type
           description: Optional filter on the transaction type(s) returned
@@ -5481,7 +5698,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -5490,7 +5707,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-12-31"
+            example: "2025-08-01"
       responses:
         "401":
           description: Unauthenticated
@@ -5615,7 +5832,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -5624,7 +5841,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-12-31"
+            example: "2025-08-31"
       tags:
         - bills
       responses:
@@ -5895,7 +6112,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -5904,7 +6121,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-12-31"
+            example: "2025-08-31"
       responses:
         "200":
           description: A list of budget limits applicable to this budget.
@@ -6102,10 +6319,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BudgetLimit'
+              $ref: '#/components/schemas/BudgetLimitUpdate'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/BudgetLimit'
+              $ref: '#/components/schemas/BudgetLimitUpdate'
         description: JSON array with updated budget limit information. See the model for the exact specifications.
         required: true
       responses:
@@ -6228,7 +6445,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -6237,7 +6454,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-12-31"
+            example: "2025-08-31"
       responses:
         "200":
           description: A list of budget limits.
@@ -6317,7 +6534,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -6326,7 +6543,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-12-31"
+            example: "2025-08-31"
         - in: query
           name: type
           description: Optional filter on the transaction type(s) returned
@@ -6482,7 +6699,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -6491,7 +6708,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-12-31"
+            example: "2025-08-31"
       responses:
         "200":
           description: A list of transactions.
@@ -6570,7 +6787,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -6579,7 +6796,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-12-31"
+            example: "2025-08-31"
       responses:
         "200":
           description: A list of budgets.
@@ -6704,7 +6921,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -6713,7 +6930,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-12-31"
+            example: "2025-08-31"
       tags:
         - budgets
       responses:
@@ -6915,7 +7132,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -6924,7 +7141,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-12-31"
+            example: "2025-08-31"
         - in: query
           name: type
           description: Optional filter on the transaction type(s) returned
@@ -7117,10 +7334,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Category'
+              $ref: '#/components/schemas/CategoryStore'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Category'
+              $ref: '#/components/schemas/CategoryStore'
         description: "JSON array or key=value pairs with the necessary category information. See the model for the exact specifications."
         required: true
       responses:
@@ -7190,7 +7407,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -7199,7 +7416,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-12-31"
+            example: "2025-08-31"
       tags:
         - categories
       responses:
@@ -7355,8 +7572,8 @@ paths:
                 $ref: '#/components/schemas/InternalExceptionResponse'
   /v1/exchange-rates:
     get:
-      summary: List all exchange rates.
-      description: List exchange rates.
+      summary: List all exchange rates that Firefly III knows.
+      description: List exchange rates that Firefly III knows.
       operationId: listCurrencyExchangeRates
       tags:
         - currency_exchange_rates
@@ -7441,11 +7658,11 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/CurrencyExchangeRateStore'
-        description: "JSON array or key=value pairs with the necessary category information. See the model for the exact specifications."
+        description: "JSON array or key=value pairs with the necessary exchange rate information. See the model for the exact specifications."
         required: true
       responses:
         "200":
-          description: 'New category stored, result in response.'
+          description: 'New exchange stored, result in response. If a rate already exists for this currency pair and date, it will be updated.'
           content:
             application/vnd.api+json:
               schema:
@@ -7483,7 +7700,7 @@ paths:
   /v1/exchange-rates/{id}:
     get:
       summary: List a single specific exchange rate.
-      description: List a single specific exchange rate
+      description: List a single specific exchange rate by its ID.
       operationId: listSpecificCurrencyExchangeRate
       tags:
         - currency_exchange_rates
@@ -7522,7 +7739,7 @@ paths:
           description: The ID of the requested currency exchange rate.
       responses:
         "200":
-          description: A list of currency exchange rates.
+          description: The exchange rate requested.
           content:
             application/vnd.api+json:
               schema:
@@ -7553,7 +7770,7 @@ paths:
                 $ref: '#/components/schemas/InternalExceptionResponse'
     delete:
       operationId: deleteSpecificCurrencyExchangeRate
-      description: "Delete a specific currency exchange rate."
+      description: "Delete a specific currency exchange rate by its internal ID."
       summary: "Delete a specific currency exchange rate."
       tags:
         - currency_exchange_rates
@@ -7604,7 +7821,7 @@ paths:
     put:
       summary: Update existing currency exchange rate.
       description: |
-        Used to update a single currency exchange rate
+        Used to update a single currency exchange rate by its ID. Including the from/to currency is optional.
       operationId: updateCurrencyExchangeRate
       parameters:
         - name: X-Trace-Id
@@ -7624,7 +7841,7 @@ paths:
             example: "123"
           description: The ID of the currency exchange rate.
       tags:
-        - links
+        - currency_exchange_rates
       requestBody:
         content:
           application/json:
@@ -7633,7 +7850,7 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/CurrencyExchangeRateUpdate'
-        description: JSON array or formdata with updated exchange rate information. See the model for the exact specifications.
+        description: JSON array or form-data with updated exchange rate information. See the model for the exact specifications.
         required: true
       responses:
         "200":
@@ -7667,10 +7884,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
 
-  /v1/exchange-rates/rates/{from}/{to}:
+  /v1/exchange-rates/{from}/{to}:
     get:
-      summary: List all exchange rate from/to the mentioned currencies.
-      description: List all exchange rate from/to the mentioned currencies.
+      summary: List all exchange rates from/to the mentioned currencies.
+      description: List all exchange rates from/to the mentioned currencies.
       operationId: listSpecificCurrencyExchangeRates
       tags:
         - currency_exchange_rates
@@ -7747,8 +7964,8 @@ paths:
                 $ref: '#/components/schemas/InternalExceptionResponse'
     delete:
       operationId: deleteSpecificCurrencyExchangeRates
-      description: "Delete all currency exchange rates from 'from' to 'to' on a specific date or today."
-      summary: "Delete all currency exchange rates from 'from' to 'to'."
+      summary: "Deletes ALL currency exchange rates from 'from' to 'to'."
+      description: "Deletes ALL currency exchange rates from 'from' to 'to'. It's important to know that the reverse exchange rates (from 'to' to 'from') will not be deleted and Firefly III will still be able to infer the correct exchange rate from the reverse one."
       tags:
         - currency_exchange_rates
       parameters:
@@ -7775,18 +7992,380 @@ paths:
             type: string
             example: "USD"
           description: "The currency code of the 'to' currency."
-        - in: query
-          name: date
-          description: |
-            A date formatted YYYY-MM-DD. Defaults to today.
-          required: false
-          schema:
-            type: string
-            format: date
-            example: "2018-09-17"
       responses:
         "204":
           description: "Currency exchange rate(s) deleted."
+        "401":
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+        "404":
+          description: Page not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        "500":
+          description: Internal exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalExceptionResponse'
+  /v1/exchange-rates/{from}/{to}/{date}:
+    get:
+      summary: List the exchange rate for the from and to-currency on the requested date.
+      description: List the exchange rate for the from and to-currency on the requested date.
+      operationId: listSpecificCurrencyExchangeRateOnDate
+      tags:
+        - currency_exchange_rates
+      parameters:
+        - name: X-Trace-Id
+          in: header
+          description: Unique identifier associated with this request.
+          required: false
+          example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
+          schema:
+            type: string
+            format: uuid
+            example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
+        - in: query
+          name: limit
+          description: Number of items per page. The default pagination is per 50 items.
+          required: false
+          schema:
+            type: integer
+            format: int32
+            example: 10
+        - in: query
+          name: page
+          description: Page number. The default pagination is per 50 items.
+          required: false
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - in: path
+          name: from
+          required: true
+          schema:
+            type: string
+            example: "EUR"
+          description: "The currency code of the 'from' currency."
+        - in: path
+          name: to
+          required: true
+          schema:
+            type: string
+            example: "USD"
+          description: "The currency code of the 'to' currency."
+        - in: path
+          name: date
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "2025-08-01"
+      responses:
+        "200":
+          description: A list of currency exchange rates.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/CurrencyExchangeRateArray'
+        "401":
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+        "404":
+          description: Page not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        "500":
+          description: Internal exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalExceptionResponse'
+    delete:
+      operationId: deleteSpecificCurrencyExchangeRateOnDate
+      description: "Delete the currency exchange rate from 'from' to 'to' on the specified date.  It's important to know that the reverse exchange rate (from 'to' to 'from') will not be deleted and Firefly III will still be able to infer the correct exchange rate from the reverse one."
+      summary: "Delete the currency exchange rate from 'from' to 'to' on the specified date."
+      tags:
+        - currency_exchange_rates
+      parameters:
+        - name: X-Trace-Id
+          in: header
+          description: Unique identifier associated with this request.
+          required: false
+          example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
+          schema:
+            type: string
+            format: uuid
+            example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
+        - in: path
+          name: from
+          required: true
+          schema:
+            type: string
+            example: "EUR"
+          description: "The currency code of the 'from' currency."
+        - in: path
+          name: to
+          required: true
+          schema:
+            type: string
+            example: "USD"
+          description: "The currency code of the 'to' currency."
+        - in: path
+          name: date
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "2025-08-01"
+      responses:
+        "204":
+          description: "Currency exchange rate(s) deleted."
+        "401":
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+        "404":
+          description: Page not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        "500":
+          description: Internal exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalExceptionResponse'
+    put:
+      summary: Update existing currency exchange rate.
+      description: |
+        Used to update a single currency exchange rate by its currency codes and date
+      operationId: updateCurrencyExchangeRateByDate
+      parameters:
+        - name: X-Trace-Id
+          in: header
+          description: Unique identifier associated with this request.
+          required: false
+          example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
+          schema:
+            type: string
+            format: uuid
+            example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
+        - in: path
+          name: from
+          required: true
+          schema:
+            type: string
+            example: "EUR"
+          description: "The currency code of the 'from' currency."
+        - in: path
+          name: to
+          required: true
+          schema:
+            type: string
+            example: "USD"
+          description: "The currency code of the 'to' currency."
+        - in: path
+          name: date
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "2025-08-01"
+      tags:
+        - currency_exchange_rates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CurrencyExchangeRateUpdateNoDate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CurrencyExchangeRateUpdate'
+        description: JSON array or form-data with updated exchange rate information. See the model for the exact specifications.
+        required: true
+      responses:
+        "200":
+          description: 'Updated exchange rate stored, result in response'
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/CurrencyExchangeRateSingle'
+        "422":
+          description: 'Validation error. The body will have the exact details.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        "401":
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+        "404":
+          description: Page not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+  /v1/exchange-rates/by-date/{date}:
+    post:
+      summary: Store new currency exchange rates under this date
+      description: Stores a new set of exchange rates. The date is fixed (in the URL parameter) and the data required can be submitted as a JSON body.
+      operationId: storeCurrencyExchangeRatesByDate
+      parameters:
+        - name: X-Trace-Id
+          in: header
+          description: Unique identifier associated with this request.
+          required: false
+          example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
+          schema:
+            type: string
+            format: uuid
+            example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
+        - in: path
+          name: date
+          required: true
+          schema:
+            type: string
+            format: string
+          example: "2025-08-01"
+      tags:
+        - currency_exchange_rates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CurrencyExchangeRateStoreByDate'
+        description: "JSON array with the necessary currency exchange rate information. See the model for the exact specifications."
+        required: true
+      responses:
+        "200":
+          description: 'New exchange rates stored, result in response. If a rate already existed for any submitted entry, it will be updated.'
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/CurrencyExchangeRateArray'
+        "422":
+          description: 'Validation error. The body will have the exact details.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        "401":
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedResponse'
+        "404":
+          description: Page not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+        "500":
+          description: Internal exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalExceptionResponse'
+  /v1/exchange-rates/by-currencies/{from}/{to}:
+    post:
+      summary: Store new currency exchange rates under this from/to pair.
+      description: Stores a new set of exchange rates for this pair. The date is variable, and the data required can be submitted as a JSON body.
+      operationId: storeCurrencyExchangeRatesByPair
+      parameters:
+        - name: X-Trace-Id
+          in: header
+          description: Unique identifier associated with this request.
+          required: false
+          example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
+          schema:
+            type: string
+            format: uuid
+            example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
+        - in: path
+          name: from
+          required: true
+          schema:
+            type: string
+            example: "EUR"
+          description: "The currency code of the 'from' currency."
+        - in: path
+          name: to
+          required: true
+          schema:
+            type: string
+            example: "USD"
+          description: "The currency code of the 'to' currency."
+      tags:
+        - currency_exchange_rates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CurrencyExchangeRateStoreByPair'
+        description: "JSON array with the necessary currency exchange rate information. See the model for the exact specifications."
+        required: true
+      responses:
+        "200":
+          description: 'New exchange rates stored, result in response. If a rate already existed for any submitted entry, it will be updated.'
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/CurrencyExchangeRateArray'
+        "422":
+          description: 'Validation error. The body will have the exact details.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
         "401":
           description: Unauthenticated
           content:
@@ -7860,7 +8439,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -7869,7 +8448,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-31"
         - in: query
           name: type
           description: Optional filter on the transaction type(s) returned.
@@ -8123,7 +8702,7 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/LinkTypeUpdate'
-        description: JSON array or formdata with updated link type information. See the model for the exact specifications.
+        description: JSON array or form-data with updated link type information. See the model for the exact specifications.
         required: true
       responses:
         "200":
@@ -8480,7 +9059,7 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/TransactionLinkUpdate'
-        description: JSON array or formdata with updated link type information. See the model for the exact specifications.
+        description: JSON array or form-data with updated link type information. See the model for the exact specifications.
         required: true
       responses:
         "200":
@@ -8664,8 +9243,8 @@ paths:
                 $ref: '#/components/schemas/InternalExceptionResponse'
   /v1/object-groups:
     get:
-      summary: List all oject groups.
-      description: List all oject groups.
+      summary: List all object groups.
+      description: List all object groups.
       operationId: listObjectGroups
       tags:
         - object_groups
@@ -9394,7 +9973,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -9403,7 +9982,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-31"
         - in: query
           name: type
           description: Optional filter on the transaction type(s) returned
@@ -9862,7 +10441,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -9871,7 +10450,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-31"
         - in: query
           name: search_limit
           description: |
@@ -9932,7 +10511,7 @@ paths:
   /v1/rule-groups/{id}/trigger:
     post:
       summary: Fire the rule group on your transactions.
-      description: Fire the rule group on your transactions. Changes will be made by the rules in the rule group! Limit the result if you want to.
+      description: Fire the rule group on your transactions. Changes will be made by the rules in the rule group. Limit the result if you want to.
       operationId: fireRuleGroup
       tags:
         - rule_groups
@@ -9960,7 +10539,7 @@ paths:
           required: false
           schema:
             type: string
-            example: "2018-09-17"
+            example: "2025-08-01"
             format: date
         - in: query
           name: end
@@ -9969,7 +10548,7 @@ paths:
           required: false
           schema:
             type: string
-            example: "2018-09-17"
+            example: "2025-08-31"
             format: date
         - in: query
           name: accounts[]
@@ -10344,7 +10923,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -10353,7 +10932,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-31"
         - in: query
           name: accounts[]
           description: |
@@ -10400,7 +10979,7 @@ paths:
   /v1/rules/{id}/trigger:
     post:
       summary: Fire the rule on your transactions.
-      description: Fire the rule group on your transactions. Changes will be made by the rules in the group! Limit the result if you want to.
+      description: Fire the rule group on your transactions. Changes will be made by the rules in the group. Limit the result if you want to.
       operationId: fireRule
       tags:
         - rules
@@ -10428,7 +11007,7 @@ paths:
           required: false
           schema:
             type: string
-            example: "2018-09-17"
+            example: "2025-08-01"
             format: date
         - in: query
           name: end
@@ -10437,7 +11016,7 @@ paths:
           required: false
           schema:
             type: string
-            example: "2018-09-17"
+            example: "2025-08-31"
             format: date
         - in: query
           name: accounts[]
@@ -10901,7 +11480,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -10910,7 +11489,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-31"
         - in: query
           name: type
           description: Optional filter on the transaction type(s) returned.
@@ -11109,7 +11688,7 @@ paths:
             example: 1
         - in: path
           name: tag
-          description: Either the tag itself or the tag ID. If you use the tag itself, and it contains international (non-ASCII) characters, your milage may vary.
+          description: Either the tag itself or the tag ID. If you use the tag itself, and it contains international (non-ASCII) characters, your mileage may vary.
           required: true
           schema:
             type: string
@@ -11166,7 +11745,7 @@ paths:
             example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
         - in: path
           name: tag
-          description: Either the tag itself or the tag ID. If you use the tag itself, and it contains international (non-ASCII) characters, your milage may vary.
+          description: Either the tag itself or the tag ID. If you use the tag itself, and it contains international (non-ASCII) characters, your mileage may vary.
           required: true
           schema:
             type: string
@@ -11237,7 +11816,7 @@ paths:
             example: 40c71bbb-c676-4f24-83cf-cc725d7d7a00
         - in: path
           name: tag
-          description: Either the tag itself or the tag ID. If you use the tag itself, and it contains international (non-ASCII) characters, your milage may vary.
+          description: Either the tag itself or the tag ID. If you use the tag itself, and it contains international (non-ASCII) characters, your mileage may vary.
           required: true
           schema:
             type: string
@@ -11548,7 +12127,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-01-01"
+            example: "2025-08-01"
         - in: query
           name: end
           description: End date for the budget limit list.
@@ -11556,7 +12135,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-01-31"
+            example: "2025-08-31"
       responses:
         "200":
           description: A list of budget limits.
@@ -11781,7 +12360,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -11790,7 +12369,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-12-31"
+            example: "2025-08-31"
         - in: query
           name: type
           description: Optional filter on the transaction type(s) returned
@@ -12072,11 +12651,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternalExceptionResponse'
-  /v1/currencies/{code}/default:
+  /v1/currencies/{code}/primary:
     post:
-      summary: Make currency default currency.
-      description: Make this currency the default currency for the user. If the currency is not enabled, it will be enabled as well.
-      operationId: defaultCurrency
+      summary: Make currency primary currency.
+      description: Make this currency the primary currency for the current financial administration. If the currency is not enabled, it will be enabled as well.
+      operationId: primaryCurrency
       tags:
         - currencies
       parameters:
@@ -12099,7 +12678,7 @@ paths:
           description: The currency code.
       responses:
         "204":
-          description: Currency has been made the default currency.
+          description: Currency has been made the primary currency.
           content:
             application/vnd.api+json:
               schema:
@@ -12306,11 +12885,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InternalExceptionResponse'
-  /v1/currencies/native:
+  /v1/currencies/primary:
     get:
-      summary: Get the native currency of the current administration.
-      description: Get the native currency of the current administration. This replaces what was called "the user's default currency" although they are essentially the same.
-      operationId: getNativeCurrency
+      summary: Get the primary currency of the current administration.
+      description: Get the primary currency of the current administration. This replaces what was called "the user's default currency" although they are essentially the same.
+      operationId: getPrimaryCurrency
       parameters:
         - name: X-Trace-Id
           in: header
@@ -12325,7 +12904,7 @@ paths:
         - currencies
       responses:
         "200":
-          description: 'The native currency'
+          description: 'The primary currency'
           content:
             application/json:
               schema:
@@ -12714,7 +13293,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: end
           description: |
@@ -12723,7 +13302,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-31"
         - in: query
           name: type
           description: Optional filter on the transaction type(s) returned.
@@ -13152,7 +13731,7 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/UserGroupUpdate'
-        description: JSON array or formdata with new user group information. See the model for the exact specifications.
+        description: JSON array or form-data with new user group information. See the model for the exact specifications.
         required: true
       responses:
         "401":
@@ -13724,7 +14303,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "2018-09-17"
+            example: "2025-08-01"
         - in: query
           name: force
           description: |
@@ -14033,7 +14612,7 @@ paths:
                 $ref: '#/components/schemas/InternalExceptionResponse'
     delete:
       operationId: deleteUser
-      description: Delete a user. You cannot delete the user you're authenticated with. This cannot be undone. Be careful!
+      description: Delete a user. You cannot delete the user you're authenticated with. This cannot be undone. Be careful.
       summary: Delete a user.
       tags:
         - users
@@ -14724,7 +15303,7 @@ paths:
     post:
       summary: Submit messages for a webhook.
       description: This endpoint will submit any open messages for this webhook. This is an asynchronous operation, so you can't see the result. Refresh the webhook message and/or the webhook message attempts to see the results. This may take some time if the webhook receiver is slow.
-      operationId: submitWebook
+      operationId: submitWebhook
       parameters:
         - name: X-Trace-Id
           in: header
@@ -14752,7 +15331,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
         "200":
-          description: OK!
+          description: OK.
         "204":
           description: No messages to send, so did nothing.
         "404":
@@ -15566,7 +16145,7 @@ components:
           type: string
           format: string
           example: "Checking Account ($123.45)"
-          description: Asset accounts and liabilities have a second field with the given date's account balance in the account currency or native currency.
+          description: Asset accounts and liabilities have a second field with the given date's account balance in the account currency or primary currency.
         type:
           type: string
           format: string
@@ -15576,52 +16155,52 @@ components:
           type: string
           format: string
           example: "12"
-          description: ID for the currency used by this account. If the user prefers amounts converted to their native currency, this native currency is used instead.
+          description: ID for the currency used by this account. If the user prefers amounts converted to their primary currency, this primary currency is used instead.
         currency_name:
           type: string
           format: string
           example: "Euro"
-          description: Currency name for the currency used by this account. If the user prefers amounts converted to their native currency, this native currency is used instead.
+          description: Currency name for the currency used by this account. If the user prefers amounts converted to their primary currency, this primary currency is used instead.
         currency_code:
           type: string
           format: string
           example: "EUR"
-          description: Currency code for the currency used by this account. If the user prefers amounts converted to their native currency, this native currency is used instead.
+          description: Currency code for the currency used by this account. If the user prefers amounts converted to their primary currency, this primary currency is used instead.
         currency_symbol:
           type: string
           format: string
           example: "$"
-          description: Currency symbol for the currency used by this account. If the user prefers amounts converted to their native currency, this native currency is used instead.
+          description: Currency symbol for the currency used by this account. If the user prefers amounts converted to their primary currency, this primary currency is used instead.
         currency_decimal_places:
           type: integer
           format: int32
           example: 2
-          description: Number of decimal places for the currency used by this account. If the user prefers amounts converted to their native currency, this native currency is used instead.
+          description: Number of decimal places for the currency used by this account. If the user prefers amounts converted to their primary currency, this primary currency is used instead.
         account_currency_id:
           type: string
           format: string
           example: "2"
-          description: ID for the currency used by this account. Even if "convertToNative" is on, the account currency ID is displayed here.
+          description: ID for the currency used by this account. Even if "convertToPrimary" is on, the account currency ID is displayed here.
         account_currency_name:
           type: string
           format: string
           example: "US Dollar"
-          description: Name for the currency used by this account. Even if "convertToNative" is on, the account currency name is displayed here.
+          description: Name for the currency used by this account. Even if "convertToPrimary" is on, the account currency name is displayed here.
         account_currency_code:
           type: string
           format: string
           example: "USD"
-          description: Code for the currency used by this account. Even if "convertToNative" is on, the account currency code is displayed here.
+          description: Code for the currency used by this account. Even if "convertToPrimary" is on, the account currency code is displayed here.
         account_currency_symbol:
           type: string
           format: string
           example: "$"
-          description: Code for the currency used by this account. Even if "convertToNative" is on, the account currency code is displayed here.
+          description: Code for the currency used by this account. Even if "convertToPrimary" is on, the account currency code is displayed here.
         account_currency_decimal_places:
           type: integer
           format: int32
           example: 2
-          description: Number of decimal places for the currency used by this account. Even if "convertToNative" is on, the account currency code is displayed here.
+          description: Number of decimal places for the currency used by this account. Even if "convertToPrimary" is on, the account currency code is displayed here.
     AutocompleteBill:
       type: object
       required:
@@ -15774,12 +16353,12 @@ components:
           type: string
           format: string
           example: "12"
-          description: Currency ID for this piggy bank. This will always be the currency of the piggy bank, never the user's native currency.
+          description: Currency ID for this piggy bank. This will always be the currency of the piggy bank, never the user's primary currency.
         currency_code:
           type: string
           format: string
           example: "EUR"
-          description: Currency code for this piggy bank. This will always be the currency of the piggy bank, never the user's native currency.
+          description: Currency code for this piggy bank. This will always be the currency of the piggy bank, never the user's primary currency.
         currency_symbol:
           type: string
           format: string
@@ -15788,12 +16367,12 @@ components:
           type: string
           format: string
           example: "Euro"
-          description: Currency name for the currency used by this piggy bank. This will always be the currency of the piggy bank, never the user's native currency.
+          description: Currency name for the currency used by this piggy bank. This will always be the currency of the piggy bank, never the user's primary currency.
         currency_decimal_places:
           type: integer
           format: int32
           example: 2
-          description: Number of decimal places for the currency used by this piggy bank. This will always be the currency of the piggy bank, never the user's native currency.
+          description: Number of decimal places for the currency used by this piggy bank. This will always be the currency of the piggy bank, never the user's primary currency.
         object_group_id:
           type: string
           format: string
@@ -15830,22 +16409,22 @@ components:
           type: string
           format: string
           example: "12"
-          description: Currency ID for the currency used by this piggy bank. This will always be the piggy bank's currency, never the native currency.
+          description: Currency ID for the currency used by this piggy bank. This will always be the piggy bank's currency, never the primary currency.
         currency_code:
           type: string
           format: string
           example: "EUR"
-          description: Currency code for the currency used by this piggy bank. This will always be the piggy bank's currency, never the native currency.
+          description: Currency code for the currency used by this piggy bank. This will always be the piggy bank's currency, never the primary currency.
         currency_symbol:
           type: string
           format: string
           example: "$"
-          description: Currency symbol for the currency used by this piggy bank. This will always be the piggy bank's currency, never the native currency.
+          description: Currency symbol for the currency used by this piggy bank. This will always be the piggy bank's currency, never the primary currency.
         currency_decimal_places:
           type: integer
           format: int32
           example: 2
-          description: Currency decimal places for the currency used by this piggy bank. This will always be the piggy bank's currency, never the native currency.
+          description: Currency decimal places for the currency used by this piggy bank. This will always be the piggy bank's currency, never the primary currency.
         object_group_id:
           type: string
           format: string
@@ -16033,39 +16612,85 @@ components:
           type: string
           format: string
           example: "5"
-          description: "The currency ID of the currency associated to the data in the entries. This may be the native currency of administration."
+          description: "The currency ID of the currency associated with this object."
+        currency_name:
+          type: string
+          format: string
+          example: Euro
+          description: "The currency name of the currency associated with this object."
         currency_code:
           type: string
           format: string
-          example: "EUR"
+          example: EUR
+          description: "The currency code of the currency associated with this object."
         currency_symbol:
           type: string
           format: string
           example: "$"
+          readOnly: true
         currency_decimal_places:
           type: integer
           format: int32
           example: 2
-          description: "Number of decimals for the currency associated to the data in the entries."
+          readOnly: true
+        primary_currency_id:
+          type: string
+          format: string
+          example: "5"
+          description: "The currency ID of the administration's primary currency."
+          readOnly: true
+        primary_currency_name:
+          type: string
+          format: string
+          example: Euro
+          readOnly: true
+          description: "The currency name of the administration's primary currency."
+        primary_currency_code:
+          type: string
+          format: string
+          example: EUR
+          readOnly: true
+          description: "The currency code of the administration's primary currency."
+        primary_currency_symbol:
+          type: string
+          format: string
+          example: "$"
+          readOnly: true
+          description: "The currency symbol of the administration's primary currency."
+        primary_currency_decimal_places:
+          type: integer
+          format: int32
+          example: 2
+          readOnly: true
+          description: "The currency decimal places of the administration's primary currency."
+        date:
+          type: string
+          format: date-time
+          example: "2025-08-01T00:00:00+00:00"
         start_date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
         end_date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-31T23:59:59+00:00"
         type:
           type: string
           format: string
           example: "line"
           description: "Indicated the type of chart that is expected to be rendered. You can safely ignore this if you want."
+        period:
+          $ref: '#/components/schemas/ChartDatasetPeriodProperty'
         yAxisID:
           type: integer
           format: int32
           example: 0
           description: "Used to indicate the Y axis for this data set. Is usually between 0 and 1 (left and right side of the chart)."
         entries:
+          description: "The actual entries for this data set. They 'key' value is the label for the data point. The value is the actual (numerical) value."
+          $ref: '#/components/schemas/ChartDataPoint'
+        pc_entries:
           description: "The actual entries for this data set. They 'key' value is the label for the data point. The value is the actual (numerical) value."
           $ref: '#/components/schemas/ChartDataPoint'
     ChartLine:
@@ -16256,159 +16881,6 @@ components:
           format: string
           example: "EUR"
           description: "The currency code of the expenses listed for this account."
-    AccountRead:
-      type: object
-      required:
-        - type
-        - id
-        - attributes
-      properties:
-        type:
-          type: string
-          format: string
-          example: "accounts"
-          description: "Immutable value"
-        id:
-          type: string
-          format: string
-          example: "2"
-        attributes:
-          $ref: '#/components/schemas/Account'
-    AccountSingle:
-      type: object
-      required:
-        - data
-      properties:
-        data:
-          $ref: '#/components/schemas/AccountRead'
-    AttachmentRead:
-      type: object
-      required:
-        - type
-        - id
-        - attributes
-        - links
-      properties:
-        type:
-          type: string
-          format: string
-          example: "attachments"
-          description: "Immutable value"
-        id:
-          type: string
-          format: string
-          example: "2"
-        attributes:
-          $ref: '#/components/schemas/Attachment'
-        links:
-          $ref: '#/components/schemas/ObjectLink'
-    AttachmentSingle:
-      type: object
-      required:
-        - data
-      properties:
-        data:
-          $ref: '#/components/schemas/AttachmentRead'
-    AvailableBudgetRead:
-      type: object
-      required:
-        - type
-        - id
-        - attributes
-      properties:
-        type:
-          type: string
-          format: string
-          example: "available_budgets"
-          description: "Immutable value"
-        id:
-          type: string
-          format: string
-          example: "2"
-        attributes:
-          $ref: '#/components/schemas/AvailableBudget'
-    AvailableBudgetSingle:
-      type: object
-      required:
-        - data
-      properties:
-        data:
-          $ref: '#/components/schemas/AvailableBudgetRead'
-    BillRead:
-      type: object
-      required:
-        - type
-        - id
-        - attributes
-      properties:
-        type:
-          type: string
-          format: string
-          example: "bills"
-          description: "Immutable value"
-        id:
-          type: string
-          format: string
-          example: "2"
-        attributes:
-          $ref: '#/components/schemas/Bill'
-    BillSingle:
-      type: object
-      required:
-        - data
-      properties:
-        data:
-          $ref: '#/components/schemas/BillRead'
-    BudgetLimitRead:
-      type: object
-      required:
-        - type
-        - id
-        - attributes
-      properties:
-        type:
-          type: string
-          format: string
-          example: "budget_limits"
-          description: "Immutable value"
-        id:
-          type: string
-          format: string
-          example: "2"
-        attributes:
-          $ref: '#/components/schemas/BudgetLimit'
-    BudgetLimitSingle:
-      type: object
-      required:
-        - data
-      properties:
-        data:
-          $ref: '#/components/schemas/BudgetLimitRead'
-    BudgetRead:
-      type: object
-      required:
-        - type
-        - id
-        - attributes
-      properties:
-        type:
-          type: string
-          format: string
-          example: "budgets"
-          description: "Immutable value"
-        id:
-          type: string
-          format: string
-          example: "2"
-        attributes:
-          $ref: '#/components/schemas/Budget'
-    BudgetSingle:
-      type: object
-      required:
-        - data
-      properties:
-        data:
-          $ref: '#/components/schemas/BudgetRead'
     CategoryRead:
       type: object
       required:
@@ -16426,7 +16898,7 @@ components:
           format: string
           example: "2"
         attributes:
-          $ref: '#/components/schemas/Category'
+          $ref: '#/components/schemas/CategoryProperties'
     CategorySingle:
       type: object
       required:
@@ -16458,7 +16930,7 @@ components:
           format: string
           example: "2"
         attributes:
-          $ref: '#/components/schemas/Currency'
+          $ref: '#/components/schemas/CurrencyProperties'
     CurrencySingle:
       type: object
       required:
@@ -16537,7 +17009,7 @@ components:
           format: string
           example: "2"
         attributes:
-          $ref: '#/components/schemas/PiggyBankEvent'
+          $ref: '#/components/schemas/PiggyBankEventProperties'
         links:
           $ref: '#/components/schemas/ObjectLink'
     PiggyBankRead:
@@ -16558,7 +17030,7 @@ components:
           format: string
           example: "2"
         attributes:
-          $ref: '#/components/schemas/PiggyBank'
+          $ref: '#/components/schemas/PiggyBankProperties'
         links:
           $ref: '#/components/schemas/ObjectLink'
     PiggyBankSingle:
@@ -16611,7 +17083,7 @@ components:
           format: string
           example: "2"
         attributes:
-          $ref: '#/components/schemas/Recurrence'
+          $ref: '#/components/schemas/RecurrenceProperties'
         links:
           $ref: '#/components/schemas/ObjectLink'
     RecurrenceSingle:
@@ -16860,7 +17332,7 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/WebhookRead'
-    Account:
+    AccountProperties:
       type: object
       required:
         - name
@@ -16869,19 +17341,18 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         active:
           type: boolean
           format: boolean
           example: false
           default: true
-          description: "If omitted, defaults to true."
         order:
           type: integer
           format: int32
@@ -16896,16 +17367,46 @@ components:
           $ref: '#/components/schemas/ShortAccountTypeProperty'
         account_role:
           $ref: '#/components/schemas/AccountRoleProperty'
+        object_group_id:
+          type: string
+          format: string
+          example: "5"
+          nullable: true
+          description: The group ID of the group this object is part of. NULL if no group.
+        object_group_order:
+          type: integer
+          format: int32
+          example: 5
+          readOnly: true
+          nullable: true
+          description: The order of the group. At least 1, for the highest sorting.
+        object_group_title:
+          type: string
+          format: string
+          example: "Example Group"
+          nullable: true
+          description: The name of the group. NULL if no group.
+        object_has_currency_setting:
+          type: boolean
+          format: boolean
+          example: true
+          readOnly: true
+          description: "Indicates whether the account has a currency setting. If false, the account uses the administration's primary currency. Asset accounts and liability accounts always have a currency setting, while expense and revenue accounts do not."
         currency_id:
           type: string
           format: string
-          example: "12"
-          description: "Use either currency_id or currency_code. Defaults to the user's default currency."
+          example: "5"
+          description: "The currency ID of the currency associated with this object."
+        currency_name:
+          type: string
+          format: string
+          example: Euro
+          description: "The currency name of the currency associated with this object."
         currency_code:
           type: string
           format: string
-          example: "EUR"
-          description: "Use either currency_id or currency_code. Defaults to the user's default currency."
+          example: EUR
+          description: "The currency code of the currency associated with this object."
         currency_symbol:
           type: string
           format: string
@@ -16916,49 +17417,85 @@ components:
           format: int32
           example: 2
           readOnly: true
-        native_currency_id:
+        primary_currency_id:
           type: string
           format: string
-          example: "12"
+          example: "5"
+          description: "The currency ID of the administration's primary currency."
           readOnly: true
-          nullable: true
-          description: "Returns the native currency ID of the administration."
-        native_currency_code:
+        primary_currency_name:
           type: string
           format: string
-          example: "EUR"
-          nullable: true
-          description: "Returns the native currency code of the administration."
-        native_currency_symbol:
+          example: Euro
+          readOnly: true
+          description: "The currency name of the administration's primary currency."
+        primary_currency_code:
+          type: string
+          format: string
+          example: EUR
+          readOnly: true
+          description: "The currency code of the administration's primary currency."
+        primary_currency_symbol:
           type: string
           format: string
           example: "$"
           readOnly: true
-          nullable: true
-          description: "Returns the native currency symbol of the administration."
-        native_currency_decimal_places:
+          description: "The currency symbol of the administration's primary currency."
+        primary_currency_decimal_places:
           type: integer
           format: int32
           example: 2
           readOnly: true
-          nullable: true
-          description: "Returns the native currency decimal places of the administration."
+          description: "The currency decimal places of the administration's primary currency."
         current_balance:
           type: string
           format: amount
           example: "123.45"
           readOnly: true
-          description: "The current balance of the account in the account's currency OR the native currency if the account has no currency."
-        native_current_balance:
+          description: "The current balance of the account in the account's currency. If the account has no currency, this is the balance in the administration's primary currency. Either way, the `currency_*` fields reflect the currency used."
+        pc_current_balance:
           type: string
           format: amount
           example: "123.45"
           readOnly: true
-          description: "The current balance of the account in the administration's native currency."
+          nullable: true
+          description: "The current balance of the account in the administration's primary currency. The `primary_currency_*` fields reflect the currency used. This field is NULL if the user does have 'convert to primary' set to true in their settings."
+        opening_balance:
+          type: string
+          format: amount
+          example: "-1012.12"
+          description: "Represents the opening balance, the initial amount this account holds in the currency of the account or the administration's primary currency if the account has no currency. Either way, the `currency_*` fields reflect the currency used."
+        pc_opening_balance:
+          type: string
+          format: amount
+          example: "-1012.12"
+          description: "The opening balance of the account in the administration's primary currency (pc). The `primary_currency_*` fields reflect the currency used. This field is NULL if the user does have 'convert to primary' set to true in their settings."
+        virtual_balance:
+          type: string
+          format: amount
+          example: "123.45"
+          description: "The virtual balance of the account in the account's currency or the administration's primary currency if the account has no currency."
+        pc_virtual_balance:
+          type: string
+          format: amount
+          example: "123.45"
+          description: "The virtual balance of the account in the administration's primary currency (pc). The `primary_currency_*` fields reflect the currency used. This field is NULL if the user does have 'convert to primary' set to true in their settings."
+        debt_amount:
+          type: string
+          format: amount
+          nullable: true
+          example: "1012.12"
+          description: "In liability accounts (loans, debts and mortgages), this is the amount of debt in the account's currency (see the `currency_*` fields). In asset accounts, this is NULL."
+        pc_debt_amount:
+          type: string
+          format: amount
+          nullable: true
+          example: "1012.12"
+          description: "In liability accounts (loans, debts and mortgages), this is the amount of debt in the administration's primary currency (see the `currency_*` fields. In asset accounts, this is NULL."
         current_balance_date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-31T23:59:59+00:00"
           readOnly: true
           description: "The timestamp for this date is always 23:59:59, to indicate it's the balance at the very END of that particular day."
         notes:
@@ -16970,7 +17507,7 @@ components:
           nullable: true
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           description: "Mandatory when the account_role is ccAsset. Moment at which CC payment installments are asked for by the bank."
         credit_card_type:
           $ref: '#/components/schemas/CreditCardTypeProperty'
@@ -16989,30 +17526,10 @@ components:
           format: string
           example: "BOFAUS3N"
           nullable: true
-        virtual_balance:
-          type: string
-          format: amount
-          example: "123.45"
-          description: "The virtual balance of the account in the account's currency or the administration's native currency if the account has no currency."
-        native_virtual_balance:
-          type: string
-          format: amount
-          example: "123.45"
-          description: "The virtual balance of the account in administration's native currency."
-        opening_balance:
-          type: string
-          format: amount
-          example: "-1012.12"
-          description: "Represents the opening balance, the initial amount this account holds in the currency of the account or the administration's native currency if the account has no currency."
-        native_opening_balance:
-          type: string
-          format: amount
-          example: "-1012.12"
-          description: "Represents the opening balance, in the administration's native currency."
         opening_balance_date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           nullable: true
           description: Represents the date of the opening balance.
         liability_type:
@@ -17027,18 +17544,11 @@ components:
           nullable: true
         interest_period:
           $ref: '#/components/schemas/InterestPeriodProperty'
-        current_debt:
-          type: string
-          format: amount
-          nullable: true
-          example: "1012.12"
-          description: Represents the current debt for liabilities.
         include_net_worth:
           type: boolean
           format: boolean
           example: true
           default: true
-          description: "If omitted, defaults to true."
         longitude:
           type: number
           format: double
@@ -17057,6 +17567,37 @@ components:
           example: 6
           nullable: true
           description: "Zoom level for the map, if drawn. This to set the box right. Unfortunately this is a proprietary value because each map provider has different zoom levels."
+        last_activity:
+          nullable: true
+          type: string
+          format: date-time
+          example: "2025-08-01T00:00:00+00:00"
+          description: "Last activity of the account."
+    AccountRead:
+      type: object
+      required:
+        - type
+        - id
+        - attributes
+      properties:
+        type:
+          type: string
+          format: string
+          example: "accounts"
+          description: "Immutable value"
+        id:
+          type: string
+          format: string
+          example: "2"
+        attributes:
+          $ref: '#/components/schemas/AccountProperties'
+    AccountSingle:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          $ref: '#/components/schemas/AccountRead'
     AccountStore:
       type: object
       required:
@@ -17092,7 +17633,7 @@ components:
         opening_balance_date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           nullable: true
           description: Represents the date of the opening balance.
         virtual_balance:
@@ -17103,12 +17644,12 @@ components:
           type: string
           format: string
           example: "12"
-          description: "Use either currency_id or currency_code. Defaults to the user's default currency."
+          description: "Use either currency_id or currency_code. Defaults to the user's financial administration's currency."
         currency_code:
           type: string
           format: string
           example: "EUR"
-          description: "Use either currency_id or currency_code. Defaults to the user's default currency."
+          description: "Use either currency_id or currency_code. Defaults to the user's financial administration's currency."
         active:
           type: boolean
           format: boolean
@@ -17134,7 +17675,7 @@ components:
           nullable: true
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           description: "Mandatory when the account_role is ccAsset. Moment at which CC payment installments are asked for by the bank."
         liability_type:
           $ref: '#/components/schemas/LiabilityTypeProperty'
@@ -17204,7 +17745,7 @@ components:
         opening_balance_date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           nullable: true
         virtual_balance:
           type: string
@@ -17214,12 +17755,12 @@ components:
           type: string
           format: string
           example: "12"
-          description: "Use either currency_id or currency_code. Defaults to the user's default currency."
+          description: "Use either currency_id or currency_code. Defaults to the user's financial administration's currency."
         currency_code:
           type: string
           format: string
           example: "EUR"
-          description: "Use either currency_id or currency_code. Defaults to the user's default currency."
+          description: "Use either currency_id or currency_code. Defaults to the user's financial administration's currency."
         active:
           type: boolean
           format: boolean
@@ -17245,7 +17786,7 @@ components:
           nullable: true
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           description: "Mandatory when the account_role is ccAsset. Moment at which CC payment installments are asked for by the bank."
         liability_type:
           $ref: '#/components/schemas/LiabilityTypeProperty'
@@ -17280,22 +17821,43 @@ components:
           example: 6
           nullable: true
           description: Zoom level for the map, if drawn. This to set the box right. Unfortunately this is a proprietary value because each map provider has different zoom levels. If omitted, the existing location will be kept. If submitted as NULL, the current location will be removed.
-    Attachment:
+    ArrayEntryWithCurrencyAndSum:
       type: object
-      required:
-        - filename
-        - attachable_type
-        - attachable_id
+      properties:
+        currency_id:
+          type: string
+          format: string
+          example: "5"
+        currency_code:
+          type: string
+          format: string
+          example: "USD"
+        currency_symbol:
+          type: string
+          format: string
+          example: "$"
+        currency_decimal_places:
+          type: integer
+          format: int32
+          example: 2
+          description: Number of decimals supported by the currency
+        sum:
+          type: string
+          format: amount
+          example: "123.45"
+          description: The amount earned, spent or transferred.
+    AttachmentProperties:
+      type: object
       properties:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         attachable_type:
           $ref: '#/components/schemas/AttachableType'
@@ -17304,16 +17866,11 @@ components:
           format: string
           example: "134"
           description: ID of the model this attachment is linked to.
-        md5:
-          type: string
-          format: string
-          example: "0c3f95f34370baa88f9fd9a671fea305"
-          description: MD5 hash of the file for basic duplicate detection. This field is deprecated.
         hash:
           type: string
           format: string
           example: "0c3f95f34370baa88f9fd9a671fea305"
-          description: Hash of the file for basic duplicate detection. It's still md5 lol.
+          description: Hash of the file for basic duplicate detection.
         filename:
           type: string
           format: string
@@ -17346,6 +17903,34 @@ components:
           format: int32
           example: 48211
           readOnly: true
+    AttachmentRead:
+      type: object
+      required:
+        - type
+        - id
+        - attributes
+        - links
+      properties:
+        type:
+          type: string
+          format: string
+          example: "attachments"
+          description: "Immutable value"
+        id:
+          type: string
+          format: string
+          example: "2"
+        attributes:
+          $ref: '#/components/schemas/AttachmentProperties'
+        links:
+          $ref: '#/components/schemas/ObjectLink'
+    AttachmentSingle:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          $ref: '#/components/schemas/AttachmentRead'
     AttachmentStore:
       type: object
       required:
@@ -17389,33 +17974,40 @@ components:
           format: string
           example: "Some notes"
           nullable: true
-    AvailableBudget:
+    AvailableBudgetProperties:
       type: object
-      required:
-        - amount
-        - start
-        - end
       properties:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
+        object_has_currency_setting:
+          type: boolean
+          format: boolean
+          example: true
+          readOnly: true
+          description: "Indicates whether the object has a currency setting. If false, the object uses the administration's primary currency."
         currency_id:
           type: string
           format: string
           example: "5"
-          description: Use either currency_id or currency_code.
+          description: "The currency ID of the currency associated with this object."
+        currency_name:
+          type: string
+          format: string
+          example: Euro
+          description: "The currency name of the currency associated with this object."
         currency_code:
           type: string
           format: string
           example: EUR
-          description: Use either currency_id or currency_code.
+          description: "The currency code of the currency associated with this object."
         currency_symbol:
           type: string
           format: string
@@ -17426,88 +18018,144 @@ components:
           format: int32
           example: 2
           readOnly: true
-        native_currency_id:
+        primary_currency_id:
           type: string
           format: string
           example: "5"
-          description: "The currency ID of the administration's native currency."
+          description: "The currency ID of the administration's primary currency."
           readOnly: true
-        native_currency_code:
+        primary_currency_name:
+          type: string
+          format: string
+          example: Euro
+          readOnly: true
+          description: "The currency name of the administration's primary currency."
+        primary_currency_code:
           type: string
           format: string
           example: EUR
           readOnly: true
-          description: "The currency code of the administration's native currency."
-        native_currency_symbol:
+          description: "The currency code of the administration's primary currency."
+        primary_currency_symbol:
           type: string
           format: string
           example: "$"
           readOnly: true
-          description: "The currency symbol of the administration's native currency."
-        native_currency_decimal_places:
+          description: "The currency symbol of the administration's primary currency."
+        primary_currency_decimal_places:
           type: integer
           format: int32
           example: 2
           readOnly: true
-          description: "The currency decimal places of the administration's native currency."
+          description: "The currency decimal places of the administration's primary currency."
         amount:
           type: string
           format: amount
           example: "123.45"
-        native_amount:
+          description: "The amount of this available budget in the currency of this available budget."
+        pc_amount:
           type: string
           format: amount
           example: "123.45"
-          description: "The amount of this available budget in the native currency of this administration."
+          description: "The amount of this available budget in the primary currency (pc) of this administration."
         start:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           description: Start date of the available budget.
         end:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-31T23:59:59+00:00"
           description: End date of the available budget.
         spent_in_budgets:
           type: array
           items:
-            $ref: '#/components/schemas/BudgetSpent'
+            $ref: '#/components/schemas/ArrayEntryWithCurrencyAndSum'
           readOnly: true
-        spent_outside_budget:
+        pc_spent_in_budgets:
           type: array
           items:
-            $ref: '#/components/schemas/BudgetSpent'
+            $ref: '#/components/schemas/ArrayEntryWithCurrencyAndSum'
           readOnly: true
-    Bill:
+          description: |
+            The amount spent in budgets in the primary currency (pc) of this administration.
+        spent_outside_budgets:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArrayEntryWithCurrencyAndSum'
+          readOnly: true
+        pc_spent_outside_budgets:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArrayEntryWithCurrencyAndSum'
+          readOnly: true
+          description: |
+            The amount spent outside of budgets in the primary currency (pc) of this administration.
+    AvailableBudgetRead:
       type: object
       required:
-        - name
-        - amount_min
-        - amount_max
-        - date
-        - repeat_freq
+        - type
+        - id
+        - attributes
+      properties:
+        type:
+          type: string
+          format: string
+          example: "available_budgets"
+          description: "Immutable value"
+        id:
+          type: string
+          format: string
+          example: "2"
+        attributes:
+          $ref: '#/components/schemas/AvailableBudgetProperties'
+    AvailableBudgetSingle:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          $ref: '#/components/schemas/AvailableBudgetRead'
+    BillProperties:
+      type: object
       properties:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
+        name:
+          type: string
+          format: string
+          example: "Rent"
+          description: "The name of the subscription."
+        object_has_currency_setting:
+          type: boolean
+          format: boolean
+          example: true
+          readOnly: true
+          description: "Indicates whether the object has a currency setting. If false, the object uses the administration's primary currency."
         currency_id:
           type: string
           format: string
           example: "5"
-          description: Use either currency_id or currency_code
+          description: "The currency ID of the currency associated with this object."
+        currency_name:
+          type: string
+          format: string
+          example: Euro
+          description: "The currency name of the currency associated with this object."
         currency_code:
           type: string
           format: string
           example: EUR
-          description: Use either currency_id or currency_code
+          description: "The currency code of the currency associated with this object."
         currency_symbol:
           type: string
           format: string
@@ -17518,71 +18166,81 @@ components:
           format: int32
           example: 2
           readOnly: true
-        native_currency_id:
+        primary_currency_id:
           type: string
           format: string
           example: "5"
+          description: "The currency ID of the administration's primary currency."
           readOnly: true
-          description: "The administration's native currency ID."
-        native_currency_code:
+        primary_currency_name:
+          type: string
+          format: string
+          example: Euro
+          readOnly: true
+          description: "The currency name of the administration's primary currency."
+        primary_currency_code:
           type: string
           format: string
           example: EUR
           readOnly: true
-          description: "The administration's native currency code."
-        native_currency_symbol:
+          description: "The currency code of the administration's primary currency."
+        primary_currency_symbol:
           type: string
           format: string
           example: "$"
           readOnly: true
-          description: "The administration's native currency symbol."
-        native_currency_decimal_places:
+          description: "The currency symbol of the administration's primary currency."
+        primary_currency_decimal_places:
           type: integer
           format: int32
           example: 2
           readOnly: true
-          description: "The administration's native currency decimal places."
-        name:
-          type: string
-          format: string
-          example: "Rent"
+          description: "The currency decimal places of the administration's primary currency."
         amount_min:
           type: string
           format: amount
           example: "123.45"
+          description: "The minimum amount that is expected for this subscription in the subscription's currency."
+        pc_amount_min:
+          type: string
+          format: amount
+          example: "123.45"
+          description: "The minimum amount that is expected for this subscription in the administration's primary currency."
         amount_max:
           type: string
           format: amount
           example: "123.45"
-        native_amount_min:
+          description: "The maximum amount that is expected for this subscription in the subscription's currency."
+        pc_amount_max:
           type: string
           format: amount
           example: "123.45"
-          nullable: true
-          readOnly: true
-          description: "The max amount of this bill in the user's native currency, if the original amount is in a different currency."
-        native_amount_max:
+          description: "The maximum amount that is expected for this subscription in the administration's primary currency."
+        amount_avg:
           type: string
           format: amount
           example: "123.45"
-          nullable: true
-          readOnly: true
-          description: "The min amount of this bill in the user's native currency, if the original amount is in a different currency."
+          description: "The average amount that is expected for this subscription in the subscription's currency."
+        pc_amount_avg:
+          type: string
+          format: amount
+          example: "123.45"
+          description: "The average amount that is expected for this subscription in the administration's primary currency."
         date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
         end_date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
-          description: "The date after which this bill is no longer valid or applicable"
+          example: "2025-08-31T23:59:59+00:00"
+          description: "The date after which this subscription is no longer valid or applicable"
           nullable: true
         extension_date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
-          description: "The date before which the bill must be renewed (or cancelled)"
+          example: "2025-08-31T23:59:59+00:00"
+          description: "The date before which the subscription must be renewed (or cancelled)"
           nullable: true
         repeat_freq:
           $ref: '#/components/schemas/BillRepeatFrequency'
@@ -17590,36 +18248,22 @@ components:
           type: integer
           format: int32
           example: 0
-          description: How often the bill must be skipped. 1 means a bi-monthly bill.
+          description: How often the subscription will be skipped. 1 means a bi-monthly subscription.
         active:
           type: boolean
           format: boolean
           example: true
-          description: If the bill is active.
+          description: If the subscription is active.
         order:
           type: integer
           format: int32
           example: 1
-          description: "Order of the bill."
+          description: "Order of the subscription."
         notes:
           type: string
           format: string
           example: "Some example notes"
           nullable: true
-        next_expected_match:
-          type: string
-          format: date-time
-          example: "2018-09-17T12:46:47+01:00"
-          description: "When the bill is expected to be due."
-          nullable: true
-          readOnly: true
-        next_expected_match_diff:
-          type: string
-          format: string
-          example: "today"
-          description: "Formatted (locally) when the bill is due."
-          nullable: true
-          readOnly: true
         object_group_id:
           type: string
           format: string
@@ -17630,8 +18274,8 @@ components:
           type: integer
           format: int32
           example: 5
-          nullable: true
           readOnly: true
+          nullable: true
           description: The order of the group. At least 1, for the highest sorting.
         object_group_title:
           type: string
@@ -17639,18 +18283,9 @@ components:
           example: "Example Group"
           nullable: true
           description: The name of the group. NULL if no group.
-        pay_dates:
-          type: array
-          description: "Array of future dates when the bill is expected to be paid. Autogenerated."
-          readOnly: true
-          items:
-            type: string
-            format: date-time
-            example: "2018-09-17T12:46:47+01:00"
-            readOnly: true
         paid_dates:
           type: array
-          description: "Array of past transactions when the bill was paid."
+          description: "Array of past transactions when the subscription was paid."
           readOnly: true
           items:
             type: object
@@ -17660,20 +18295,150 @@ components:
                 type: string
                 format: string
                 example: "123"
-                description: "Transaction group ID of the paid bill."
+                description: "Transaction group ID of the transaction linked to this subscription."
                 readOnly: true
               transaction_journal_id:
                 type: string
                 format: string
                 example: "123"
-                description: "Transaction journal ID of the paid bill."
+                description: "Transaction journal ID of the transaction linked to this subscription."
                 readOnly: true
               date:
                 type: string
                 format: date-time
-                example: "2018-09-17T12:46:47+01:00"
+                example: "2025-08-01T00:00:00+00:00"
                 description: "Date the bill was paid."
                 readOnly: true
+              subscription_id:
+                type: string
+                format: string
+                example: "123"
+                description: "ID of this subscription."
+                readOnly: true
+              currency_id:
+                type: string
+                format: string
+                example: "5"
+                description: "The currency ID of the currency associated with this object."
+              currency_name:
+                type: string
+                format: string
+                example: Euro
+                description: "The currency name of the currency associated with this object."
+              currency_code:
+                type: string
+                format: string
+                example: EUR
+                description: "The currency code of the currency associated with this object."
+              currency_symbol:
+                type: string
+                format: string
+                example: "$"
+                readOnly: true
+              currency_decimal_places:
+                type: integer
+                format: int32
+                example: 2
+                readOnly: true
+              primary_currency_id:
+                type: string
+                format: string
+                example: "5"
+                description: "The currency ID of the administration's primary currency."
+                readOnly: true
+              primary_currency_name:
+                type: string
+                format: string
+                example: Euro
+                readOnly: true
+                description: "The currency name of the administration's primary currency."
+              primary_currency_code:
+                type: string
+                format: string
+                example: EUR
+                readOnly: true
+                description: "The currency code of the administration's primary currency."
+              primary_currency_symbol:
+                type: string
+                format: string
+                example: "$"
+                readOnly: true
+                description: "The currency symbol of the administration's primary currency."
+              primary_currency_decimal_places:
+                type: integer
+                format: int32
+                example: 2
+                readOnly: true
+                description: "The currency decimal places of the administration's primary currency."
+              amount:
+                type: string
+                format: amount
+                example: "123.45"
+                description: "The amount that was paid for this subscription in the subscription's currency."
+              pc_amount:
+                type: string
+                format: amount
+                example: "123.45"
+                description: "The amount that was paid for this subscription in the administration's primary currency."
+              foreign_amount:
+                type: string
+                format: amount
+                example: "123.45"
+                description: "The foreign amount that was paid for this subscription in the subscription's currency."
+              pc_foreign_amount:
+                type: string
+                format: amount
+                example: "123.45"
+                description: "The foreign amount that was paid for this subscription in the administration's primary currency."
+        pay_dates:
+          type: array
+          description: "Array of future dates when the bill is expected to be paid. Autogenerated."
+          readOnly: true
+          items:
+            type: string
+            format: date-time
+            example: "2025-08-01T00:00:00+00:00"
+            readOnly: true
+
+        next_expected_match:
+          type: string
+          format: date-time
+          example: "2025-08-01T00:00:00+00:00"
+          description: "When the subscription is expected to be due."
+          nullable: true
+          readOnly: true
+        next_expected_match_diff:
+          type: string
+          format: string
+          example: "today"
+          description: "Formatted (locally) when the subscription is due."
+          nullable: true
+          readOnly: true
+    BillRead:
+      type: object
+      required:
+        - type
+        - id
+        - attributes
+      properties:
+        type:
+          type: string
+          format: string
+          example: "bills"
+          description: "Immutable value"
+        id:
+          type: string
+          format: string
+          example: "2"
+        attributes:
+          $ref: '#/components/schemas/BillProperties'
+    BillSingle:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          $ref: '#/components/schemas/BillRead'
     BillStore:
       type: object
       required:
@@ -17708,16 +18473,16 @@ components:
         date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
         end_date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-31T23:59:59+00:00"
           description: "The date after which this bill is no longer valid or applicable"
         extension_date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-31T23:59:59+00:00"
           description: "The date before which the bill must be renewed (or cancelled)"
         repeat_freq:
           $ref: '#/components/schemas/BillRepeatFrequency'
@@ -17778,16 +18543,16 @@ components:
         date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
         end_date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-31T23:59:59+00:00"
           description: "The date after which this bill is no longer valid or applicable"
         extension_date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-31T23:59:59+00:00"
           description: "The date before which the bill must be renewed (or cancelled)"
         repeat_freq:
           $ref: '#/components/schemas/BillRepeatFrequency'
@@ -17818,7 +18583,7 @@ components:
           example: "Example Group"
           nullable: true
           description: The name of the group. NULL if no group.
-    Budget:
+    BudgetProperties:
       type: object
       required:
         - name
@@ -17826,103 +18591,164 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
-        name:
-          type: string
-          format: string
-          example: "Bills"
         active:
           type: boolean
           format: boolean
           example: false
-        notes:
+        name:
           type: string
           format: string
-          example: "Some notes"
-          nullable: true
+          example: "Bills"
         order:
           type: integer
           format: int32
           example: 5
           readOnly: true
+        notes:
+          type: string
+          format: string
+          example: "Some notes"
+          nullable: true
         auto_budget_type:
           $ref: '#/components/schemas/AutoBudgetType'
+        auto_budget_period:
+          $ref: '#/components/schemas/AutoBudgetPeriod'
+        object_group_id:
+          type: string
+          format: string
+          example: "5"
+          nullable: true
+          description: The group ID of the group this object is part of. NULL if no group.
+        object_group_order:
+          type: integer
+          format: int32
+          example: 5
+          readOnly: true
+          nullable: true
+          description: The order of the group. At least 1, for the highest sorting.
+        object_group_title:
+          type: string
+          format: string
+          example: "Example Group"
+          nullable: true
+          description: The name of the group. NULL if no group.
+        object_has_currency_setting:
+          type: boolean
+          format: boolean
+          example: true
+          readOnly: true
+          description: "Indicates whether the object has a currency setting. If false, the object uses the administration's primary currency."
         currency_id:
           type: string
           format: string
-          example: "12"
-          nullable: true
-          description: "The currency ID that is part of the budget's auto-budget settings, if any."
+          example: "5"
+          description: "The currency ID of the currency associated with this object."
+        currency_name:
+          type: string
+          format: string
+          example: Euro
+          description: "The currency name of the currency associated with this object."
         currency_code:
           type: string
           format: string
-          example: "EUR"
-          nullable: true
-          description: "The currency code that is part of the budget's auto-budget settings, if any."
+          example: EUR
+          description: "The currency code of the currency associated with this object."
         currency_symbol:
           type: string
           format: string
           example: "$"
           readOnly: true
-          nullable: true
-          description: "The currency symbol that is part of the budget's auto-budget settings, if any."
         currency_decimal_places:
           type: integer
           format: int32
           example: 2
           readOnly: true
-          nullable: true
-          description: "The currency decimal places that is part of the budget's auto-budget settings, if any."
-        native_currency_id:
+        primary_currency_id:
           type: string
           format: string
           example: "5"
+          description: "The currency ID of the administration's primary currency."
           readOnly: true
-          description: "The administration's native currency ID."
-        native_currency_code:
+        primary_currency_name:
+          type: string
+          format: string
+          example: Euro
+          readOnly: true
+          description: "The currency name of the administration's primary currency."
+        primary_currency_code:
           type: string
           format: string
           example: EUR
           readOnly: true
-          description: "The administration's native currency code."
-        native_currency_symbol:
+          description: "The currency code of the administration's primary currency."
+        primary_currency_symbol:
           type: string
           format: string
           example: "$"
           readOnly: true
-          description: "The administration's native currency symbol."
-        native_currency_decimal_places:
+          description: "The currency symbol of the administration's primary currency."
+        primary_currency_decimal_places:
           type: integer
           format: int32
           example: 2
           readOnly: true
-          description: "The administration's native currency decimal places."
+          description: "The currency decimal places of the administration's primary currency."
         auto_budget_amount:
           type: string
           format: amount
           example: "-1012.12"
           nullable: true
           description: "The amount for the auto-budget, if set."
-        native_auto_budget_amount:
+        pc_auto_budget_amount:
           type: string
           format: amount
           example: "-1012.12"
           nullable: true
-          description: "The native amount for the auto-budget, if set."
-        auto_budget_period:
-          $ref: '#/components/schemas/AutoBudgetPeriod'
+          description: "The amount for the auto-budget, if set in the primary currency of the administration."
         spent:
           description: "Information on how much was spent in this budget. Is only filled in when the start and end date are submitted."
           type: array
           readOnly: true
           items:
-            $ref: '#/components/schemas/BudgetSpent'
+            $ref: '#/components/schemas/ArrayEntryWithCurrencyAndSum'
+        pc_spent:
+          description: "Information on how much was spent in this budget. Is only filled in when the start and end date are submitted. It is converted to the primary currency of the administration."
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/ArrayEntryWithCurrencyAndSum'
+    BudgetRead:
+      type: object
+      required:
+        - type
+        - id
+        - attributes
+      properties:
+        type:
+          type: string
+          format: string
+          example: "budgets"
+          description: "Immutable value"
+        id:
+          type: string
+          format: string
+          example: "2"
+        attributes:
+          $ref: '#/components/schemas/BudgetProperties'
+    BudgetSingle:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          $ref: '#/components/schemas/BudgetRead'
     BudgetStore:
       type: object
       required:
@@ -17953,13 +18779,13 @@ components:
           format: string
           example: "12"
           nullable: true
-          description: "Use either currency_id or currency_code. Defaults to the user's default currency."
+          description: "Use either currency_id or currency_code. Defaults to the user's financial administration's currency."
         auto_budget_currency_code:
           type: string
           format: string
           example: "EUR"
           nullable: true
-          description: "Use either currency_id or currency_code. Defaults to the user's default currency."
+          description: "Use either currency_id or currency_code. Defaults to the user's financial administration's currency."
         auto_budget_amount:
           type: string
           format: amount
@@ -17996,13 +18822,13 @@ components:
           format: string
           example: "12"
           nullable: true
-          description: "Use either currency_id or currency_code. Defaults to the user's default currency."
+          description: "Use either currency_id or currency_code. Defaults to the user's financial administration's currency."
         auto_budget_currency_code:
           type: string
           format: string
           example: "EUR"
           nullable: true
-          description: "Use either currency_id or currency_code. Defaults to the user's default currency."
+          description: "Use either currency_id or currency_code. Defaults to the user's financial administration's currency."
         auto_budget_amount:
           type: string
           format: amount
@@ -18010,49 +18836,56 @@ components:
           nullable: true
         auto_budget_period:
           $ref: '#/components/schemas/AutoBudgetPeriod'
-    BudgetLimit:
+    BudgetLimitProperties:
       type: object
-      required:
-        - amount
-        - start
-        - end
-        - budget_id
       properties:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         start:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           description: Start date of the budget limit.
         end:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-31T23:59:59+00:00"
           description: End date of the budget limit.
+        budget_id:
+          type: string
+          format: string
+          example: "23"
+          description: The budget ID of the associated budget.
+          readOnly: true
+        object_has_currency_setting:
+          type: boolean
+          format: boolean
+          example: true
+          readOnly: true
+          description: "Indicates whether the object has a currency setting. If false, the object uses the administration's primary currency."
         currency_id:
           type: string
           format: string
           example: "5"
-          description: Use either currency_id or currency_code. Defaults to the user's default currency.
+          description: "The currency ID of the currency associated with this object."
+        currency_name:
+          type: string
+          format: string
+          example: Euro
+          description: "The currency name of the currency associated with this object."
         currency_code:
           type: string
           format: string
           example: EUR
-          description: Use either currency_id or currency_code. Defaults to the user's default currency.
-        currency_name:
-          type: string
-          format: string
-          example: "Euro"
-          readOnly: true
+          description: "The currency code of the currency associated with this object."
         currency_symbol:
           type: string
           format: string
@@ -18063,36 +18896,47 @@ components:
           format: int32
           example: 2
           readOnly: true
-        native_currency_id:
+        primary_currency_id:
           type: string
           format: string
           example: "5"
+          description: "The currency ID of the administration's primary currency."
           readOnly: true
-          description: "The administration's native currency ID."
-        native_currency_code:
+        primary_currency_name:
+          type: string
+          format: string
+          example: Euro
+          readOnly: true
+          description: "The currency name of the administration's primary currency."
+        primary_currency_code:
           type: string
           format: string
           example: EUR
           readOnly: true
-          description: "The administration's native currency code."
-        native_currency_symbol:
+          description: "The currency code of the administration's primary currency."
+        primary_currency_symbol:
           type: string
           format: string
           example: "$"
           readOnly: true
-          description: "The administration's native currency symbol."
-        native_currency_decimal_places:
+          description: "The currency symbol of the administration's primary currency."
+        primary_currency_decimal_places:
           type: integer
           format: int32
           example: 2
           readOnly: true
-          description: "The administration's native currency decimal places."
-        budget_id:
+          description: "The currency decimal places of the administration's primary currency."
+        amount:
           type: string
-          format: string
-          example: "23"
-          description: The budget ID of the associated budget.
+          format: amount
+          example: "123.45"
+        pc_amount:
+          type: string
+          format: amount
+          example: "123.45"
+          nullable: true
           readOnly: true
+          description: "The amount of this budget limit in the user's primary currency, if the original amount is in a different currency."
         period:
           type: string
           format: string
@@ -18100,30 +18944,49 @@ components:
           nullable: true
           readOnly: true
           description: Period of the budget limit. Only used when auto-generated by auto-budget.
-        amount:
-          type: string
-          format: amount
-          example: "123.45"
-        native_amount:
-          type: string
-          format: amount
-          example: "123.45"
-          nullable: true
-          readOnly: true
-          description: "The amount of this budget limit in the user's native currency, if the original amount is in a different currency."
         spent:
-          type: string
-          format: amount
-          example: "-1012.12"
-          nullable: true
+          description: "Amount(s) spent in the currencies in the database for this budget limit."
+          type: array
           readOnly: true
-          description: "Will be in the native currency if this is turned on by the user."
+          items:
+            $ref: '#/components/schemas/ArrayEntryWithCurrencyAndSum'
+        pc_spent:
+          description: "Amount(s) spent in the primary currency in the database for this budget limit."
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/ArrayEntryWithCurrencyAndSum'
         notes:
           type: string
           format: string
           example: "Some example notes"
           nullable: true
           description: Some notes for this specific budget limit.
+    BudgetLimitRead:
+      type: object
+      required:
+        - type
+        - id
+        - attributes
+      properties:
+        type:
+          type: string
+          format: string
+          example: "budget_limits"
+          description: "Immutable value"
+        id:
+          type: string
+          format: string
+          example: "2"
+        attributes:
+          $ref: '#/components/schemas/BudgetLimitProperties'
+    BudgetLimitSingle:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          $ref: '#/components/schemas/BudgetLimitRead'
     BudgetLimitStore:
       type: object
       required:
@@ -18136,12 +18999,12 @@ components:
           type: string
           format: string
           example: "5"
-          description: Use either currency_id or currency_code. Defaults to the user's default currency.
+          description: Use either currency_id or currency_code. Defaults to the user's primary currency.
         currency_code:
           type: string
           format: string
           example: EUR
-          description: Use either currency_id or currency_code. Defaults to the user's default currency.
+          description: Use either currency_id or currency_code. Defaults to the user's primary currency.
         budget_id:
           type: string
           format: string
@@ -18151,7 +19014,7 @@ components:
         start:
           type: string
           format: date
-          example: "2017-09-17"
+          example: "2025-08-01"
           description: Start date of the budget limit.
         period:
           type: string
@@ -18163,7 +19026,7 @@ components:
         end:
           type: string
           format: date
-          example: "2017-09-17"
+          example: "2025-08-31"
           description: End date of the budget limit.
         amount:
           type: string
@@ -18175,32 +19038,128 @@ components:
           example: "Some example notes"
           nullable: true
           description: Some notes for this specific budget limit.
-    BudgetSpent:
+    BudgetLimitUpdate:
       type: object
       properties:
-        sum:
+        created_at:
           type: string
-          format: amount
-          example: "123.45"
-          description: "The amount spent. This is in the administration's native currency, if the conversion is turned on."
+          format: date-time
+          example: "2025-08-01T00:00:00+00:00"
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-08-01T00:00:00+00:00"
+          readOnly: true
+        start:
+          type: string
+          format: date-time
+          example: "2025-08-01T00:00:00+00:00"
+          description: Start date of the budget limit.
+        end:
+          type: string
+          format: date-time
+          example: "2025-08-31T23:59:59+00:00"
+          description: End date of the budget limit.
+        budget_id:
+          type: string
+          format: string
+          example: "23"
+          description: The budget ID of the associated budget.
+          readOnly: true
+        object_has_currency_setting:
+          type: boolean
+          format: boolean
+          example: true
+          readOnly: true
+          description: "Indicates whether the object has a currency setting. If false, the object uses the administration's primary currency."
         currency_id:
           type: string
           format: string
           example: "5"
+          description: "The currency ID of the currency associated with this object."
+        currency_name:
+          type: string
+          format: string
+          example: Euro
+          description: "The currency name of the currency associated with this object."
         currency_code:
           type: string
           format: string
-          example: "USD"
+          example: EUR
+          description: "The currency code of the currency associated with this object."
         currency_symbol:
           type: string
           format: string
           example: "$"
+          readOnly: true
         currency_decimal_places:
           type: integer
           format: int32
           example: 2
-          description: Number of decimals supported by the currency
-    Category:
+          readOnly: true
+        primary_currency_id:
+          type: string
+          format: string
+          example: "5"
+          description: "The currency ID of the administration's primary currency."
+          readOnly: true
+        primary_currency_name:
+          type: string
+          format: string
+          example: Euro
+          readOnly: true
+          description: "The currency name of the administration's primary currency."
+        primary_currency_code:
+          type: string
+          format: string
+          example: EUR
+          readOnly: true
+          description: "The currency code of the administration's primary currency."
+        primary_currency_symbol:
+          type: string
+          format: string
+          example: "$"
+          readOnly: true
+          description: "The currency symbol of the administration's primary currency."
+        primary_currency_decimal_places:
+          type: integer
+          format: int32
+          example: 2
+          readOnly: true
+          description: "The currency decimal places of the administration's primary currency."
+        period:
+          type: string
+          format: string
+          example: "monthly"
+          nullable: true
+          readOnly: true
+          description: Period of the budget limit. Only used when auto-generated by auto-budget.
+        amount:
+          type: string
+          format: amount
+          example: "123.45"
+        pc_amount:
+          type: string
+          format: amount
+          example: "123.45"
+          nullable: true
+          readOnly: true
+          description: "The amount of this budget limit in the user's primary currency, if the original amount is in a different currency."
+        spent:
+          type: string
+          format: amount
+          example: "-1012.12"
+          nullable: true
+          readOnly: true
+          description: "Will be in the primary currency if this is turned on by the user."
+        notes:
+          type: string
+          format: string
+          example: "Some example notes"
+          nullable: true
+          description: Some notes for this specific budget limit.
+    CategoryProperties:
       type: object
       required:
         - name
@@ -18208,12 +19167,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         name:
           type: string
@@ -18224,40 +19183,92 @@ components:
           format: string
           nullable: true
           example: "Some example notes"
-        native_currency_id:
+        object_has_currency_setting:
+          type: boolean
+          format: boolean
+          example: false
+          readOnly: false
+          description: "This object never has its own currency setting, so this value is always false."
+        primary_currency_id:
           type: string
           format: string
           example: "5"
+          description: "The currency ID of the administration's primary currency."
           readOnly: true
-          description: "The administration's native currency ID."
-        native_currency_code:
+        primary_currency_name:
+          type: string
+          format: string
+          example: Euro
+          readOnly: true
+          description: "The currency name of the administration's primary currency."
+        primary_currency_code:
           type: string
           format: string
           example: EUR
           readOnly: true
-          description: "The administration's native currency code."
-        native_currency_symbol:
+          description: "The currency code of the administration's primary currency."
+        primary_currency_symbol:
           type: string
           format: string
           example: "$"
           readOnly: true
-          description: "The administration's native currency symbol."
-        native_currency_decimal_places:
+          description: "The currency symbol of the administration's primary currency."
+        primary_currency_decimal_places:
           type: integer
           format: int32
           example: 2
           readOnly: true
-          description: "The administration's native currency decimal places."
+          description: "The currency decimal places of the administration's primary currency."
         spent:
+          description: "Amount(s) spent in the currencies in the database for this category. ONLY present when start and date are set."
           type: array
           readOnly: true
           items:
-            $ref: '#/components/schemas/CategorySpent'
+            $ref: '#/components/schemas/ArrayEntryWithCurrencyAndSum'
+        pc_spent:
+          description: "Amount(s) spent in the primary currency in the database for this category. ONLY present when start and date are set. "
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/ArrayEntryWithCurrencyAndSum'
         earned:
+          description: "Amount(s) earned in the currencies in the database for this category. ONLY present when start and date are set."
           type: array
           readOnly: true
           items:
-            $ref: '#/components/schemas/CategoryEarned'
+            $ref: '#/components/schemas/ArrayEntryWithCurrencyAndSum'
+        pc_earned:
+          description: "Amount(s) earned in the primary currency in the database for this category. ONLY present when start and date are set. "
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/ArrayEntryWithCurrencyAndSum'
+        transferred:
+          description: "Amount(s) transferred in the currencies in the database for this category. ONLY present when start and date are set. "
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/ArrayEntryWithCurrencyAndSum'
+        pc_transferred:
+          description: "Amount(s) transferred in primary currency in the database for this category. ONLY present when start and date are set. "
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/ArrayEntryWithCurrencyAndSum'
+    CategoryStore:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          format: string
+          example: "Lunch"
+        notes:
+          type: string
+          format: string
+          nullable: true
+          example: "Some example notes"
     CategoryUpdate:
       type: object
       required:
@@ -18272,89 +19283,18 @@ components:
           format: string
           nullable: true
           example: "Some example notes"
-    CategoryEarned:
-      type: object
-      properties:
-        currency_id:
-          type: string
-          format: string
-          example: "5"
-        currency_code:
-          type: string
-          format: string
-          example: "USD"
-        currency_symbol:
-          type: string
-          format: string
-          example: "$"
-        currency_decimal_places:
-          type: integer
-          format: int32
-          example: 2
-          description: Number of decimals supported by the currency
-        sum:
-          type: string
-          format: amount
-          example: "123.45"
-          description: The amount earned.
-    CategorySpent:
-      type: object
-      properties:
-        currency_id:
-          type: string
-          format: string
-          example: "5"
-        currency_code:
-          type: string
-          format: string
-          example: "USD"
-        currency_symbol:
-          type: string
-          format: string
-          example: "$"
-        currency_decimal_places:
-          type: integer
-          format: int32
-          example: 2
-          description: Number of decimals supported by the currency
-        sum:
-          type: string
-          format: amount
-          example: "-12423.45"
-          description: The amount spent.
-    CurrencyExchangeRateRead:
-      type: object
-      required:
-        - type
-        - id
-        - attributes
-        - links
-      properties:
-        type:
-          type: string
-          format: string
-          example: "currency_exchange_rates"
-          description: "Immutable value"
-        id:
-          type: string
-          format: string
-          example: "2"
-        attributes:
-          $ref: '#/components/schemas/CurrencyExchangeRateReadAttributes'
-        links:
-          $ref: '#/components/schemas/ObjectLink'
-    CurrencyExchangeRateReadAttributes:
+    CurrencyExchangeProperties:
       type: object
       properties:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         from_currency_id:
           type: string
@@ -18362,6 +19302,12 @@ components:
           example: "12"
           readOnly: true
           description: "Base currency ID for this exchange rate entry."
+        from_currency_name:
+          type: string
+          format: string
+          example: "Euro"
+          readOnly: true
+          description: "Base currency name for this exchange rate entry."
         from_currency_code:
           type: string
           format: string
@@ -18386,6 +19332,12 @@ components:
           example: "12"
           readOnly: true
           description: "Destination currency ID for this exchange rate entry."
+        to_currency_name:
+          type: string
+          format: string
+          example: "EUR"
+          readOnly: true
+          description: "Destination currency name for this exchange rate entry."
         to_currency_code:
           type: string
           format: string
@@ -18414,8 +19366,26 @@ components:
           type: string
           format: date-time
           readOnly: true
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           description: "Date and time of the exchange rate."
+    CurrencyExchangeRateRead:
+      type: object
+      properties:
+        type:
+          type: string
+          format: string
+          readOnly: true
+          example: "currency_exchange_rates"
+          description: "Immutable value"
+        id:
+          type: string
+          readOnly: true
+          format: string
+          example: "2"
+        attributes:
+          $ref: '#/components/schemas/CurrencyExchangeProperties'
+        links:
+          $ref: '#/components/schemas/ObjectLink'
     CurrencyExchangeRateSingle:
       type: object
       required:
@@ -18426,15 +19396,66 @@ components:
     CurrencyExchangeRateStore:
       type: object
       required:
-        - date
         - from
         - to
+        - rates
+      properties:
+        from:
+          type: string
+          format: string
+          example: "USD"
+          description: "The base currency code."
+          nullable: false
+        to:
+          type: string
+          format: string
+          example: "EUR"
+          description: "The destination currency code."
+          nullable: false
+        rate:
+          type: string
+          format: string
+          nullable: false
+          example: "2.3456"
+          description: "The exchange rate from the base currency to the destination currency."
+    CurrencyExchangeRateStoreByDate:
+      type: object
+      required:
+        - from
+        - date
+        - rates
+      properties:
+        from:
+          type: string
+          format: string
+          example: "EUR"
+          description: "The 'from'-currency"
+        rates:
+          type: object
+          description: "The actual entries for this data set. They 'key' value is 'to' currency. The value is the exchange rate."
+          additionalProperties:
+            type: string
+          example:
+            USD: '1.2345'
+            GBP: '6.3456'
+    CurrencyExchangeRateStoreByPair:
+      type: object
+      description: "The actual entries for this data set. They 'key' value is the date in YYYY-MM-DD. The value is the exchange rate."
+      additionalProperties:
+        type: string
+      example:
+        2025-08-01: '1.2345'
+        2025-08-02: '6.3456'
+    CurrencyExchangeRateUpdate:
+      type: object
+      required:
+        - date
         - rate
       properties:
         date:
           type: string
           format: date
-          example: "2018-09-17"
+          example: "2025-08-01"
           description: The date to which the exchange rate is applicable.
           nullable: false
         rate:
@@ -18448,25 +19469,18 @@ components:
           format: string
           example: "USD"
           description: "The base currency code."
-          nullable: false
+          nullable: true
         to:
           type: string
           format: string
           example: "EUR"
           description: "The destination currency code."
-          nullable: false
-    CurrencyExchangeRateUpdate:
+          nullable: true
+    CurrencyExchangeRateUpdateNoDate:
       type: object
       required:
-        - date
         - rate
       properties:
-        date:
-          type: string
-          format: date
-          example: "2018-09-17"
-          description: The date to which the exchange rate is applicable.
-          nullable: false
         rate:
           type: string
           format: string
@@ -18482,12 +19496,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         title:
           type: string
@@ -18555,7 +19569,77 @@ components:
           type: string
           format: uri
           example: "https://demo.firefly-iii.org/api/v1/OBJECT?&page=12"
-    PiggyBank:
+    PiggyBankAccountRead:
+      type: object
+      properties:
+        account_id:
+          type: string
+          format: string
+          example: "3"
+          readOnly: true
+          nullable: false
+          description: "The ID of the account."
+        name:
+          type: string
+          format: string
+          readOnly: true
+          nullable: false
+          example: "Checking account"
+        current_amount:
+          type: string
+          format: amount
+          example: "123.45"
+        pc_current_amount:
+          type: string
+          format: amount
+          example: "123.45"
+          description: "If convertToPrimary is on, this will show the amount in the primary currency."
+    PiggyBankAccountStore:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: string
+          example: "3"
+          nullable: true
+          description: "The ID of the account."
+        name:
+          type: string
+          format: string
+          nullable: true
+          example: "Checking account"
+          description: "The name of the account."
+        current_amount:
+          type: string
+          format: amount
+          example: "123.45"
+          description: "The amount saved currently."
+    PiggyBankAccountUpdate:
+      type: object
+      required:
+        - id
+      properties:
+        account_id:
+          type: string
+          format: string
+          example: "3"
+          nullable: true
+          description: "The ID of the account."
+        name:
+          type: string
+          format: string
+          nullable: true
+          example: "Checking account"
+          description: "The name of the account."
+        current_amount:
+          type: string
+          format: amount
+          nullable: true
+          example: "123.45"
+          description: "The amount saved currently."
+    PiggyBankProperties:
       type: object
       required:
         - name
@@ -18565,79 +19649,34 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         name:
           type: string
           format: string
           example: "New digital camera"
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/PiggyBankAccountRead'
-        currency_id:
-          type: string
-          format: string
-          example: "5"
-          readOnly: true
-        currency_code:
-          type: string
-          format: string
-          example: "USD"
-          readOnly: true
-        currency_symbol:
-          type: string
-          format: string
-          example: "$"
-          readOnly: true
-        currency_decimal_places:
-          type: integer
-          format: int32
-          example: 2
-          description: Number of decimals supported by the currency
-          readOnly: true
-        target_amount:
-          type: string
-          format: amount
-          nullable: true
-          example: "123.45"
         percentage:
           type: number
-          format: float
+          format: int32
           nullable: true
-          example: 12.5
+          example: 12
           readOnly: true
-        current_amount:
-          type: string
-          format: amount
-          example: "123.45"
-        left_to_save:
-          type: string
-          nullable: true
-          format: string
-          example: "700.00"
-          readOnly: true
-        save_per_month:
-          type: string
-          nullable: true
-          format: string
-          example: "12.45"
-          readOnly: true
+          description: "The percentage of the target amount that has been saved, if a target amount is set."
         start_date:
           type: string
-          format: date
-          example: "2018-09-17"
+          format: date-time
+          example: "2025-08-01T00:00:00+00:00"
           description: "The date you started with this piggy bank."
         target_date:
           type: string
-          format: date
           nullable: true
-          example: "2018-09-17"
+          format: date-time
+          example: "2025-08-01T00:00:00+00:00"
           description: "The date you intend to finish saving money."
         order:
           type: integer
@@ -18672,81 +19711,113 @@ components:
           example: "Example Group"
           nullable: true
           description: The name of the group. NULL if no group.
-    PiggyBankAccountRead:
-      type: object
-      required:
-        - id
-        - name
-        - current_amount
-        - native_current_amount
-      properties:
-        id:
-          type: string
-          format: string
-          example: "3"
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PiggyBankAccountRead'
+        object_has_currency_setting:
+          type: boolean
+          format: boolean
+          example: true
           readOnly: true
-          nullable: false
-          description: "The ID of the account."
-        name:
+          description: "Indicates whether the object has a currency setting. If false, the object uses the administration's primary currency."
+        currency_id:
           type: string
           format: string
+          example: "5"
+          description: "The currency ID of the currency associated with this object."
+        currency_name:
+          type: string
+          format: string
+          example: Euro
+          description: "The currency name of the currency associated with this object."
+        currency_code:
+          type: string
+          format: string
+          example: EUR
+          description: "The currency code of the currency associated with this object."
+        currency_symbol:
+          type: string
+          format: string
+          example: "$"
           readOnly: true
-          nullable: false
-          example: "Checking account"
+        currency_decimal_places:
+          type: integer
+          format: int32
+          example: 2
+          readOnly: true
+        primary_currency_id:
+          type: string
+          format: string
+          example: "5"
+          description: "The currency ID of the administration's primary currency."
+          readOnly: true
+        primary_currency_name:
+          type: string
+          format: string
+          example: Euro
+          readOnly: true
+          description: "The currency name of the administration's primary currency."
+        primary_currency_code:
+          type: string
+          format: string
+          example: EUR
+          readOnly: true
+          description: "The currency code of the administration's primary currency."
+        primary_currency_symbol:
+          type: string
+          format: string
+          example: "$"
+          readOnly: true
+          description: "The currency symbol of the administration's primary currency."
+        primary_currency_decimal_places:
+          type: integer
+          format: int32
+          example: 2
+          readOnly: true
+          description: "The currency decimal places of the administration's primary currency."
+        target_amount:
+          type: string
+          format: amount
+          nullable: true
+          example: "123.45"
+        pc_target_amount:
+          type: string
+          format: amount
+          nullable: true
+          example: "123.45"
+          description: "The target amount in the primary currency of the administration."
         current_amount:
           type: string
           format: amount
           example: "123.45"
-        native_current_amount:
+        pc_current_amount:
           type: string
           format: amount
           example: "123.45"
-          description: "If convertToNative is on, this will show the amount in the native currency."
-    PiggyBankAccountStore:
-      type: object
-      required:
-        - id
-      properties:
-        id:
+          description: "The current amount in the primary currency of the administration."
+        left_to_save:
           type: string
+          nullable: true
           format: string
-          example: "3"
-          nullable: true
-          description: "The ID of the account."
-        name:
+          example: "700.00"
+        pc_left_to_save:
           type: string
+          nullable: true
           format: string
+          example: "700.00"
+        save_per_month:
+          type: string
           nullable: true
-          example: "Checking account"
-          description: "The name of the account."
-        current_amount:
-          type: string
-          format: amount
-          example: "123.45"
-          description: "The amount saved currently."
-    PiggyBankAccountUpdate:
-      type: object
-      required:
-        - id
-      properties:
-        id:
-          type: string
           format: string
-          example: "3"
-          nullable: true
-          description: "The ID of the account."
-        name:
+          example: "12.45"
+          readOnly: true
+        pc_save_per_month:
           type: string
+          nullable: true
           format: string
-          nullable: true
-          example: "Checking account"
-          description: "The name of the account."
-        current_amount:
-          type: string
-          format: amount
-          nullable: true
-          example: "123.45"
-          description: "The amount saved currently."
+          example: "12.45"
+          readOnly: true
     PiggyBankStore:
       type: object
       required:
@@ -18774,13 +19845,13 @@ components:
         start_date:
           type: string
           format: date
-          example: "2018-09-17"
+          example: "2025-08-01"
           description: The date you started with this piggy bank.
         target_date:
           type: string
           format: date
           nullable: true
-          example: "2018-09-17"
+          example: "2025-08-31"
           description: The date you intend to finish saving money.
         order:
           type: integer
@@ -18837,13 +19908,13 @@ components:
         start_date:
           type: string
           format: date
-          example: "2018-09-17"
+          example: "2025-08-01"
           description: The date you started with this piggy bank.
         target_date:
           type: string
           format: date
           nullable: true
-          example: "2018-09-17"
+          example: "2025-08-31"
           description: The date you intend to finish saving money.
         order:
           type: integer
@@ -18871,37 +19942,86 @@ components:
           example: "Example Group"
           nullable: true
           description: The name of the group. NULL if no group.
-    PiggyBankEvent:
+    PiggyBankEventProperties:
       type: object
       properties:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
-        currency_id:
-          type: string
-          format: string
-          example: "5"
-        currency_code:
-          type: string
-          format: string
-          example: EUR
-        currency_symbol:
-          type: string
-          format: string
-          example: "$"
-        currency_decimal_places:
-          type: integer
-          format: int32
-          example: 2
+          example: "2025-08-01T00:00:00+00:00"
         amount:
           type: string
           format: amount
           example: "123.45"
+        pc_amount:
+          type: string
+          format: amount
+          example: "123.45"
+        object_has_currency_setting:
+          type: boolean
+          format: boolean
+          example: true
+          readOnly: true
+          description: "Indicates whether the object has a currency setting. If false, the object uses the administration's primary currency."
+        currency_id:
+          type: string
+          format: string
+          example: "5"
+          description: "The currency ID of the currency associated with this object."
+        currency_name:
+          type: string
+          format: string
+          example: Euro
+          description: "The currency name of the currency associated with this object."
+        currency_code:
+          type: string
+          format: string
+          example: EUR
+          description: "The currency code of the currency associated with this object."
+        currency_symbol:
+          type: string
+          format: string
+          example: "$"
+          readOnly: true
+        currency_decimal_places:
+          type: integer
+          format: int32
+          example: 2
+          readOnly: true
+        primary_currency_id:
+          type: string
+          format: string
+          example: "5"
+          description: "The currency ID of the administration's primary currency."
+          readOnly: true
+        primary_currency_name:
+          type: string
+          format: string
+          example: Euro
+          readOnly: true
+          description: "The currency name of the administration's primary currency."
+        primary_currency_code:
+          type: string
+          format: string
+          example: EUR
+          readOnly: true
+          description: "The currency code of the administration's primary currency."
+        primary_currency_symbol:
+          type: string
+          format: string
+          example: "$"
+          readOnly: true
+          description: "The currency symbol of the administration's primary currency."
+        primary_currency_decimal_places:
+          type: integer
+          format: int32
+          example: 2
+          readOnly: true
+          description: "The currency decimal places of the administration's primary currency."
         transaction_journal_id:
           type: string
           format: string
@@ -18923,12 +20043,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         name:
           type: string
@@ -18943,18 +20063,18 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/PolymorphicProperty'
-    Recurrence:
+    RecurrenceProperties:
       type: object
       properties:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         type:
           $ref: '#/components/schemas/RecurrenceTransactionType'
@@ -18970,26 +20090,20 @@ components:
         first_date:
           type: string
           format: date
-          example: "2018-09-17"
+          example: "2025-08-31"
           description: "First time the recurring transaction will fire. Must be after today."
         latest_date:
           type: string
           format: date
-          example: "2018-09-17"
+          example: "2025-08-01"
           description: "Last time the recurring transaction has fired."
           nullable: true
           readOnly: true
         repeat_until:
           type: string
           format: date
-          example: "2018-09-17"
+          example: "2025-08-31"
           description: "Date until the recurring transaction can fire. Use either this field or repetitions."
-          nullable: true
-        nr_of_repetitions:
-          type: integer
-          format: int32
-          example: 5
-          description: Max number of created transactions. Use either this field or repeat_until.
           nullable: true
         apply_rules:
           type: boolean
@@ -19001,6 +20115,12 @@ components:
           format: boolean
           example: true
           description: If the recurrence is even active.
+        nr_of_repetitions:
+          type: integer
+          format: int32
+          example: 5
+          description: Max number of created transactions. Use either this field or repeat_until.
+          nullable: true
         notes:
           type: string
           format: string
@@ -19038,12 +20158,12 @@ components:
         first_date:
           type: string
           format: date
-          example: "2018-09-17"
+          example: "2025-08-31"
           description: "First time the recurring transaction will fire. Must be after today."
         repeat_until:
           type: string
           format: date
-          example: "2018-09-17"
+          example: "2025-08-31"
           description: "Date until the recurring transaction can fire. Use either this field or repetitions."
           nullable: true
         nr_of_repetitions:
@@ -19090,13 +20210,13 @@ components:
         first_date:
           type: string
           format: date
-          example: "2018-09-17"
+          example: "2025-08-31"
           description: "First time the recurring transaction will fire."
         repeat_until:
           type: string
           format: date
-          example: "2018-09-17"
-          description: Date until the recurring transaction can fire. After that date, it's basically inactive. Use either this field or repetitions.
+          example: "2025-08-31"
+          description: Date until when the recurring transaction can fire. After that date, it's basically inactive. Use either this field or repetitions.
           nullable: true
         nr_of_repetitions:
           type: integer
@@ -19141,12 +20261,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         type:
           $ref: '#/components/schemas/RecurrenceRepetitionType'
@@ -19160,7 +20280,7 @@ components:
             - For 'weekly', it is day of the week between 1 and 7 (Monday - Sunday).
             - For 'ndom', it is '1,2' or '4,5' or something else, where the first number is the week in the month, and the second number is the day in the week (between 1 and 7). '2,3' means: the 2nd Wednesday of the month
             - For 'monthly' it is the day of the month (1 - 31)
-            - For yearly, it is a full date, ie '2018-09-17'. The year you use does not matter.
+            - For yearly, it is a full date, ie '2025-08-01'. The year you use does not matter.
         skip:
           type: integer
           format: int32
@@ -19189,7 +20309,7 @@ components:
           items:
             type: string
             format: date-time
-            example: "2018-09-17T12:46:47+01:00"
+            example: "2025-08-31T23:59:59+00:00"
     RecurrenceRepetitionStore:
       type: object
       required:
@@ -19208,7 +20328,7 @@ components:
             - For 'weekly', it is day of the week between 1 and 7 (Monday - Sunday).
             - For 'ndom', it is '1,2' or '4,5' or something else, where the first number is the week in the month, and the second number is the day in the week (between 1 and 7). '2,3' means: the 2nd Wednesday of the month
             - For 'monthly' it is the day of the month (1 - 31)
-            - For yearly, it is a full date, ie '2018-09-17'. The year you use does not matter.
+            - For yearly, it is a full date, ie '2025-08-01'. The year you use does not matter.
         skip:
           type: integer
           format: int32
@@ -19239,7 +20359,7 @@ components:
             - For 'weekly', it is day of the week between 1 and 7 (Monday - Sunday).
             - For 'ndom', it is '1,2' or '4,5' or something else, where the first number is the week in the month, and the second number is the day in the week (between 1 and 7). '2,3' means: the 2nd Wednesday of the month
             - For 'monthly' it is the day of the month (1 - 31)
-            - For yearly, it is a full date, ie '2018-09-17'. The year you use does not matter.
+            - For yearly, it is a full date, ie '2025-08-01'. The year you use does not matter.
         skip:
           type: integer
           format: int32
@@ -19269,50 +20389,104 @@ components:
           type: string
           format: string
           example: "Rent for the current month"
+        object_has_currency_setting:
+          type: boolean
+          format: boolean
+          example: true
+          readOnly: true
+          description: "Indicates whether the object has a currency setting. If false, the object uses the administration's primary currency."
+        currency_id:
+          type: string
+          format: string
+          example: "5"
+          description: "The currency ID of the currency associated with this object."
+        currency_name:
+          type: string
+          format: string
+          example: Euro
+          description: "The currency name of the currency associated with this object."
+        currency_code:
+          type: string
+          format: string
+          example: EUR
+          description: "The currency code of the currency associated with this object."
+        currency_symbol:
+          type: string
+          format: string
+          example: "$"
+          readOnly: true
+        currency_decimal_places:
+          type: integer
+          format: int32
+          example: 2
+          readOnly: true
+        primary_currency_id:
+          type: string
+          format: string
+          example: "5"
+          description: "The currency ID of the administration's primary currency."
+          readOnly: true
+        primary_currency_name:
+          type: string
+          format: string
+          example: Euro
+          readOnly: true
+          description: "The currency name of the administration's primary currency."
+        primary_currency_code:
+          type: string
+          format: string
+          example: EUR
+          readOnly: true
+          description: "The currency code of the administration's primary currency."
+        primary_currency_symbol:
+          type: string
+          format: string
+          example: "$"
+          readOnly: true
+          description: "The currency symbol of the administration's primary currency."
+        primary_currency_decimal_places:
+          type: integer
+          format: int32
+          example: 2
+          readOnly: true
+          description: "The currency decimal places of the administration's primary currency."
         amount:
           type: string
           format: amount
           example: "123.45"
           description: Amount of the transaction.
+        pc_amount:
+          type: string
+          format: amount
+          example: "123.45"
+          description: Amount of the transaction in primary currency.
         foreign_amount:
           type: string
           format: amount
           example: "123.45"
           description: Foreign amount of the transaction.
           nullable: true
-        currency_id:
+        pc_foreign_amount:
           type: string
-          format: string
-          example: "3"
-          description: Submit either a currency_id or a currency_code.
-        currency_code:
-          type: string
-          format: string
-          example: "EUR"
-          description: Submit either a currency_id or a currency_code.
-        currency_symbol:
-          type: string
-          format: string
-          example: "€"
-          readOnly: true
-        currency_decimal_places:
-          type: integer
-          format: int32
-          example: 2
-          description: Number of decimals in the currency
-          readOnly: true
+          format: amount
+          example: "123.45"
+          description: Foreign amount of the transaction.
+          nullable: true
         foreign_currency_id:
           type: string
           format: string
           example: "17"
           nullable: true
-          description: Submit either a foreign_currency_id or a foreign_currency_code, or neither.
+        foreign_currency_name:
+          type: string
+          format: string
+          example: "British Pound"
+          nullable: true
         foreign_currency_code:
           type: string
           format: string
           example: "GBP"
           nullable: true
-          description: Submit either a foreign_currency_id or a foreign_currency_code, or neither.
         foreign_currency_symbol:
           type: string
           format: string
@@ -19399,23 +20573,19 @@ components:
           format: string
           example: "123"
           nullable: true
-          description: Optional. Use either this or the piggy_bank_name
         piggy_bank_name:
           type: string
           format: string
           nullable: true
-          description: Optional. Use either this or the piggy_bank_id
-        bill_id:
+        subscription_id:
           type: string
           format: string
           example: "123"
           nullable: true
-          description: Optional. Use either this or the bill_name
-        bill_name:
+        subscription_name:
           type: string
           format: string
           nullable: true
-          description: Optional. Use either this or the bill_id
     RecurrenceTransactionStore:
       type: object
       required:
@@ -19596,12 +20766,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         title:
           type: string
@@ -19772,12 +20942,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         type:
           $ref: '#/components/schemas/RuleActionKeyword'
@@ -19869,12 +21039,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         title:
           type: string
@@ -19950,12 +21120,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         type:
           $ref: '#/components/schemas/RuleTriggerKeyword'
@@ -20058,12 +21228,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         tag:
           type: string
@@ -20073,7 +21243,7 @@ components:
         date:
           type: string
           format: date
-          example: "2018-09-17"
+          example: "2025-08-01"
           description: The date to which the tag is applicable.
           nullable: true
         description:
@@ -20113,7 +21283,7 @@ components:
         date:
           type: string
           format: date
-          example: "2018-09-17"
+          example: "2025-08-01"
           description: The date to which the tag is applicable.
           nullable: true
         description:
@@ -20151,7 +21321,7 @@ components:
         date:
           type: string
           format: date
-          example: "2018-09-17"
+          example: "2025-08-01"
           description: The date to which the tag is applicable.
           nullable: true
         description:
@@ -20177,7 +21347,7 @@ components:
           example: 6
           nullable: true
           description: "Zoom level for the map, if drawn. This to set the box right. Unfortunately this is a proprietary value because each map provider has different zoom levels."
-    Currency:
+    CurrencyProperties:
       type: object
       required:
         - code
@@ -20187,12 +21357,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         enabled:
           type: boolean
@@ -20200,16 +21370,11 @@ components:
           example: true
           default: true
           description: Defaults to true
-        default:
+        primary:
           type: boolean
           format: boolean
           example: false
-          description: Make this currency the native currency.
-        native:
-          type: boolean
-          format: boolean
-          example: false
-          description: Make this currency the native currency.
+          description: Is the primary currency?
         code:
           type: string
           format: string
@@ -20240,11 +21405,11 @@ components:
           example: true
           default: true
           description: Defaults to true
-        default:
+        primary:
           type: boolean
           format: boolean
           example: true
-          description: Make this currency the default currency. You can set this value to FALSE, in which case nothing will change to the default currency. If you set it to TRUE, the current default currency will no longer be the default currency.
+          description: Make this currency the primary currency for the current administration. You can set this value to FALSE, in which case nothing will change to the primary currency. If you set it to TRUE, the current primary currency will no longer be the primary currency.
         code:
           type: string
           format: string
@@ -20270,11 +21435,11 @@ components:
           format: boolean
           example: true
           description: "If the currency is enabled"
-        default:
+        primary:
           type: boolean
           format: boolean
           example: true
-          description: "If the currency must be the default for the user. You can only submit TRUE. Submitting FALSE will not drop this currency as the default currency, because then the system would be without one."
+          description: "If the currency must be the primary for the user. You can only submit TRUE. Submitting FALSE will not drop this currency as the primary currency, because then the system would be without one."
           enum:
             - true
         code:
@@ -20305,12 +21470,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         user:
           type: string
@@ -20394,12 +21559,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         link_type_id:
           type: string
@@ -20563,7 +21728,7 @@ components:
         date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           description: "Date of the transaction"
         order:
           type: integer
@@ -20571,45 +21736,49 @@ components:
           example: 0
           nullable: true
           description: "Order of this entry in the list of transactions."
+        object_has_currency_setting:
+          type: boolean
+          format: boolean
+          example: true
+          readOnly: true
+          description: "Indicates whether the transaction has a currency setting. For transactions this is always true."
         currency_id:
           type: string
           format: string
           example: "12"
-          nullable: true
-          description: Currency ID. Default is the source account's currency, or the user's default currency. Can be used instead of currency_code.
+          description: Currency ID for the currency of this transaction.
         currency_code:
           type: string
           format: string
           example: EUR
-          nullable: true
-          description: Currency code. Default is the source account's currency, or the user's default currency. Can be used instead of currency_id.
+          description: Currency code for the currency of this transaction.
         currency_symbol:
           type: string
           format: string
           example: "$"
           readOnly: true
+          description: Currency symbol for the currency of this transaction.
         currency_name:
           type: string
           format: string
           example: "Euro"
-          readOnly: true
+          description: Currency name for the currency of this transaction.
         currency_decimal_places:
           type: integer
           format: int32
           example: 2
           description: Number of decimals used in this currency.
-          readOnly: true
         foreign_currency_id:
           type: string
           format: string
           example: "17"
           nullable: true
-          description: Currency ID of the foreign currency. Default is null. Is required when you submit a foreign amount.
+          description: Currency ID of the foreign currency, if this transaction has a foreign amount.
         foreign_currency_code:
           type: string
           format: string
           example: USD
-          description: Currency code of the foreign currency. Default is NULL. Can be used instead of the foreign_currency_id, but this or the ID is required when submitting a foreign amount.
+          description: Currency code of the foreign currency. Default is NULL.
           nullable: true
         foreign_currency_symbol:
           type: string
@@ -20621,20 +21790,81 @@ components:
           type: integer
           format: int32
           example: 2
-          description: Number of decimals in the currency
+          description: Number of decimals in the foreign currency.
           nullable: true
           readOnly: true
+        primary_currency_id:
+          type: string
+          format: string
+          example: "12"
+          readOnly: true
+          nullable: true
+          description: "Returns the primary currency ID of the administration. This currency is used as the currency for all `pc_*` amount and balance fields of this account."
+        primary_currency_code:
+          type: string
+          format: string
+          example: "EUR"
+          nullable: true
+          description: "Returns the primary currency code of the administration. This currency is used as the currency for all `pc_*` amount and balance fields of this account."
+        primary_currency_symbol:
+          type: string
+          format: string
+          example: "$"
+          readOnly: true
+          nullable: true
+          description: "See the other `primary_*` fields."
+        primary_currency_decimal_places:
+          type: integer
+          format: int32
+          example: 2
+          readOnly: true
+          nullable: true
+          description: "See the other `primary_*` fields."
         amount:
           type: string
           format: amount
           example: "123.45"
           description: "Amount of the transaction."
+        pc_amount:
+          type: string
+          format: amount
+          example: "123.45"
+          description: "Amount of the transaction in the primary currency of this administration. The `primary_currency_*` fields reflect the currency used. This field is NULL if the user does have 'convert to primary' set to true in their settings."
         foreign_amount:
           type: string
           format: amount
           example: "123.45"
           nullable: true
-          description: The amount in a foreign currency.
+          description: The amount in the set foreign currency. May be NULL if the transaction does not have a foreign amount.
+        pc_foreign_amount:
+          type: string
+          format: amount
+          example: "123.45"
+          description: "Foreign amount of the transaction in the primary currency of this administration. The `primary_currency_*` fields reflect the currency used. This field is NULL if the user does have 'convert to primary' set to true in their settings."
+        source_balance_after:
+          type: string
+          format: amount
+          example: "123.45"
+          nullable: true
+          description: "The balance of the source account. This is the balance in the account's currency which may be different from this transaction, and is not provided in this model."
+        pc_source_balance_after:
+          type: string
+          format: amount
+          example: "123.45"
+          nullable: true
+          description: "The balance of the source account in the primary currency of this administration. The `primary_currency_*` fields reflect the currency used. This field is NULL if the user does have 'convert to primary' set to true in their settings."
+        destination_balance_after:
+          type: string
+          format: amount
+          example: "123.45"
+          nullable: true
+          description: "The balance of the destination account. This is the balance in the account's currency which may be different from this transaction, and is not provided in this model."
+        pc_destination_balance_after:
+          type: string
+          format: amount
+          example: "123.45"
+          nullable: true
+          description: "The balance of the destination account in the primary currency of this administration. The `primary_currency_*` fields reflect the currency used. This field is NULL if the user does have 'convert to primary' set to true in their settings."
         description:
           type: string
           format: string
@@ -20690,7 +21920,7 @@ components:
           type: string
           format: string
           example: Groceries
-          description: The name of the budget to be used. If the budget name is unknown, the ID will be used or the value will be ignored.
+          description: The name of the budget used.
           nullable: true
           readOnly: true
         category_id:
@@ -20710,13 +21940,25 @@ components:
           format: string
           nullable: true
           example: "111"
-          description: Optional. Use either this or the bill_name
+          description: The associated subscription ID for this transaction. `bill` refers to the OLD name for subscriptions and this field will be removed.
         bill_name:
           type: string
           format: string
           example: "Monthly rent"
           nullable: true
-          description: Optional. Use either this or the bill_id
+          description: The associated subscription name for this transaction. `bill` refers to the OLD name for subscriptions and this field will be removed.
+        subscription_id:
+          type: string
+          format: string
+          nullable: true
+          example: "111"
+          description: The associated subscription ID for this transaction.
+        subscription_name:
+          type: string
+          format: string
+          example: "Monthly rent"
+          nullable: true
+          description: The associated subscription name for this transaction.
         reconciled:
           type: boolean
           format: boolean
@@ -20778,11 +22020,6 @@ components:
           description: "The # of the current transaction created under this recurrence."
           readOnly: true
           nullable: true
-        bunq_payment_id:
-          type: string
-          nullable: true
-          format: string
-          description: Internal ID of bunq transaction. DEPRECATED
         import_hash_v2:
           type: string
           nullable: true
@@ -20889,7 +22126,7 @@ components:
         date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           description: "Date of the transaction"
         amount:
           type: string
@@ -20912,13 +22149,13 @@ components:
           format: string
           example: "12"
           nullable: true
-          description: Currency ID. Default is the source account's currency, or the user's default currency. The value you submit may be overruled by the source or destination account.
+          description: Currency ID. Default is the source account's currency, or the user's financial administration's currency. The value you submit may be overruled by the source or destination account.
         currency_code:
           type: string
           format: string
           example: EUR
           nullable: true
-          description: Currency code. Default is the source account's currency, or the user's default currency. The value you submit may be overruled by the source or destination account.
+          description: Currency code. Default is the source account's currency, or the user's financial administration's primary currency. The value you submit may be overruled by the source or destination account.
         foreign_amount:
           type: string
           format: amount
@@ -21044,11 +22281,6 @@ components:
           format: string
           nullable: true
           description: External, custom URL for this transaction.
-        bunq_payment_id:
-          type: string
-          nullable: true
-          format: string
-          description: Internal ID of bunq transaction. Field is no longer used but still works.
         sepa_cc:
           type: string
           format: string
@@ -21126,7 +22358,7 @@ components:
         date:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           description: "Date of the transaction"
         amount:
           type: string
@@ -21149,13 +22381,13 @@ components:
           format: string
           example: "12"
           nullable: true
-          description: Currency ID. Default is the source account's currency, or the user's default currency. Can be used instead of currency_code.
+          description: Currency ID. Default is the source account's currency, or the user's financial administration's primary currency. Can be used instead of currency_code.
         currency_code:
           type: string
           format: string
           example: EUR
           nullable: true
-          description: Currency code. Default is the source account's currency, or the user's default currency. Can be used instead of currency_id.
+          description: Currency code. Default is the source account's currency, or the user's financial administration's primary currency. Can be used instead of currency_id.
         currency_symbol:
           type: string
           format: string
@@ -21309,11 +22541,6 @@ components:
           format: string
           nullable: true
           description: External, custom URL for this transaction.
-        bunq_payment_id:
-          type: string
-          nullable: true
-          format: string
-          description: Internal ID of bunq transaction.
         sepa_cc:
           type: string
           format: string
@@ -21387,12 +22614,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         email:
           type: string
@@ -21435,12 +22662,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         in_use:
           type: boolean
@@ -21460,29 +22687,29 @@ components:
           description: "Title of the user group. By default, it is the same as the user's email address."
           example: "demo@firefly"
           readOnly: false
-        native_currency_id:
+        primary_currency_id:
           type: string
           format: string
           example: "12"
           readOnly: true
-          description: "Returns the native currency ID of the user group."
-        native_currency_code:
+          description: "Returns the primary currency ID of the user group."
+        primary_currency_code:
           type: string
           format: string
           example: "EUR"
-          description: "Returns the native currency code of the user group."
-        native_currency_symbol:
+          description: "Returns the primary currency code of the user group."
+        primary_currency_symbol:
           type: string
           format: string
           example: "$"
           readOnly: true
-          description: "Returns the native currency symbol of the user group."
-        native_currency_decimal_places:
+          description: "Returns the primary currency symbol of the user group."
+        primary_currency_decimal_places:
           type: integer
           format: int32
           example: 2
           readOnly: true
-          description: "Returns the native currency decimal places of the user group."
+          description: "Returns the primary currency decimal places of the user group."
         members:
           type: array
           items:
@@ -21557,16 +22784,16 @@ components:
           format: string
           example: "New user group title"
           description: "A descriptive title for the user group."
-        native_currency_id:
+        primary_currency_id:
           type: string
           format: string
           example: "1"
-          description: "Use either native_currency_id or native_currency_code. This will set the native currency for the user group ('financial administration')."
-        native_currency_code:
+          description: "Use either primary_currency_id or primary_currency_code. This will set the primary currency for the user group ('financial administration')."
+        primary_currency_code:
           type: string
           format: string
           example: "EUR"
-          description: "Use either native_currency_id or native_currency_code. This will set the native currency for the user group ('financial administration')."
+          description: "Use either primary_currency_id or primary_currency_code. This will set the primary currency for the user group ('financial administration')."
     Webhook:
       title: "A single webhook (read)"
       type: object
@@ -21580,12 +22807,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         active:
           type: boolean
@@ -21684,12 +22911,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         webhook_message_id:
           type: string
@@ -21720,12 +22947,12 @@ components:
         created_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         updated_at:
           type: string
           format: date-time
-          example: "2018-09-17T12:46:47+01:00"
+          example: "2025-08-01T00:00:00+00:00"
           readOnly: true
         sent:
           type: boolean
@@ -21808,7 +23035,7 @@ components:
         - type: object
         - type: array
           items:
-            type: string
+            $ref: '#/components/schemas/StringArrayItem'
     RecurrenceRepetitionType:
       type: string
       format: string
@@ -21906,6 +23133,11 @@ components:
       enum:
         - "store-journal"
         - "update-journal"
+    StringArrayItem:
+      type: string
+      format: string
+      example: "EUR"
+      description: "The actual preference content."
     UserBlockedCodeProperty:
       type: string
       format: string
@@ -22088,12 +23320,12 @@ components:
             version:
               type: string
               format: string
-              example: "5.8.0-alpha.1"
+              example: "6.3.0"
             api_version:
               type: string
               format: string
               description: Same value as the version field.
-              example: "5.8.0-alpha.1"
+              example: "6.3.0"
             php_version:
               type: string
               format: string
@@ -22206,6 +23438,18 @@ components:
         - Loan
         - Debt
         - Mortgage
+    ChartDatasetPeriodProperty:
+      type: string
+      format: string
+      example: "1M"
+      description: "Period of the chart."
+      enum:
+        - 1D
+        - 1W
+        - 1M
+        - 3M
+        - 1Y
+        - custom
     CreditCardTypeProperty:
       type: string
       format: string
@@ -22232,7 +23476,7 @@ components:
       type: string
       format: string
       example: credit
-      description: "'credit' indicates somebody owes you the liability. 'debit' Indicates you owe this debt yourself. Works only for liabiltiies."
+      description: "'credit' indicates somebody owes you the liability. 'debit' Indicates you owe this debt yourself. Works only for liabilities."
       nullable: true
       enum:
         - credit
@@ -22397,11 +23641,11 @@ components:
           authorizationUrl: https://demo.firefly-iii.org/oauth/authorize
           tokenUrl: https://demo.firefly-iii.org/oauth/token
           refreshUrl: https://demo.firefly-iii.org/oauth/token
-          scopes: { }
+          scopes: {}
     local_bearer_auth:
       description: Optional Bearer token flow
       type: http
       scheme: bearer
 security:
-  - firefly_iii_auth: [ ]
-  - local_bearer_auth: [ ]
+  - firefly_iii_auth: []
+  - local_bearer_auth: []

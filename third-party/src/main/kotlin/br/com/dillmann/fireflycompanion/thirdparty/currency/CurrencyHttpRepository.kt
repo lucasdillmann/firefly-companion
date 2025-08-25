@@ -9,7 +9,7 @@ internal class CurrencyHttpRepository(
     private val converter: CurrencyConverter,
 ) : CurrencyRepository {
     override suspend fun getDefault(): Currency {
-        val currency = api.listCurrency().data.first { it.attributes.default == true }
+        val currency = api.getPrimaryCurrency().data
         return converter.toDomain(currency)
     }
 }

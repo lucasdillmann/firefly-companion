@@ -23,6 +23,11 @@ GET {{base-url}}/v1/chart/account/overview?start=2025-07-02&end=2025-08-02
 Authorization: Bearer {{token}}
 Accept: application/json
 
+### Balance chart
+GET {{base-url}}/v1/chart/balance/balance?start=2025-08-01&end=2025-08-30&preselected=all&period=1D
+Authorization: Bearer {{token}}
+Accept: application/json
+
 ### Get transaction by ID
 GET {{base-url}}/v1/transactions/12564
 Authorization: Bearer {{token}}
