@@ -57,7 +57,6 @@ fun HomeOverview() {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
         ) {
             Column(
@@ -132,7 +131,6 @@ private fun DetailBlock(
             .defaultMinSize(minWidth = 125.dp)
             .minimumInteractiveComponentSize(),
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = compositeColor)
     ) {
         Column(

@@ -40,7 +40,6 @@ fun TransactionListItem(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         onClick = { navigate(Route.TRANSACTION_FORM, transaction) },
     ) {
         Row(

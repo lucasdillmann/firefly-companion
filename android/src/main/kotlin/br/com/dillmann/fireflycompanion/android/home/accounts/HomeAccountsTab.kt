@@ -160,7 +160,6 @@ private fun AccountItem(account: Account) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         onClick = { navigate(Route.ACCOUNT_FORM, account) },
     ) {
         Row(
