@@ -24,6 +24,7 @@ import br.com.dillmann.fireflycompanion.core.pagination.Page
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +33,7 @@ fun TransactionList(
     modifier: Modifier = Modifier,
     header: (@Composable (Boolean) -> Unit)? = null,
     transactionsProvider: suspend (PageRequest) -> Page<Transaction>,
-    dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy"),
+    dateFormat: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM),
 ) {
     val queue by persistent(ActionQueue())
     var items by persistent(emptyList<Any>())

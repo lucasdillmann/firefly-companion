@@ -28,6 +28,11 @@ GET {{base-url}}/v1/chart/balance/balance?start=2025-08-01&end=2025-08-30&presel
 Authorization: Bearer {{token}}
 Accept: application/json
 
+### Goals
+GET {{base-url}}/v1/piggy-banks
+Authorization: Bearer {{token}}
+Accept: application/json
+
 ### Get transaction by ID
 GET {{base-url}}/v1/transactions/12564
 Authorization: Bearer {{token}}

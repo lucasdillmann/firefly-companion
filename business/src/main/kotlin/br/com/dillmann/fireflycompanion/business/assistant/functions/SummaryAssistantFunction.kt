@@ -10,18 +10,18 @@ internal class SummaryAssistantFunction(
 ) : AssistantFunction {
     override fun metadata() =
         Function(
-            name = "get_summary_overview",
+            name = "getSummaryOverview",
             description = "Get summary overview with all account's totals (net worth, earned, spent, bills paid, " +
                 "unpaid bills, left to spend and balance) for a given period of time",
             arguments = listOf(
                 FunctionArgument(
-                    name = "start_date",
+                    name = "startDate",
                     type = "string",
                     description = "Start date (date only in ISO-8601 format)",
                     required = true,
                 ),
                 FunctionArgument(
-                    name = "end_date",
+                    name = "endDate",
                     type = "string",
                     description = "End date (date only in ISO-8601 format)",
                     required = true,
@@ -30,8 +30,8 @@ internal class SummaryAssistantFunction(
         )
 
     override suspend fun execute(arguments: Map<String, Any?>?): Any? {
-        val startDate = getDate(arguments, "start_date") ?: return mapOf("error" to "Invalid start date")
-        val endDate = getDate(arguments, "end_date") ?: return mapOf("error" to "Invalid end date")
+        val startDate = getDate(arguments, "startDate") ?: return mapOf("error" to "Invalid start date")
+        val endDate = getDate(arguments, "endDate") ?: return mapOf("error" to "Invalid end date")
 
         return useCase.getSummary(startDate, endDate)
     }

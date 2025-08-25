@@ -2,9 +2,8 @@ package br.com.dillmann.fireflycompanion.business.assistant.functions
 
 import br.com.dillmann.fireflycompanion.business.assistant.model.LLMRequest.Function
 import br.com.dillmann.fireflycompanion.business.assistant.model.LLMRequest.FunctionArgument
-import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.ListTransactionsUseCase
-import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
+import br.com.dillmann.fireflycompanion.core.pagination.fetchAllPages
 import java.time.LocalDate
 
 internal class ListTransactionsAssistantFunction(
@@ -12,23 +11,23 @@ internal class ListTransactionsAssistantFunction(
 ): AssistantFunction {
     override fun metadata() =
         Function(
-            name = "list_transactions",
+            name = "listTransactions",
             description = "Get transactions (deposits, withdraws and transfers) for a given period of time",
             arguments = listOf(
                 FunctionArgument(
-                    name = "start_date",
+                    name = "startDate",
                     type = "string",
                     description = "Start date (date only in ISO-8601 format)",
                     required = true,
                 ),
                 FunctionArgument(
-                    name = "end_date",
+                    name = "endDate",
                     type = "string",
                     description = "End date (date only in ISO-8601 format)",
                     required = true,
                 ),
                 FunctionArgument(
-                    name = "account_id",
+                    name = "accountId",
                     type = listOf("string", "null"),
                     description = "ID of the account",
                     required = false,
@@ -37,24 +36,13 @@ internal class ListTransactionsAssistantFunction(
         )
 
     override suspend fun execute(arguments: Map<String, Any?>?): Any {
-        val startDate = getDate(arguments, "start_date") ?: return mapOf("error" to "Invalid start date")
-        val endDate = getDate(arguments, "end_date") ?: return mapOf("error" to "Invalid end date")
-        val accountId = arguments?.get("account_id") as? String?
+        val startDate = getDate(arguments, "startDate") ?: return mapOf("error" to "Invalid start date")
+        val endDate = getDate(arguments, "endDate") ?: return mapOf("error" to "Invalid end date")
+        val accountId = arguments?.get("accountId") as? String?
 
-        val result = mutableListOf<Transaction>()
-        var pageNumber = 0
-        do {
-            val page = useCase.list(
-                page = PageRequest(pageNumber++, 100),
-                accountId = accountId,
-                startDate = startDate,
-                endDate = endDate
-            )
-
-            result += page.content
-        } while (page.hasMorePages)
-
-        return result
+        return fetchAllPages {
+            useCase.list(it, accountId, startDate, endDate)
+        }
     }
 
     private fun getDate(arguments: Map<String, Any?>?, name: String): LocalDate? {

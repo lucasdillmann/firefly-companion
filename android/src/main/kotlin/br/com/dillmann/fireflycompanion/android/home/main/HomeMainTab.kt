@@ -24,10 +24,7 @@ fun HomeMainTab(
         item { HomeCreditCards() }
         item { HomeExpensesByCategory() }
         item { HomeAccountsOverview() }
-        item { HomeBudgets() }
-        item { HomeMonthlySavings() }
-        item { HomeSpendFrequency() }
-        item { HomeMonthlyBalance() }
         item { HomeGoals() }
+        item { HomeSubscriptions() }
     }
 }

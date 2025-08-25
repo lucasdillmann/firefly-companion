@@ -10,9 +10,9 @@ import br.com.dillmann.fireflycompanion.android.core.components.section.SectionC
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 
 @Composable
-fun HomeMonthlySavings() {
+fun HomeSubscriptions() {
     SectionCard(
-        title = i18n(R.string.monthly_savings)
+        title = i18n(R.string.subscriptions)
     ) {
         Text(
             modifier = Modifier.fillMaxWidth(),

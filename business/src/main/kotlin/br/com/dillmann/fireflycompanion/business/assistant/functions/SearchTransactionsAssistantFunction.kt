@@ -11,7 +11,7 @@ internal class SearchTransactionsAssistantFunction(
 ): AssistantFunction {
     override fun metadata() =
         Function(
-            name = "search_transactions",
+            name = "searchTransactions",
             description = "Search for transactions (deposits, withdraws and transfers)",
             arguments = listOf(
                 FunctionArgument(

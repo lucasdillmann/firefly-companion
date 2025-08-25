@@ -10,17 +10,17 @@ internal class ExpensesByCategoryAssistantFunction(
 ) : AssistantFunction {
     override fun metadata() =
         Function(
-            name = "expenses_by_category",
+            name = "getExpensesByCategory",
             description = "Get the expenses (amount only) by category",
             arguments = listOf(
                 FunctionArgument(
-                    name = "start_date",
+                    name = "startDate",
                     type = "string",
                     description = "Start date (date only in ISO-8601 format)",
                     required = true,
                 ),
                 FunctionArgument(
-                    name = "end_date",
+                    name = "endDate",
                     type = "string",
                     description = "End date (date only in ISO-8601 format)",
                     required = true,
@@ -29,8 +29,8 @@ internal class ExpensesByCategoryAssistantFunction(
         )
 
     override suspend fun execute(arguments: Map<String, Any?>?): Any {
-        val startDate = getDate(arguments, "start_date") ?: return mapOf("error" to "Invalid start date")
-        val endDate = getDate(arguments, "end_date") ?: return mapOf("error" to "Invalid end date")
+        val startDate = getDate(arguments, "startDate") ?: return mapOf("error" to "Invalid start date")
+        val endDate = getDate(arguments, "endDate") ?: return mapOf("error" to "Invalid end date")
 
         return useCase.getExpensesByCategory(
             startDate = startDate,

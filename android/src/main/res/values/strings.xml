@@ -11,7 +11,7 @@
     <string name="toggle_money_visibility">Toggle money visibility</string>
     <string name="accounts">Accounts</string>
     <string name="not_implemented">Not yet implemented</string>
-    <string name="budgets">Budgets</string>
+    <string name="subscriptions">Subscriptions</string>
     <string name="credit_cards">Credit cards</string>
     <string name="expenses_by_category">Expenses by category</string>
     <string name="goals">Goals</string>
@@ -136,4 +136,8 @@
     <string name="current_year">Current year</string>
     <string name="tags">Tags</string>
     <string name="tag">Tag</string>
+    <string name="out_of">out of</string>
+    <string name="achieved">achieved</string>
+    <string name="days_left">days left</string>
+    <string name="to">to</string>
 </resources>

@@ -3,6 +3,7 @@ package br.com.dillmann.fireflycompanion.business.assistant
 import br.com.dillmann.fireflycompanion.business.assistant.functions.AccountsAssistantFunction
 import br.com.dillmann.fireflycompanion.business.assistant.functions.AssistantFunction
 import br.com.dillmann.fireflycompanion.business.assistant.functions.ExpensesByCategoryAssistantFunction
+import br.com.dillmann.fireflycompanion.business.assistant.functions.GoalsAssistantFunction
 import br.com.dillmann.fireflycompanion.business.assistant.functions.SummaryAssistantFunction
 import br.com.dillmann.fireflycompanion.business.assistant.functions.ListTransactionsAssistantFunction
 import br.com.dillmann.fireflycompanion.business.assistant.functions.SearchTransactionsAssistantFunction
@@ -19,6 +20,7 @@ internal val AssistantModule =
         single { ListTransactionsAssistantFunction(get()) } bind AssistantFunction::class
         single { SearchTransactionsAssistantFunction(get()) } bind AssistantFunction::class
         single { SummaryAssistantFunction(get()) } bind AssistantFunction::class
+        single { GoalsAssistantFunction(get()) } bind AssistantFunction::class
 
         single {
             AssistantService(get(), get(), getAll(), get())

@@ -17,6 +17,7 @@ fun MoneyText(
     modifier: Modifier = Modifier,
     style: TextStyle = MaterialTheme.typography.bodyMedium,
     dynamicColors: Boolean = false,
+    plainText: Boolean = false,
     baseColor: Color = MoneyColor.base(),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
     currency: Currency,
@@ -29,6 +30,16 @@ fun MoneyText(
             !dynamicColors || value == null || !visible.value -> baseColor
             else -> MoneyColor.of(value, baseColor)
         }
+
+    if (plainText) {
+        Text(
+            text = text,
+            style = style,
+            color = color,
+        )
+
+        return
+    }
 
     Row(
         horizontalArrangement = horizontalArrangement,

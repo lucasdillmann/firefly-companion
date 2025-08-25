@@ -1,19 +1,19 @@
 package br.com.dillmann.fireflycompanion.business.assistant.functions
 
-import br.com.dillmann.fireflycompanion.business.account.usecase.ListAccountsUseCase
 import br.com.dillmann.fireflycompanion.business.assistant.model.LLMRequest.Function
+import br.com.dillmann.fireflycompanion.business.goal.usecase.ListGoalsUseCase
 import br.com.dillmann.fireflycompanion.core.pagination.fetchAllPages
 
-internal class AccountsAssistantFunction(
-    private val useCase: ListAccountsUseCase,
+internal class GoalsAssistantFunction(
+    private val useCase: ListGoalsUseCase,
 ) : AssistantFunction {
     override fun metadata() =
         Function(
-            name = "getAccounts",
-            description = "Get accounts (assets, credit cards, etc) including its balance",
+            name = "getGoals",
+            description = "Get goals (name, start date, end date, target amount, current amount, etc)",
             arguments = emptyList(),
         )
 
     override suspend fun execute(arguments: Map<String, Any?>?) =
-        fetchAllPages { useCase.listAccounts(it) }
+        fetchAllPages { useCase.listGoals(it) }
 }

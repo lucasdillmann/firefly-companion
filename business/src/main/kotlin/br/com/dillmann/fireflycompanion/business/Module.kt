@@ -5,6 +5,7 @@ import br.com.dillmann.fireflycompanion.business.assistant.AssistantModule
 import br.com.dillmann.fireflycompanion.business.autocomplete.AutoCompleteModule
 import br.com.dillmann.fireflycompanion.business.connectiontest.ConnectionTestModule
 import br.com.dillmann.fireflycompanion.business.currency.CurrencyModule
+import br.com.dillmann.fireflycompanion.business.goal.GoalModule
 import br.com.dillmann.fireflycompanion.business.overview.OverviewModule
 import br.com.dillmann.fireflycompanion.business.preferences.PreferencesModule
 import br.com.dillmann.fireflycompanion.business.serverconfig.ServerConfigModule
@@ -20,6 +21,7 @@ val BusinessModule =
         loadKoinModules(AutoCompleteModule)
         loadKoinModules(ConnectionTestModule)
         loadKoinModules(CurrencyModule)
+        loadKoinModules(GoalModule)
         loadKoinModules(PreferencesModule)
         loadKoinModules(ServerConfigModule)
         loadKoinModules(OverviewModule)

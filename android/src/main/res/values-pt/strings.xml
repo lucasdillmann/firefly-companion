@@ -11,7 +11,7 @@
     <string name="toggle_money_visibility">Alternar visibilidade do dinheiro</string>
     <string name="accounts">Contas</string>
     <string name="not_implemented">Ainda não implementado</string>
-    <string name="budgets">Orçamentos</string>
+    <string name="subscriptions">Assinaturas</string>
     <string name="credit_cards">Cartões de crédito</string>
     <string name="expenses_by_category">Despesas por categoria</string>
     <string name="goals">Objetivos</string>
@@ -137,4 +137,8 @@
     <string name="current_year">Ano atual</string>
     <string name="tags">Tags</string>
     <string name="tag">Tag</string>
+    <string name="out_of">de</string>
+    <string name="achieved">atingido</string>
+    <string name="days_left">dias restantes</string>
+    <string name="to">até</string>
 </resources>
