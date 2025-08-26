@@ -55,7 +55,7 @@ fun NavigationContext.AccountForm() {
         }
     }
 
-    OnRefreshEvent {
+    OnRefreshEvent("AccountForm") {
         queue.add {
             showLoading = true
             account = getAccountUseCase.getAccount(account.id)!!

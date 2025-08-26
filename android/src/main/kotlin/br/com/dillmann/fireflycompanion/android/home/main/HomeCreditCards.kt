@@ -43,7 +43,7 @@ fun HomeCreditCards() {
     val actionQueue by persistent(ActionQueue())
     var creditCards by persistent(::fetchCreditCards)
 
-    OnRefreshEvent(HomeTabs.MAIN) {
+    OnRefreshEvent("HomeCreditCards", HomeTabs.MAIN) {
         actionQueue.add {
             creditCards = null
             creditCards = fetchCreditCards()

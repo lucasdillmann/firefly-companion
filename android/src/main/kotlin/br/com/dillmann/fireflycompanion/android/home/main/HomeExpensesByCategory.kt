@@ -17,7 +17,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.colorpool.ColorPool
-import br.com.dillmann.fireflycompanion.android.core.components.contenthidden.ContentHiddenIcon
 import br.com.dillmann.fireflycompanion.android.core.components.loading.LoadingIndicator
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibility
 import br.com.dillmann.fireflycompanion.android.core.components.section.SectionCard
@@ -43,7 +42,7 @@ fun HomeExpensesByCategory() {
     val currency by persistent { getKoin().get<GetDefaultCurrencyUseCase>().getDefault() }
     var overview by persistent(::fetchOverview)
 
-    OnRefreshEvent(HomeTabs.MAIN) {
+    OnRefreshEvent("HomeExpensesByCategory", HomeTabs.MAIN) {
         queue.add {
             overview = null
             overview = fetchOverview()

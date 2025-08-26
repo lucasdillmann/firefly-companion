@@ -68,7 +68,7 @@ fun HomeAccountsTab(
         }
     }
 
-    OnRefreshEvent {
+    OnRefreshEvent("HomeAccountsTab") {
         loadAccounts(refresh = true)
     }
 

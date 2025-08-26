@@ -69,7 +69,7 @@ fun TransactionList(
         }
     }
 
-    OnRefreshEvent(TransactionListScope) {
+    OnRefreshEvent("TransactionList", TransactionListScope) {
         loadTransactions(refresh = true)
     }
 

@@ -45,7 +45,7 @@ fun HomeGoals() {
     val actionQueue by persistent(ActionQueue())
     var goals by persistent(::fetchGoals)
 
-    OnRefreshEvent(HomeTabs.MAIN) {
+    OnRefreshEvent("HomeGoals", HomeTabs.MAIN) {
         actionQueue.add {
             goals = null
             goals = fetchGoals()

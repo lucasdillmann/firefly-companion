@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.colorpool.ColorPool
-import br.com.dillmann.fireflycompanion.android.core.components.contenthidden.ContentHiddenIcon
 import br.com.dillmann.fireflycompanion.android.core.components.loading.LoadingIndicator
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibility
 import br.com.dillmann.fireflycompanion.android.core.components.section.SectionCard
@@ -40,7 +39,7 @@ fun HomeAccountsOverview() {
     val queue by persistent(ActionQueue())
     var overview by persistent(::fetchOverview)
 
-    OnRefreshEvent(HomeTabs.MAIN) {
+    OnRefreshEvent("HomeAccountsOverview", HomeTabs.MAIN) {
         queue.add {
             overview = null
             overview = fetchOverview()

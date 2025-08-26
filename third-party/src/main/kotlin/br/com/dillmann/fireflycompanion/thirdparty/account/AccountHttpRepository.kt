@@ -21,7 +21,7 @@ internal class AccountHttpRepository(
             page = page.number + 1,
             limit = page.size,
             type = type?.name?.let(AccountTypeFilter::decode) ?: AccountTypeFilter.ALL,
-            date = LocalDate.now().plusDays(1),
+            date = date(),
         )
 
         return response.meta.toPage(
@@ -30,11 +30,14 @@ internal class AccountHttpRepository(
         )
     }
 
-    override suspend fun findById(accountId: String): Account? =
-        accountsApi.getAccount(accountId).data.let(converter::toDomain)
+    override suspend fun findById(accountId: String): Account =
+        accountsApi.getAccount(id = accountId, date = date()).data.let(converter::toDomain)
 
     override suspend fun findOverview(startDate: LocalDate, endDate: LocalDate): List<AccountOverview> =
         chartsApi
             .getChartAccountOverview(startDate, endDate)
             .map(converter::toDomain)
+
+    private fun date() =
+        LocalDate.now().plusDays(1)
 }

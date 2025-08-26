@@ -39,7 +39,7 @@ fun HomeOverview() {
     var summary by persistent(::fetchSummary)
     val scrollState = rememberScrollState()
 
-    OnRefreshEvent(HomeTabs.MAIN) {
+    OnRefreshEvent("HomeOverview", HomeTabs.MAIN) {
         queue.add {
             summary = null
             summary = fetchSummary()
