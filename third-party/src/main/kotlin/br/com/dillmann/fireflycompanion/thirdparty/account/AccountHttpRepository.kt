@@ -21,6 +21,7 @@ internal class AccountHttpRepository(
             page = page.number + 1,
             limit = page.size,
             type = type?.name?.let(AccountTypeFilter::decode) ?: AccountTypeFilter.ALL,
+            date = LocalDate.now().plusDays(1),
         )
 
         return response.meta.toPage(
