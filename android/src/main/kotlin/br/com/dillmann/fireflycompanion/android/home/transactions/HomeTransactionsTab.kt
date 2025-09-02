@@ -3,14 +3,13 @@ package br.com.dillmann.fireflycompanion.android.home.transactions
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionList
 import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionListScope
-import br.com.dillmann.fireflycompanion.android.core.compose.persistent
+import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.android.core.refresh.RefreshDispatcher
@@ -25,7 +24,8 @@ fun HomeTransactionsTab(
 ) {
     val listUseCase = koin().get<ListTransactionsUseCase>()
     val searchUseCase = koin().get<SearchTransactionsUseCase>()
-    var searchTerms by persistent("")
+    val searchTerms = volatile(TextFieldValue(""))
+
 
     Section(
         title = i18n(R.string.tab_transactions),
@@ -39,20 +39,21 @@ fun HomeTransactionsTab(
             header = { ready ->
                 HomeTransactionsSearchField(
                     searchTerms = searchTerms,
-                    onChange = { searchTerms = it },
                     enabled = ready,
                     refresh = { RefreshDispatcher.notify(TransactionListScope) },
                 )
             },
             transactionsProvider = {
-                if (searchTerms.isBlank()) listUseCase.list(it)
-                else searchUseCase.search(it, searchTerms)
+                val terms = searchTerms.value.text
+
+                if (terms.isBlank()) listUseCase.list(it)
+                else searchUseCase.search(it, terms)
             }
         )
     }
 
-    BackHandler(enabled = searchTerms.isNotBlank()) {
-        searchTerms = ""
+    BackHandler(enabled = searchTerms.value.text.isNotBlank()) {
+        searchTerms.value = searchTerms.value.copy(text = "")
         RefreshDispatcher.notify(TransactionListScope)
     }
 }

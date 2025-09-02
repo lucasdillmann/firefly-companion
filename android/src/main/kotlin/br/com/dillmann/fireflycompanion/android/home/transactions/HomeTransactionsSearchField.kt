@@ -12,6 +12,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -22,17 +25,17 @@ import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 
 @Composable
 fun HomeTransactionsSearchField(
-    searchTerms: String,
+    searchTerms: MutableState<TextFieldValue>,
     enabled: Boolean,
-    onChange: (String) -> Unit,
     refresh: () -> Unit,
 ) {
+    var terms by searchTerms
     val height = 48.dp
 
     Row {
         AppTextField(
-            value = TextFieldValue(searchTerms),
-            onChange = { onChange(it.text.replace("\n", "")) },
+            value = terms,
+            onChange = { terms = it },
             label = i18n(R.string.search),
             enabled = enabled,
             stickyLabel = false,

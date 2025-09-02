@@ -175,8 +175,8 @@ private fun AccessToken(
     state: MutableState<Preferences>,
     onChange: () -> Unit,
 ) {
-    val preferences by state
-    val assistant = preferences.assistant
+    var preferences by state
+    var value by volatile(TextFieldValue(preferences.assistant.accessToken ?: ""))
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -189,10 +189,13 @@ private fun AccessToken(
         )
 
         AppTextField(
-            value = TextFieldValue(assistant.accessToken ?: ""),
+            value = value,
             onChange = { newValue ->
-                val updated = assistant.copy(accessToken = newValue.text.ifBlank { null })
-                state.value = preferences.copy(assistant = updated)
+                value = newValue
+
+                val updated = preferences.assistant.copy(accessToken = newValue.text.ifBlank { null })
+                preferences = preferences.copy(assistant = updated)
+
                 onChange()
             },
             containerModifier = Modifier.weight(2f),
@@ -210,8 +213,8 @@ private fun ApiUrl(
     state: MutableState<Preferences>,
     onChange: () -> Unit,
 ) {
-    val preferences by state
-    val assistant = preferences.assistant
+    var preferences by state
+    var value by volatile(TextFieldValue(preferences.assistant.url ?: ""))
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -224,10 +227,13 @@ private fun ApiUrl(
         )
 
         AppTextField(
-            value = TextFieldValue(assistant.url ?: ""),
+            value = value,
             onChange = { newValue ->
-                val updated = assistant.copy(url = newValue.text.ifBlank { null })
-                state.value = preferences.copy(assistant = updated)
+                value = newValue
+
+                val updated = preferences.assistant.copy(url = newValue.text.ifBlank { null })
+                preferences = preferences.copy(assistant = updated)
+
                 onChange()
             },
             label = i18n(R.string.server_url),
