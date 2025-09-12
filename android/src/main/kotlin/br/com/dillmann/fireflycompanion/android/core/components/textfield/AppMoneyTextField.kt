@@ -38,7 +38,7 @@ fun AppMoneyTextField(
     var textFieldValue by volatile(TextFieldValue())
     val decimalSeparator = DecimalFormatSymbols.getInstance(AppContext.currentLocale()).decimalSeparator
 
-    LaunchedEffect(value) {
+    LaunchedEffect(Unit) {
         if (!textFieldValue.text.isEmpty())
             return@LaunchedEffect
 
@@ -49,13 +49,13 @@ fun AppMoneyTextField(
     AppTextField(
         value = textFieldValue,
         onChange = { newValue ->
-            val (formattedText, bigDecimalValue) = handleInput(newValue.text, currency, decimalSeparator)
-            textFieldValue = TextFieldValue(
-                text = formattedText,
-                selection = TextRange(formattedText.length),
-            )
+            val (text, value) = handleInput(newValue.text, currency, decimalSeparator)
+            val selection =
+                if (text != newValue.text) TextRange(text.length)
+                else newValue.selection
 
-            onChange(bigDecimalValue)
+            textFieldValue = TextFieldValue(text, selection)
+            onChange(value)
         },
         modifier = modifier,
         containerModifier = containerModifier,
@@ -80,16 +80,13 @@ private fun handleInput(
     val symbol = currency.symbol
     val pureValue = input.removePrefix(symbol).trim()
     val minusCount = pureValue.count { it == '-' }
-    val shouldBeNegative = minusCount % 2 == 1
+    val negativePrefix = if (minusCount % 2 == 1) "-" else ""
     val digitsOnly = pureValue.filter { it.isDigit() }
 
-    if (digitsOnly.isEmpty()) {
-        val negativePrefix = if (shouldBeNegative) "-" else ""
+    if (digitsOnly.isEmpty())
         return "$symbol ${negativePrefix}0$decimalSeparator${"0".repeat(decimalPlaces)}" to BigDecimal.ZERO
-    }
 
     if (digitsOnly.length == 1) {
-        val negativePrefix = if (shouldBeNegative) "-" else ""
         val formattedValue = "$symbol $negativePrefix$digitsOnly"
         val value = BigDecimal("$negativePrefix$digitsOnly").divide(BigDecimal.TEN.pow(decimalPlaces))
         return formattedValue to value
@@ -97,7 +94,6 @@ private fun handleInput(
 
     val wholePart = digitsOnly.dropLast(decimalPlaces).trimStart('0')
     val fractionalPart = digitsOnly.takeLast(decimalPlaces).padStart(decimalPlaces, '0')
-    val negativePrefix = if (shouldBeNegative) "-" else ""
     val wholePartDisplay = wholePart.ifEmpty { "0" }
     val formattedText = "$symbol $negativePrefix$wholePartDisplay$decimalSeparator$fractionalPart"
     val bigDecimalValue =
