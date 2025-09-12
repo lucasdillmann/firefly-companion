@@ -15,9 +15,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.compose.async
+import br.com.dillmann.fireflycompanion.android.core.compose.emptyVolatile
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.business.currency.Currency
 import br.com.dillmann.fireflycompanion.business.currency.usecase.GetDefaultCurrencyUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.DeleteTransactionUseCase
@@ -25,7 +27,6 @@ import br.com.dillmann.fireflycompanion.business.transaction.usecase.SaveTransac
 import br.com.dillmann.fireflycompanion.core.validation.ConsistencyException
 import br.com.dillmann.fireflycompanion.core.validation.ValidationOutcome
 import java.math.BigDecimal
-import java.math.RoundingMode
 import java.time.OffsetDateTime
 
 @Composable
@@ -40,13 +41,14 @@ fun TransactionDetails(
     val showLoading = volatile(false)
     val showDeleteConfirmation = volatile(false)
     val description = volatile(TextFieldValue(transaction?.description ?: ""))
-    val amount = volatile(TextFieldValue(transaction?.amount?.toString() ?: ""))
+    val amount = volatile(transaction?.amount ?: BigDecimal.ZERO)
     val category = volatile(TextFieldValue(transaction?.category ?: ""))
     val dateTime = volatile(transaction?.date ?: OffsetDateTime.now())
     val sourceAccount = volatile(TextFieldValue(transaction?.sourceAccountName ?: ""))
     val destinationAccount = volatile(TextFieldValue(transaction?.destinationAccountName ?: ""))
     val transactionType = volatile(transaction?.type ?: Transaction.Type.WITHDRAWAL)
     val tag = volatile(TextFieldValue(transaction?.tags?.firstOrNull() ?: ""))
+    val currency = emptyVolatile<Currency>()
 
     fun handleSave() {
         val saveAction = koin().get<SaveTransactionUseCase>()
@@ -62,7 +64,7 @@ fun TransactionDetails(
                     description = description.value.text,
                     category = category.value.text.takeIf { it.isNotBlank() },
                     date = dateTime.value,
-                    amount = amount.value.text.toBigDecimalOrNull() ?: BigDecimal.ZERO,
+                    amount = amount.value,
                     currency = transaction?.currency ?: getCurrencyAction.getDefault(),
                     type = transactionType.value,
                     sourceAccountName = sourceAccount.value.text.takeIf { it.isNotBlank() },
@@ -98,17 +100,8 @@ fun TransactionDetails(
 
     LaunchedEffect(Unit) {
         async {
-            if (transaction == null)
-                return@async
-
             showLoading.value = true
-            val currency = koin().get<GetDefaultCurrencyUseCase>().getDefault()
-            val formattedValue = transaction
-                .amount
-                .setScale(currency.decimalPlaces, RoundingMode.HALF_EVEN)
-                .toPlainString()
-
-            amount.value = TextFieldValue(formattedValue)
+            currency.value = koin().get<GetDefaultCurrencyUseCase>().getDefault()
             showLoading.value = false
         }
     }
@@ -155,17 +148,20 @@ fun TransactionDetails(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start,
         ) {
-            TransactionFormFields(
-                description = description,
-                amount = amount,
-                category = category,
-                dateTime = dateTime,
-                sourceAccount = sourceAccount,
-                destinationAccount = destinationAccount,
-                transactionType = transactionType,
-                validationOutcome = validationOutcome.value,
-                tag = tag,
-            )
+            if (currency.value != null) {
+                TransactionFormFields(
+                    description = description,
+                    amount = amount,
+                    category = category,
+                    dateTime = dateTime,
+                    sourceAccount = sourceAccount,
+                    destinationAccount = destinationAccount,
+                    transactionType = transactionType,
+                    validationOutcome = validationOutcome.value,
+                    tag = tag,
+                    currency = currency.value!!,
+                )
+            }
         }
     }
 

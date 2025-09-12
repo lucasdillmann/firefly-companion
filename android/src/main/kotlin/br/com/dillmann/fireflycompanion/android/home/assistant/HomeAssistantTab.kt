@@ -45,10 +45,7 @@ import java.time.format.FormatStyle
 fun HomeAssistantTab() {
     val useCase = getKoin().get<StartAssistantSessionUseCase>()
     var messages by persistent(emptyList<AssistantMessage>())
-    val session by volatile {
-        val language = AppContext.resolve().resources.configuration.locales[0].toLanguageTag()
-        useCase.startSession(language)
-    }
+    val session by volatile { useCase.startSession(AppContext.currentLocale().toLanguageTag()) }
 
     val queue by persistent(ActionQueue())
     var input by volatile(TextFieldValue(""))

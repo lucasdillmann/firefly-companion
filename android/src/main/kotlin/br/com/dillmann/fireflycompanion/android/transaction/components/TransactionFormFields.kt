@@ -2,15 +2,9 @@ package br.com.dillmann.fireflycompanion.android.transaction.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
@@ -18,19 +12,21 @@ import br.com.dillmann.fireflycompanion.android.core.components.autocomplete.Aut
 import br.com.dillmann.fireflycompanion.android.core.components.datepicker.DatePicker
 import br.com.dillmann.fireflycompanion.android.core.components.datepicker.DatePickerType
 import br.com.dillmann.fireflycompanion.android.core.components.selectionrow.SelectionRow
-import br.com.dillmann.fireflycompanion.android.core.components.textfield.AppTextField
+import br.com.dillmann.fireflycompanion.android.core.components.textfield.AppMoneyTextField
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
 import br.com.dillmann.fireflycompanion.business.autocomplete.AutoCompleteType
 import br.com.dillmann.fireflycompanion.business.autocomplete.usecase.AutoCompleteUseCase
+import br.com.dillmann.fireflycompanion.business.currency.Currency
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction.Type
 import br.com.dillmann.fireflycompanion.core.validation.ValidationOutcome
+import java.math.BigDecimal
 import java.time.OffsetDateTime
 
 @Composable
 fun TransactionFormFields(
     description: MutableState<TextFieldValue>,
-    amount: MutableState<TextFieldValue>,
+    amount: MutableState<BigDecimal>,
     category: MutableState<TextFieldValue>,
     dateTime: MutableState<OffsetDateTime>,
     sourceAccount: MutableState<TextFieldValue>,
@@ -38,6 +34,7 @@ fun TransactionFormFields(
     transactionType: MutableState<Type>,
     validationOutcome: ValidationOutcome?,
     tag: MutableState<TextFieldValue>,
+    currency: Currency,
 ) {
     val autoComplete = koin().get<AutoCompleteUseCase>()
     val supportedTypes = listOf(Type.DEPOSIT, Type.WITHDRAWAL, Type.TRANSFER)
@@ -65,13 +62,13 @@ fun TransactionFormFields(
         },
     )
 
-    AppTextField(
+    AppMoneyTextField(
         value = amount.value,
         onChange = { amount.value = it },
         label = i18n(R.string.amount),
         modifier = Modifier.fillMaxWidth(),
         enabled = !disabled,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+        currency = currency,
         errorMessage = validationOutcome?.messageFor("amount"),
     )
 
@@ -133,7 +130,7 @@ fun TransactionFormFields(
 }
 
 private fun translate(type: Type) =
-    when(type) {
+    when (type) {
         Type.DEPOSIT -> R.string.deposit
         Type.WITHDRAWAL -> R.string.withdrawal
         Type.TRANSFER -> R.string.transfer

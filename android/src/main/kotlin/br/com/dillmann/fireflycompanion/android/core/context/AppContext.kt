@@ -3,6 +3,7 @@ package br.com.dillmann.fireflycompanion.android.core.context
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.LocaleList
+import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
 import br.com.dillmann.fireflycompanion.database.context.ContextProvider
 import java.util.*
@@ -14,6 +15,9 @@ object AppContext : ContextProvider {
 
     override suspend fun resolve(): Context =
         current
+
+    fun currentLocale(): Locale =
+        async { current.resources.configuration.locales[0] }.get()
 
     fun init(context: Context) {
         if (::root.isInitialized)

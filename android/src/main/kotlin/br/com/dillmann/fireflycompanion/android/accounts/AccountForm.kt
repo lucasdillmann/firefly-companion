@@ -1,7 +1,6 @@
 package br.com.dillmann.fireflycompanion.android.accounts
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -9,14 +8,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
-import br.com.dillmann.fireflycompanion.android.core.components.textfield.AppTextField
+import br.com.dillmann.fireflycompanion.android.core.components.textfield.AppMoneyTextField
 import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionList
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
@@ -31,14 +28,13 @@ import br.com.dillmann.fireflycompanion.business.account.usecase.GetAccountUseCa
 import br.com.dillmann.fireflycompanion.business.account.usecase.UpdateAccountBalanceUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.ListTransactionsUseCase
 import org.koin.java.KoinJavaComponent.getKoin
-import java.math.BigDecimal
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavigationContext.AccountForm() {
     val queue by persistent(ActionQueue())
     var account by volatile(requireBagValue<Account>())
-    var balanceState by volatile(TextFieldValue(account.currentBalance.toString()))
+    var balance by volatile(account.currentBalance)
     var showLoading by volatile(false)
     val listTransactionsUseCase = getKoin().get<ListTransactionsUseCase>()
     val updateBalanceUseCase = getKoin().get<UpdateAccountBalanceUseCase>()
@@ -48,9 +44,7 @@ fun NavigationContext.AccountForm() {
         showLoading = true
 
         queue.add {
-            val newBalance = BigDecimal(balanceState.text)
-            updateBalanceUseCase.updateBalance(account.id, newBalance)
-
+            updateBalanceUseCase.updateBalance(account.id, balance)
             RefreshDispatcher.notify()
         }
     }
@@ -64,7 +58,7 @@ fun NavigationContext.AccountForm() {
     }
 
     LaunchedEffect(account) {
-        balanceState = TextFieldValue(account.currentBalance.toString())
+        balance = account.currentBalance
     }
 
     Scaffold(
@@ -89,18 +83,17 @@ fun NavigationContext.AccountForm() {
                 .padding(innerPadding)
                 .imePadding(),
         ) {
-            AppTextField(
+            AppMoneyTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 0.dp),
-                value = balanceState,
-                onChange = { balanceState = it },
+                value = balance,
+                onChange = { balance = it },
                 textStyle = AppTextFieldDefaults.textStyle.copy(
                     textAlign = TextAlign.Center,
                     fontSize = LocalTextStyle.current.fontSize.times(2),
                 ),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                currency = account.currency,
             )
 
             Section(
