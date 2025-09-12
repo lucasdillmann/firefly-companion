@@ -25,24 +25,22 @@ fun AutoCompleteOutlinedTextField(
     suggestionsProvider: suspend (query: String) -> List<String>,
 ) {
     val queue by persistent(ActionQueue())
-    var expanded by persistent(false)
     var suggestions by persistent(emptyList<String>())
 
     suspend fun fetchSuggestions() {
         if (disabled) return
 
         suggestions = suggestionsProvider(value.value.text)
-        expanded = suggestions.isNotEmpty()
     }
 
-    BackHandler(enabled = expanded) {
-        expanded = false
+    BackHandler(enabled = suggestions.isNotEmpty()) {
+        suggestions = emptyList()
     }
 
     ExposedDropdownMenuBox(
         modifier = modifier,
-        expanded = expanded,
-        onExpandedChange = { expanded = it },
+        expanded = suggestions.isNotEmpty(),
+        onExpandedChange = {},
     ) {
         AppTextField(
             value = value.value,
@@ -64,15 +62,15 @@ fun AutoCompleteOutlinedTextField(
         )
 
         ExposedDropdownMenu(
-            expanded = expanded && !disabled,
-            onDismissRequest = { expanded = false },
+            expanded = !disabled && suggestions.isNotEmpty(),
+            onDismissRequest = { suggestions = emptyList() },
         ) {
             suggestions.forEach {
                 DropdownMenuItem(
                     text = { Text(it) },
                     onClick = {
                         value.value = TextFieldValue(it)
-                        expanded = false
+                        suggestions = emptyList()
                     }
                 )
             }
