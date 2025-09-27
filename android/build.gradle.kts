@@ -12,7 +12,6 @@ dependencies {
     implementation(project(":third-party"))
 
     implementation(platform(libs.androidx.compose.bom))
-
     implementation(libs.koin.android)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)

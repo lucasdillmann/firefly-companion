@@ -1,0 +1,60 @@
+name: firefly-companion
+
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  build-release-apk:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build Release APK
+        run: ./gradlew :android:assembleRelease --stacktrace --no-daemon
+
+      - name: Determine tag name
+        id: tag
+        run: echo "name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Rename APK file
+        run: |
+          TAG="${{ steps.tag.outputs.name }}"
+          APK_PATH=$(ls android/build/outputs/apk/release/*.apk | head -n 1)
+          mkdir -p dist
+          cp "$APK_PATH" "dist/firefly-companion-${TAG}.apk"
+          echo "RENAMED_APK=dist/firefly-companion-${TAG}.apk" >> $GITHUB_ENV
+
+      - name: Save APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefly-companion-release-apk
+          path: ${{ env.RENAMED_APK }}
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ steps.tag.outputs.name }}
+          tag_name: ${{ steps.tag.outputs.name }}
+          files: ${{ env.RENAMED_APK }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
