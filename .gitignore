@@ -16,3 +16,4 @@ local.properties
 .kotlin/
 **/*.private.env.json
 .idea/
+firefly-companion.keystore

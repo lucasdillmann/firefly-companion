@@ -16,7 +16,7 @@ fun OnboardingServerFormHeader() {
         text = i18n(R.string.onboarding_server_title),
         style = MaterialTheme.typography.headlineMedium,
         textAlign = TextAlign.Left,
-        modifier = Modifier.padding(top = 64.dp, bottom = 16.dp)
+        modifier = Modifier.padding(top = 96.dp, bottom = 16.dp)
     )
 
     Text(

@@ -15,5 +15,5 @@ data class Subscription(
     data class Payment(
         val paidAt: LocalDate,
         val amount: BigDecimal,
-    )
+    ) : Serializable
 }
