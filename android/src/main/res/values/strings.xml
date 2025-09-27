@@ -140,4 +140,6 @@
     <string name="achieved">achieved</string>
     <string name="days_left">days left</string>
     <string name="to">to</string>
+    <string name="to_pay_at">to pay at</string>
+    <string name="paid_at">paid at</string>
 </resources>

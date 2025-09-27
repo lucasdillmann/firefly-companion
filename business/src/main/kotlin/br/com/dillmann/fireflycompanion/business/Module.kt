@@ -8,6 +8,7 @@ import br.com.dillmann.fireflycompanion.business.currency.CurrencyModule
 import br.com.dillmann.fireflycompanion.business.goal.GoalModule
 import br.com.dillmann.fireflycompanion.business.overview.OverviewModule
 import br.com.dillmann.fireflycompanion.business.preferences.PreferencesModule
+import br.com.dillmann.fireflycompanion.business.subscription.SubscriptionModule
 import br.com.dillmann.fireflycompanion.business.serverconfig.ServerConfigModule
 import br.com.dillmann.fireflycompanion.business.transaction.TransactionModule
 import br.com.dillmann.fireflycompanion.business.user.UserModule
@@ -24,6 +25,7 @@ val BusinessModule =
         loadKoinModules(GoalModule)
         loadKoinModules(PreferencesModule)
         loadKoinModules(ServerConfigModule)
+        loadKoinModules(SubscriptionModule)
         loadKoinModules(OverviewModule)
         loadKoinModules(TransactionModule)
         loadKoinModules(UserModule)

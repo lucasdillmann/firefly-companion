@@ -141,4 +141,6 @@
     <string name="achieved">atingido</string>
     <string name="days_left">dias restantes</string>
     <string name="to">até</string>
+    <string name="to_pay_at">a pagar em</string>
+    <string name="paid_at">pago em</string>
 </resources>

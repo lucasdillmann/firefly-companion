@@ -1,13 +1,11 @@
 package br.com.dillmann.fireflycompanion.android.core.router
 
 import java.io.Serializable
+import kotlin.collections.removeLastOrNull
 
 data class NavigationContext(
     private val event: NavigationEvent,
 ) {
-    fun currentRoute() =
-        event.route
-
     fun finish() {
         RouterState.stack -= event
     }
@@ -19,8 +17,12 @@ data class NavigationContext(
         bag: Serializable? = null,
     ) {
         navigate(route, bag)
-        if (finishCurrent) finish()
-        if (replacePrevious) RouterState.stack.removeLastOrNull()
+
+        if (finishCurrent)
+            finish()
+
+        if (replacePrevious)
+            RouterState.stack.removeLastOrNull()
     }
 
     @Suppress("UNCHECKED_CAST")

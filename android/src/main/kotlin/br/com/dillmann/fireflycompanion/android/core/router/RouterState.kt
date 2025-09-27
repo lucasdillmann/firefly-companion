@@ -1,17 +1,13 @@
 package br.com.dillmann.fireflycompanion.android.core.router
 
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 
 object RouterState {
-    lateinit var stack: NavBackStack
+    lateinit var stack: NavBackStack<NavKey>
         private set
 
-    fun init(stack: NavBackStack) {
+    fun init(stack: NavBackStack<NavKey>) {
         this.stack = stack
     }
-
-    @Suppress("UNCHECKED_CAST")
-    fun typedStack() =
-        stack as SnapshotStateList<NavigationEvent>
 }

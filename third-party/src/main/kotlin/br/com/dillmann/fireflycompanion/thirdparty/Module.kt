@@ -12,6 +12,7 @@ import br.com.dillmann.fireflycompanion.thirdparty.insight.InsightModule
 import br.com.dillmann.fireflycompanion.thirdparty.openai.OpenAiModule
 import br.com.dillmann.fireflycompanion.thirdparty.piggybank.PiggyBankModule
 import br.com.dillmann.fireflycompanion.thirdparty.search.SearchModule
+import br.com.dillmann.fireflycompanion.thirdparty.subscription.SubscriptionModule
 import br.com.dillmann.fireflycompanion.thirdparty.summary.SummaryModule
 import br.com.dillmann.fireflycompanion.thirdparty.transaction.TransactionModule
 import br.com.dillmann.fireflycompanion.thirdparty.user.UserModule
@@ -33,6 +34,7 @@ val ThirdPartyModule =
         loadKoinModules(PiggyBankModule)
         loadKoinModules(SummaryModule)
         loadKoinModules(SearchModule)
+        loadKoinModules(SubscriptionModule)
         loadKoinModules(TransactionModule)
         loadKoinModules(UserModule)
     }

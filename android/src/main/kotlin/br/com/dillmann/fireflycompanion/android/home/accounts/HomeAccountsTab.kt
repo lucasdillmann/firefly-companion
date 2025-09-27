@@ -232,6 +232,7 @@ private fun Account.Type.details(): Pair<ImageVector, String> =
         Account.Type.REVENUE -> Icons.Filled.MonetizationOn to R.string.revenue
         Account.Type.LIABILITY,
         Account.Type.LIABILITIES -> Icons.Filled.Warning to R.string.liability
+        Account.Type.INITIAL_BALANCE -> Icons.Filled.Add to R.string.initial_balance
         Account.Type.INITIAL_MINUS_BALANCE -> Icons.Filled.Remove to R.string.initial_balance
         Account.Type.RECONCILIATION -> Icons.Filled.AccountBalance to R.string.reconciliation
     }.let { (icon, stringId) ->

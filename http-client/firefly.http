@@ -71,3 +71,8 @@ Accept: application/vnd.api+json, application/json
 GET  {{base-url}}/v1/currencies/native
 Authorization: Bearer {{token}}
 Accept: application/vnd.api+json, application/json
+
+### Bills (subscriptions)
+GET  {{base-url}}/v1/bills?start=2025-09-01&end=2025-10-01
+Authorization: Bearer {{token}}
+Accept: application/vnd.api+json, application/json

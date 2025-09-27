@@ -25,6 +25,7 @@ data class Account(
         LIABILITIES,
         INITIAL_MINUS_BALANCE,
         RECONCILIATION,
+        INITIAL_BALANCE,
     }
 
     enum class Role {
