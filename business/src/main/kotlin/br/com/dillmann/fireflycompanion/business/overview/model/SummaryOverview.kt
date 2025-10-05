@@ -13,4 +13,5 @@ data class SummaryOverview(
     val unpaidBills: BigDecimal? = null,
     val leftToSpend: BigDecimal? = null,
     val balance: BigDecimal? = null,
+    val reconciliations: BigDecimal? = null,
 ) : Serializable

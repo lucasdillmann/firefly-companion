@@ -10,6 +10,10 @@ Authorization: Bearer {{token}}
 GET {{base-url}}/v1/accounts?type=asset&active=true
 Authorization: Bearer {{token}}
 
+### Transactions
+GET {{base-url}}/v1/transactions?start=2025-10-01&end=2025-10-31&type=reconciliation
+Authorization: Bearer {{token}}
+
 ### Expenses by category
 GET {{base-url}}/v1/insight/expense/category?start=2025-08-01&end=2025-08-30
 Authorization: Bearer {{token}}

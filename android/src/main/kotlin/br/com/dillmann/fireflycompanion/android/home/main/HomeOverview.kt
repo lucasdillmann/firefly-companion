@@ -98,15 +98,26 @@ fun HomeOverview() {
                 valueProvider = { it.spent?.abs() },
             )
             DetailBlock(
-                title = i18n(R.string.left_to_spend),
+                title = i18n(R.string.reconciliation),
                 summary = summary,
                 tintColor = AppColors.Blue,
+                valueProvider = { it.reconciliations },
+            )
+            DetailBlock(
+                title = i18n(R.string.left_to_spend),
+                summary = summary,
+                tintColor = AppColors.Yellow,
                 valueProvider = { it.leftToSpend },
             )
             DetailBlock(
-                title = i18n(R.string.balance),
+                title = i18n(R.string.gross_balance),
                 summary = summary,
                 valueProvider = { it.balance },
+            )
+            DetailBlock(
+                title = i18n(R.string.net_balance),
+                summary = summary,
+                valueProvider = { it.balance?.plus(it.reconciliations ?: BigDecimal.ZERO) },
             )
         }
     }

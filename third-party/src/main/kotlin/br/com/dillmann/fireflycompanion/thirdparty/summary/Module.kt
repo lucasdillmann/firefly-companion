@@ -10,5 +10,5 @@ internal val SummaryModule =
     module {
         single { SummaryApi(get(Qualifiers.API_BASE_URL), get()) }
         single<SummaryConverter> { getConverter() }
-        single<OverviewRepository> { OverviewHttpRepository(get(), get(),get()) }
+        single<OverviewRepository> { OverviewHttpRepository(get(), get(), get(),get()) }
     }

@@ -24,7 +24,7 @@
     <string name="earned">Earned</string>
     <string name="spent">Spent</string>
     <string name="left_to_spend">Left to spend</string>
-    <string name="balance">Balance</string>
+    <string name="gross_balance">Gross balance</string>
     <string name="onboarding_main_title">Hello there 👋</string>
     <string name="onboarding_main_message">Welcome to Firefly Companion. Before using the app, we need to connect to
         your Firefly III server.
@@ -142,4 +142,5 @@
     <string name="to">to</string>
     <string name="to_pay_at">to pay at</string>
     <string name="paid_at">paid at</string>
+    <string name="net_balance">Net balance</string>
 </resources>

@@ -24,7 +24,7 @@
     <string name="earned">Ganhos</string>
     <string name="spent">Gastos</string>
     <string name="left_to_spend">Orçamento restante</string>
-    <string name="balance">Balanço geral</string>
+    <string name="gross_balance">Balanço bruto</string>
     <string name="onboarding_main_title">Olá 👋</string>
     <string name="onboarding_main_message">Bem-vindo ao Firefly Companion. Antes de usar o aplicativo, precisamos nos
         conectar ao seu servidor Firefly III.
@@ -143,4 +143,5 @@
     <string name="to">até</string>
     <string name="to_pay_at">a pagar em</string>
     <string name="paid_at">pago em</string>
+    <string name="net_balance">Balanço final</string>
 </resources>
