@@ -9,11 +9,11 @@ data class Subscription(
     val name: String,
     val currency: Currency,
     val active: Boolean,
-    val expectedPayment: Payment?,
-    val lastPayment: Payment?,
+    val payment: Payment?,
 ) : Serializable {
     data class Payment(
         val paidAt: LocalDate,
         val amount: BigDecimal,
+        val pending: Boolean,
     ) : Serializable
 }

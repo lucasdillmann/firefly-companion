@@ -18,17 +18,16 @@ internal interface SubscriptionConverter {
             .paidDates
             ?.filter { it.date != null && it.amount != null }
             ?.maxByOrNull { it.date!! }
-            ?.let { Payment(it.date!!.toLocalDate(), it.amount!!) }
+            ?.let { Payment(it.date!!.toLocalDate(), it.amount!!, false) }
         val expectedPayment = attributes
             .nextExpectedMatch
-            ?.let { Payment(it.toLocalDate(), attributes.amountAvg ?: BigDecimal.ZERO) }
+            ?.let { Payment(it.toLocalDate(), attributes.amountAvg ?: BigDecimal.ZERO, true) }
 
         return Subscription(
             name = attributes.name ?: "",
             active = attributes.active ?: false,
             currency = toDomainCurrency(attributes),
-            lastPayment = lastPayment,
-            expectedPayment = expectedPayment,
+            payment = lastPayment ?: expectedPayment,
         )
     }
 

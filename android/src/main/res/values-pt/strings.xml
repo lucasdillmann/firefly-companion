@@ -144,4 +144,8 @@
     <string name="to_pay_at">a pagar em</string>
     <string name="paid_at">pago em</string>
     <string name="net_balance">Balanço final</string>
+    <string name="paid_so_far">pago até o momento</string>
+    <string name="yet_to_be_paid">ainda pendente</string>
+    <string name="nothing_paid_so_far">Nada pago até o momento</string>
+    <string name="no_subscriptions_left_to_pay">Nenhuma assinatura pendente</string>
 </resources>

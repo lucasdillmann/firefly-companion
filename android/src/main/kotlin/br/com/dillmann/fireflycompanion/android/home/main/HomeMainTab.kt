@@ -24,7 +24,7 @@ fun HomeMainTab(
         item { HomeCreditCards() }
         item { HomeExpensesByCategory() }
         item { HomeAccountsOverview() }
-        item { HomeGoals() }
         item { HomeSubscriptions() }
+        item { HomeGoals() }
     }
 }

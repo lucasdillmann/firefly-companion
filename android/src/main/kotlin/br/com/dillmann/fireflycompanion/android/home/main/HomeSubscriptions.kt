@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -27,16 +28,18 @@ import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.theme.AppColors
 import br.com.dillmann.fireflycompanion.android.home.HomeTabs
 import br.com.dillmann.fireflycompanion.android.home.extensions.toDateRange
+import br.com.dillmann.fireflycompanion.business.currency.Currency
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
 import br.com.dillmann.fireflycompanion.business.subscription.Subscription
 import br.com.dillmann.fireflycompanion.business.subscription.usecase.SubscriptionOverviewUseCase
 import br.com.dillmann.fireflycompanion.core.pagination.fetchAllPages
+import ir.ehsannarmani.compose_charts.PieChart
+import ir.ehsannarmani.compose_charts.models.Pie
 import org.koin.java.KoinJavaComponent.getKoin
 import org.koin.mp.KoinPlatform
+import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-
-private const val COLLAPSED_LIST_SIZE: Int = 5
 
 @Composable
 fun HomeSubscriptions() {
@@ -81,28 +84,31 @@ private fun SubscriptionList(subscriptions: List<Subscription>, expanded: Mutabl
         return
     }
 
-    val targetList =
-        if (expanded.value) subscriptions
-        else subscriptions.take(COLLAPSED_LIST_SIZE)
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Overview(subscriptions, subscriptions.first().currency)
 
-    TransitionContainer(state = expanded.value) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            targetList.forEachIndexed { index, subscription ->
-                SubscriptionDetails(subscription)
+        TransitionContainer(state = expanded.value) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                if (expanded.value) {
+                    subscriptions.forEachIndexed { index, subscription ->
+                        SubscriptionDetails(subscription)
 
-                if (index < targetList.lastIndex) {
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 4.dp, horizontal = 0.dp),
-                        thickness = 0.2.dp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                        if (index < subscriptions.lastIndex) {
+                            HorizontalDivider(
+                                modifier = Modifier.padding(vertical = 4.dp, horizontal = 0.dp),
+                                thickness = 0.2.dp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
                 }
-            }
 
-            if (subscriptions.size > COLLAPSED_LIST_SIZE) {
                 ExpandCollapseButton(expanded)
             }
         }
@@ -111,11 +117,9 @@ private fun SubscriptionList(subscriptions: List<Subscription>, expanded: Mutabl
 
 @Composable
 private fun SubscriptionDetails(subscription: Subscription) {
-    val (date, amount) = subscription.lastPayment
-        ?: subscription.expectedPayment
-        ?: return
+    val (date, amount) = subscription.payment ?: return
     val (statusDescription, statusColor) =
-        if (subscription.lastPayment == null) R.string.to_pay_at to AppColors.Yellow
+        if (subscription.payment!!.pending) R.string.to_pay_at to AppColors.Yellow
         else R.string.paid_at to AppColors.Green
     val style =
         MaterialTheme.typography.bodyMedium.copy(color = statusColor)
@@ -160,6 +164,99 @@ private fun SubscriptionDetails(subscription: Subscription) {
 }
 
 @Composable
+private fun Overview(subscriptions: List<Subscription>, currency: Currency) {
+    val pendingSubscriptions = subscriptions.filter { it.payment?.pending == true }
+    val paidSubscriptions = subscriptions.filter { it.payment?.pending == false }
+
+    val pendingAmount = pendingSubscriptions.sumOf { it.payment!!.amount }.toFloat()
+    val paidAmount = paidSubscriptions.sumOf { it.payment!!.amount }.toFloat()
+    val totalAmount = pendingAmount + paidAmount
+
+    val paidPercentage = if (totalAmount > 0) (paidAmount / totalAmount * 100) else 0f
+    val pendingPercentage = if (totalAmount > 0) (pendingAmount / totalAmount * 100) else 0f
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            OverviewText(
+                text =
+                    if (pendingAmount == 0f) R.string.no_subscriptions_left_to_pay
+                    else R.string.yet_to_be_paid,
+                currency = currency,
+                amount = pendingAmount.takeIf { it > 0f }?.toBigDecimal(),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+
+            OverviewText(
+                text =
+                    if (paidAmount == 0f) R.string.nothing_paid_so_far
+                    else R.string.paid_so_far,
+                currency = currency,
+                amount = paidAmount.takeIf { it > 0f }?.toBigDecimal(),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+
+        if (totalAmount == 0f)
+            return
+
+        Box(
+            modifier = Modifier.size(60.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            PieChart(
+                modifier = Modifier.size(50.dp),
+                style = Pie.Style.Stroke(width = 10.dp),
+                data = listOf(
+                    Pie(
+                        label = i18n(R.string.paid_at),
+                        data = paidPercentage.toDouble(),
+                        color = AppColors.Green,
+                    ),
+                    Pie(
+                        label = i18n(R.string.to_pay_at),
+                        data = pendingPercentage.toDouble(),
+                        color = AppColors.Yellow,
+                    ),
+                ),
+            )
+        }
+    }
+}
+
+@Composable
+private fun OverviewText(
+    text: Int,
+    amount: BigDecimal?,
+    currency: Currency,
+    style: TextStyle,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        if (amount != null) {
+            MoneyText(
+                value = amount,
+                currency = currency,
+                style = style,
+            )
+        }
+
+        Text(
+            text = i18n(text),
+            style = style,
+        )
+    }
+}
+
+@Composable
 private fun ExpandCollapseButton(expanded: MutableState<Boolean>) {
     Box(
         modifier = Modifier.fillMaxWidth(),
@@ -167,7 +264,7 @@ private fun ExpandCollapseButton(expanded: MutableState<Boolean>) {
     ) {
         IconButton(
             onClick = { expanded.value = !expanded.value },
-            modifier = Modifier.size(32.dp),
+            modifier = Modifier.size(26.dp).fillMaxWidth(),
         ) {
             Icon(
                 contentDescription = "",
@@ -187,5 +284,5 @@ private suspend fun fetchSubscriptions(): List<Subscription> {
     return fetchAllPages { useCase.subscriptionsOverview(it, startDate, endDate) }
         .filter { it.active }
         .sortedBy { it.name }
-        .sortedBy { it.lastPayment != null }
+        .sortedBy { it.payment?.pending == false }
 }

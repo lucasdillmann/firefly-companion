@@ -143,4 +143,8 @@
     <string name="to_pay_at">to pay at</string>
     <string name="paid_at">paid at</string>
     <string name="net_balance">Net balance</string>
+    <string name="paid_so_far">paid so far</string>
+    <string name="yet_to_be_paid">yet to be paid</string>
+    <string name="nothing_paid_so_far">Nothing paid so far</string>
+    <string name="no_subscriptions_left_to_pay">No subscriptions left to pay</string>
 </resources>
