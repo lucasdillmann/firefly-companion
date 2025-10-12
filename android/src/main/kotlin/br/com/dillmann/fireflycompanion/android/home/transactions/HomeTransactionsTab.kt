@@ -11,7 +11,7 @@ import br.com.dillmann.fireflycompanion.android.core.components.transactions.Tra
 import br.com.dillmann.fireflycompanion.android.core.components.transactions.TransactionListScope
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
-import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.android.core.refresh.RefreshDispatcher
 import br.com.dillmann.fireflycompanion.android.home.HomeTopActions
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.ListTransactionsUseCase
@@ -22,8 +22,8 @@ import br.com.dillmann.fireflycompanion.business.transaction.usecase.SearchTrans
 fun HomeTransactionsTab(
     modifier: Modifier = Modifier,
 ) {
-    val listUseCase = koin().get<ListTransactionsUseCase>()
-    val searchUseCase = koin().get<SearchTransactionsUseCase>()
+    val listUseCase = get<ListTransactionsUseCase>()
+    val searchUseCase = get<SearchTransactionsUseCase>()
     val searchTerms = volatile(TextFieldValue(""))
 
 

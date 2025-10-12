@@ -2,6 +2,7 @@ package br.com.dillmann.fireflycompanion.business.account
 
 import br.com.dillmann.fireflycompanion.business.account.usecase.GetAccountOverviewUseCase
 import br.com.dillmann.fireflycompanion.business.account.usecase.GetAccountUseCase
+import br.com.dillmann.fireflycompanion.business.account.usecase.GetActiveAccountsUseCase
 import br.com.dillmann.fireflycompanion.business.account.usecase.ListAccountsUseCase
 import br.com.dillmann.fireflycompanion.business.account.usecase.UpdateAccountBalanceUseCase
 import br.com.dillmann.fireflycompanion.business.currency.usecase.GetDefaultCurrencyUseCase
@@ -9,6 +10,8 @@ import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.SaveTransactionUseCase
 import br.com.dillmann.fireflycompanion.core.pagination.Page
 import br.com.dillmann.fireflycompanion.core.pagination.PageRequest
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.OffsetDateTime
@@ -17,12 +20,20 @@ internal class AccountService(
     private val repository: AccountRepository,
     private val defaultCurrency: GetDefaultCurrencyUseCase,
     private val saveTransaction: SaveTransactionUseCase,
-) : ListAccountsUseCase, UpdateAccountBalanceUseCase, GetAccountUseCase, GetAccountOverviewUseCase {
+) : ListAccountsUseCase,
+    UpdateAccountBalanceUseCase,
+    GetAccountUseCase,
+    GetAccountOverviewUseCase,
+    GetActiveAccountsUseCase {
+
     override suspend fun listAccounts(page: PageRequest, type: Account.Type?): Page<Account> =
         repository.findAccounts(page, type).filter { it.active }
 
     override suspend fun getAccount(id: String): Account? =
         repository.findById(id)
+
+    override suspend fun getActiveAccounts(type: Account.Type?): List<Account> =
+        repository.findActive(type)
 
     override suspend fun updateBalance(accountId: String, newBalance: BigDecimal): Account {
         val account = repository.findById(accountId) ?: error("Account not found")
@@ -52,5 +63,12 @@ internal class AccountService(
     }
 
     override suspend fun getOverview(startDate: LocalDate, endDate: LocalDate): List<AccountOverview> =
-        repository.findOverview(startDate, endDate)
+        coroutineScope {
+            val activeAccountsAsync = async { getActiveAccounts(Account.Type.ASSET) }
+            val mainDataAsync = async { repository.findOverview(startDate, endDate, Account.Type.ASSET) }
+
+            val accountNames = activeAccountsAsync.await().map { it.name }.toSet()
+            mainDataAsync.await().filter { it.name in accountNames }.sortedBy { it.name }
+        }
+
 }

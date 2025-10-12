@@ -7,8 +7,8 @@ import android.os.CancellationSignal
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
-import org.koin.java.KoinJavaComponent.getKoin
 import java.time.LocalDateTime
 import java.util.concurrent.Executors
 
@@ -52,7 +52,7 @@ object Biometrics {
         if (lockedAt == null)
             return false
 
-        val preferences = async { getKoin().get<GetPreferencesUseCase>().getPreferences() }.get()
+        val preferences = async { get<GetPreferencesUseCase>().getPreferences() }.get()
         val skewSeconds = preferences.lockTimeout.seconds
 
         return lockedAt!!.plusSeconds(skewSeconds) > LocalDateTime.now()

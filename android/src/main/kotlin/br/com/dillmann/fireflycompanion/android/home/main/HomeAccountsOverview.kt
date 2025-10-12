@@ -22,6 +22,7 @@ import br.com.dillmann.fireflycompanion.android.core.components.section.SectionC
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.theme.AppColors
@@ -32,7 +33,6 @@ import br.com.dillmann.fireflycompanion.business.account.usecase.GetAccountOverv
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
 import ir.ehsannarmani.compose_charts.LineChart
 import ir.ehsannarmani.compose_charts.models.*
-import org.koin.mp.KoinPlatform.getKoin
 
 @Composable
 fun HomeAccountsOverview() {
@@ -131,8 +131,8 @@ private fun Graph(overview: List<AccountOverview>) {
 }
 
 private suspend fun fetchOverview(): List<AccountOverview> {
-    val overviewUseCase = getKoin().get<GetAccountOverviewUseCase>()
-    val preferencesUseCase = getKoin().get<GetPreferencesUseCase>()
+    val overviewUseCase = get<GetAccountOverviewUseCase>()
+    val preferencesUseCase = get<GetPreferencesUseCase>()
     val (startDate, endDate) = preferencesUseCase.getPreferences().homePeriod.toDateRange()
     return overviewUseCase.getOverview(startDate, endDate)
 }

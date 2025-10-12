@@ -11,7 +11,7 @@ interface AssistantSession {
 
     interface Callback {
         suspend fun message(response: AssistantMessage)
-        suspend fun state(state: State)
+        suspend fun state(newState: State)
     }
 
     suspend fun sendMessage(message: String, callback: Callback)

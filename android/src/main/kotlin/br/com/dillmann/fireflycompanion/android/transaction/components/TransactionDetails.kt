@@ -18,7 +18,7 @@ import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.compose.emptyVolatile
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
-import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.business.currency.Currency
 import br.com.dillmann.fireflycompanion.business.currency.usecase.GetDefaultCurrencyUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
@@ -51,8 +51,8 @@ fun TransactionDetails(
     val currency = emptyVolatile<Currency>()
 
     fun handleSave() {
-        val saveAction = koin().get<SaveTransactionUseCase>()
-        val getCurrencyAction = koin().get<GetDefaultCurrencyUseCase>()
+        val saveAction = get<SaveTransactionUseCase>()
+        val getCurrencyAction = get<GetDefaultCurrencyUseCase>()
 
         validationOutcome.value = null
         showLoading.value = true
@@ -83,7 +83,7 @@ fun TransactionDetails(
     }
 
     fun handleDelete() {
-        val deleteAction = koin().get<DeleteTransactionUseCase>()
+        val deleteAction = get<DeleteTransactionUseCase>()
         val id = transaction?.id ?: return
 
         showLoading.value = true
@@ -101,7 +101,7 @@ fun TransactionDetails(
     LaunchedEffect(Unit) {
         async {
             showLoading.value = true
-            currency.value = koin().get<GetDefaultCurrencyUseCase>().getDefault()
+            currency.value = get<GetDefaultCurrencyUseCase>().getDefault()
             showLoading.value = false
         }
     }

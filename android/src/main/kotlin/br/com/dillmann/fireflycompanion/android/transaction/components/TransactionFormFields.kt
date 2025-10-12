@@ -14,7 +14,7 @@ import br.com.dillmann.fireflycompanion.android.core.components.datepicker.DateP
 import br.com.dillmann.fireflycompanion.android.core.components.selectionrow.SelectionRow
 import br.com.dillmann.fireflycompanion.android.core.components.textfield.AppMoneyTextField
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
-import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.business.autocomplete.AutoCompleteType
 import br.com.dillmann.fireflycompanion.business.autocomplete.usecase.AutoCompleteUseCase
 import br.com.dillmann.fireflycompanion.business.currency.Currency
@@ -36,7 +36,7 @@ fun TransactionFormFields(
     tag: MutableState<TextFieldValue>,
     currency: Currency,
 ) {
-    val autoComplete = koin().get<AutoCompleteUseCase>()
+    val autoComplete = get<AutoCompleteUseCase>()
     val supportedTypes = listOf(Type.DEPOSIT, Type.WITHDRAWAL, Type.TRANSFER)
     val sourceAccountRequiredTypes = listOf(Type.TRANSFER, Type.WITHDRAWAL, Type.RECONCILIATION)
     val destinationAccountRequiredTypes = listOf(Type.TRANSFER, Type.DEPOSIT, Type.RECONCILIATION)

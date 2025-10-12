@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
-import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.android.core.router.Route
 import br.com.dillmann.fireflycompanion.android.core.router.Router
 import br.com.dillmann.fireflycompanion.business.serverconfig.usecase.GetConfigUseCase
@@ -14,7 +14,7 @@ class MainActivity : PreconfiguredActivity() {
     @Composable
     override fun Content(padding: PaddingValues) {
         val initialRoute by persistent {
-            val serverConfig = koin().get<GetConfigUseCase>().getConfig()
+            val serverConfig = get<GetConfigUseCase>().getConfig()
             if (serverConfig == null)
                 Route.ONBOARDING_START_SCREEN
             else

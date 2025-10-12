@@ -19,7 +19,7 @@ import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.compose.emptyVolatile
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
-import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.android.core.router.NavigationContext
 import br.com.dillmann.fireflycompanion.android.core.router.Route
 import br.com.dillmann.fireflycompanion.android.onboarding.components.OnboardingServerFormButtons
@@ -97,7 +97,7 @@ private fun NavigationContext.handleSubmit(
     showLoading: MutableState<Boolean>,
     errorDialog: MutableState<MessageException?>,
 ) {
-    val saveAction = koin().get<SaveConfigUseCase>()
+    val saveAction = get<SaveConfigUseCase>()
     val config = ServerConfig(serverUrl, accessToken)
 
     outcome.value = null

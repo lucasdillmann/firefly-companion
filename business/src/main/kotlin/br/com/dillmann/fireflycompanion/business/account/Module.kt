@@ -2,6 +2,7 @@ package br.com.dillmann.fireflycompanion.business.account
 
 import br.com.dillmann.fireflycompanion.business.account.usecase.GetAccountOverviewUseCase
 import br.com.dillmann.fireflycompanion.business.account.usecase.GetAccountUseCase
+import br.com.dillmann.fireflycompanion.business.account.usecase.GetActiveAccountsUseCase
 import br.com.dillmann.fireflycompanion.business.account.usecase.ListAccountsUseCase
 import br.com.dillmann.fireflycompanion.business.account.usecase.UpdateAccountBalanceUseCase
 import org.koin.dsl.binds
@@ -14,5 +15,6 @@ internal val AccountModule =
             UpdateAccountBalanceUseCase::class,
             GetAccountUseCase::class,
             GetAccountOverviewUseCase::class,
+            GetActiveAccountsUseCase::class,
         )
     }

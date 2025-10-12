@@ -15,7 +15,7 @@ import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.context.AppContext
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
-import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.android.core.router.NavigationContext
 import br.com.dillmann.fireflycompanion.android.core.router.Route
 import br.com.dillmann.fireflycompanion.android.core.theme.AppThemeContext
@@ -28,7 +28,7 @@ import kotlinx.coroutines.runBlocking
 
 @Composable
 fun NavigationContext.PreferencesForm() {
-    val getPreferences = koin().get<GetPreferencesUseCase>()
+    val getPreferences = get<GetPreferencesUseCase>()
     val currentPreferences = async { getPreferences.getPreferences() }.join()
     val preferencesState = volatile(currentPreferences)
     val scrollState = rememberScrollState()
@@ -62,7 +62,7 @@ fun NavigationContext.PreferencesForm() {
 }
 
 private fun submitPreferences(preferences: Preferences) {
-    val savePreferences = koin().get<SavePreferencesUseCase>()
+    val savePreferences = get<SavePreferencesUseCase>()
 
     runBlocking {
         savePreferences.savePreferences(preferences)

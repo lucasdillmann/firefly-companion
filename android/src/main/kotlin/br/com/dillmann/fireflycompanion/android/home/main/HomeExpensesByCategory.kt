@@ -23,6 +23,7 @@ import br.com.dillmann.fireflycompanion.android.core.components.section.SectionC
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.home.HomeTabs
@@ -34,12 +35,11 @@ import br.com.dillmann.fireflycompanion.business.overview.usecase.ExpensesByCate
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
 import ir.ehsannarmani.compose_charts.ColumnChart
 import ir.ehsannarmani.compose_charts.models.*
-import org.koin.java.KoinJavaComponent.getKoin
 
 @Composable
 fun HomeExpensesByCategory() {
     val queue by persistent(ActionQueue())
-    val currency by persistent { getKoin().get<GetDefaultCurrencyUseCase>().getDefault() }
+    val currency by persistent { get<GetDefaultCurrencyUseCase>().getDefault() }
     var overview by persistent(::fetchOverview)
 
     OnRefreshEvent("HomeExpensesByCategory", HomeTabs.MAIN) {
@@ -147,9 +147,6 @@ private fun Graph(overview: List<ExpensesByCategoryOverview>, currency: Currency
 }
 
 private suspend fun fetchOverview(): List<ExpensesByCategoryOverview> {
-    val (startDate, endDate) = getKoin().get<GetPreferencesUseCase>().getPreferences().homePeriod.toDateRange()
-    return getKoin()
-        .get<ExpensesByCategoryOverviewUseCase>()
-        .getExpensesByCategory(startDate, endDate)
-        .sortedBy { it.amount }
+    val (startDate, endDate) = get<GetPreferencesUseCase>().getPreferences().homePeriod.toDateRange()
+    return get<ExpensesByCategoryOverviewUseCase>().getExpensesByCategory(startDate, endDate).sortedBy { it.amount }
 }

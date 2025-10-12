@@ -21,9 +21,9 @@ import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.extensions.description
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.business.assistant.usecase.GetAvailableModelsUseCase
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences
-import org.koin.java.KoinJavaComponent.getKoin
 
 @Composable
 fun PreferencesFormAssistantField(
@@ -119,7 +119,7 @@ private fun ModelSelector(
             return@LaunchedEffect
 
         async {
-            models = getKoin().get<GetAvailableModelsUseCase>().getAvailableModels()
+            models = get<GetAvailableModelsUseCase>().getAvailableModels()
         }
     }
 

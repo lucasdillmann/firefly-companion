@@ -23,6 +23,7 @@ import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.section.SectionCard
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.theme.AppColors
@@ -35,8 +36,6 @@ import br.com.dillmann.fireflycompanion.business.subscription.usecase.Subscripti
 import br.com.dillmann.fireflycompanion.core.pagination.fetchAllPages
 import ir.ehsannarmani.compose_charts.PieChart
 import ir.ehsannarmani.compose_charts.models.Pie
-import org.koin.java.KoinJavaComponent.getKoin
-import org.koin.mp.KoinPlatform
 import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -278,8 +277,8 @@ private fun ExpandCollapseButton(expanded: MutableState<Boolean>) {
 }
 
 private suspend fun fetchSubscriptions(): List<Subscription> {
-    val useCase = getKoin().get<SubscriptionOverviewUseCase>()
-    val preferencesUseCase = KoinPlatform.getKoin().get<GetPreferencesUseCase>()
+    val useCase = get<SubscriptionOverviewUseCase>()
+    val preferencesUseCase = get<GetPreferencesUseCase>()
     val (startDate, endDate) = preferencesUseCase.getPreferences().homePeriod.toDateRange()
     return fetchAllPages { useCase.subscriptionsOverview(it, startDate, endDate) }
         .filter { it.active }

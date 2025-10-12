@@ -23,11 +23,11 @@ import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.refresh.RefreshDispatcher
 import br.com.dillmann.fireflycompanion.android.core.router.NavigationContext
 import br.com.dillmann.fireflycompanion.android.core.components.textfield.AppTextFieldDefaults
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.business.account.Account
 import br.com.dillmann.fireflycompanion.business.account.usecase.GetAccountUseCase
 import br.com.dillmann.fireflycompanion.business.account.usecase.UpdateAccountBalanceUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.ListTransactionsUseCase
-import org.koin.java.KoinJavaComponent.getKoin
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,9 +36,9 @@ fun NavigationContext.AccountForm() {
     var account by volatile(requireBagValue<Account>())
     var balance by volatile(account.currentBalance)
     var showLoading by volatile(false)
-    val listTransactionsUseCase = getKoin().get<ListTransactionsUseCase>()
-    val updateBalanceUseCase = getKoin().get<UpdateAccountBalanceUseCase>()
-    val getAccountUseCase = getKoin().get<GetAccountUseCase>()
+    val listTransactionsUseCase = get<ListTransactionsUseCase>()
+    val updateBalanceUseCase = get<UpdateAccountBalanceUseCase>()
+    val getAccountUseCase = get<GetAccountUseCase>()
 
     fun updateBalance() {
         showLoading = true

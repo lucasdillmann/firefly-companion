@@ -30,13 +30,37 @@ internal class AccountHttpRepository(
         )
     }
 
+    override suspend fun findActive(type: Account.Type?): List<Account> {
+        val output = mutableListOf<Account>()
+        var pageNumber = 0
+
+        do {
+            val page = findAccounts(PageRequest(pageNumber++, 100), type)
+            output += page.content.filter { it.active }
+        } while (page.hasMorePages)
+
+        return output.sortedBy { it.name }
+    }
+
     override suspend fun findById(accountId: String): Account =
         accountsApi.getAccount(id = accountId, date = date()).data.let(converter::toDomain)
 
-    override suspend fun findOverview(startDate: LocalDate, endDate: LocalDate): List<AccountOverview> =
+    override suspend fun findOverview(startDate: LocalDate, endDate: LocalDate, type: Account.Type?): List<AccountOverview> =
         chartsApi
-            .getChartAccountOverview(startDate, endDate)
+            .getChartAccountOverview(
+                start = startDate,
+                end = endDate,
+                preselected = type?.toAccountOverviewType(),
+                period = ChartsApi.PeriodGetChartAccountOverview._1_D,
+            )
             .map(converter::toDomain)
+
+    private fun Account.Type.toAccountOverviewType() =
+        when (this) {
+            Account.Type.ASSET -> ChartsApi.PreselectedGetChartAccountOverview.ASSETS
+            Account.Type.LIABILITIES -> ChartsApi.PreselectedGetChartAccountOverview.LIABILITIES
+            else -> error("Unsupported account type $this")
+        }
 
     private fun date() =
         LocalDate.now().plusDays(1)

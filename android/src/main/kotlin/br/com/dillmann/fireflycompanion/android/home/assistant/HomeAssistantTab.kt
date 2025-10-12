@@ -29,13 +29,13 @@ import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.context.AppContext
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.business.assistant.AssistantSession
 import br.com.dillmann.fireflycompanion.business.assistant.AssistantSession.State
 import br.com.dillmann.fireflycompanion.business.assistant.model.AssistantMessage
 import br.com.dillmann.fireflycompanion.business.assistant.usecase.StartAssistantSessionUseCase
 import kotlinx.coroutines.launch
-import org.koin.java.KoinJavaComponent.getKoin
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -43,7 +43,7 @@ import java.time.format.FormatStyle
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun HomeAssistantTab() {
-    val useCase = getKoin().get<StartAssistantSessionUseCase>()
+    val useCase = get<StartAssistantSessionUseCase>()
     var messages by persistent(emptyList<AssistantMessage>())
     val session by volatile { useCase.startSession(AppContext.currentLocale().toLanguageTag()) }
 

@@ -21,7 +21,7 @@ import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
-import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.theme.AppColors
@@ -198,8 +198,8 @@ private fun SummaryDetailsCards(
 }
 
 private suspend fun fetchSummary(): SummaryOverview {
-    val overviewUseCase = koin().get<SummaryOverviewUseCase>()
-    val preferencesUseCase = koin().get<GetPreferencesUseCase>()
+    val overviewUseCase = get<SummaryOverviewUseCase>()
+    val preferencesUseCase = get<GetPreferencesUseCase>()
     val (startDate, endDate) = preferencesUseCase.getPreferences().homePeriod.toDateRange()
     return overviewUseCase.getSummary(startDate, endDate)
 }

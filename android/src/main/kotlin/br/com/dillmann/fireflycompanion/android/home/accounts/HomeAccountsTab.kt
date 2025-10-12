@@ -24,7 +24,7 @@ import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
-import br.com.dillmann.fireflycompanion.android.core.koin.KoinManager.koin
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.router.Route
@@ -40,7 +40,7 @@ fun HomeAccountsTab(
     modifier: Modifier = Modifier,
 ) {
     val queue by persistent(ActionQueue())
-    val listUseCase = koin().get<ListAccountsUseCase>()
+    val listUseCase = get<ListAccountsUseCase>()
     var accounts by persistent(emptyList<Account>())
     var currentPage by persistent(0)
     var hasMorePages by persistent(true)

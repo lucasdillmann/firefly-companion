@@ -8,12 +8,12 @@ import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.selectionrow.SelectionRow
 import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.android.core.refresh.RefreshDispatcher
 import br.com.dillmann.fireflycompanion.android.home.HomeTabs
 import br.com.dillmann.fireflycompanion.business.preferences.Preferences.HomePeriod
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.GetPreferencesUseCase
 import br.com.dillmann.fireflycompanion.business.preferences.usecase.SavePreferencesUseCase
-import org.koin.java.KoinJavaComponent.getKoin
 
 @Composable
 fun HomePeriodSelector() {
@@ -46,10 +46,10 @@ private fun translate(option: HomePeriod) =
 private fun saveSelection(newSelection: HomePeriod) {
     async {
         val updated = getPreferences().copy(homePeriod = newSelection)
-        getKoin().get<SavePreferencesUseCase>().savePreferences(updated)
+        get<SavePreferencesUseCase>().savePreferences(updated)
         RefreshDispatcher.notify(HomeTabs.MAIN)
     }
 }
 
 private fun getPreferences() =
-    async { getKoin().get<GetPreferencesUseCase>().getPreferences() }.get()
+    async { get<GetPreferencesUseCase>().getPreferences() }.get()

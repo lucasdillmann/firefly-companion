@@ -25,6 +25,7 @@ import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.section.SectionCard
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.core.router.Route
@@ -34,7 +35,6 @@ import br.com.dillmann.fireflycompanion.business.account.Account
 import br.com.dillmann.fireflycompanion.business.account.usecase.ListAccountsUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 import br.com.dillmann.fireflycompanion.core.pagination.fetchAllPages
-import org.koin.java.KoinJavaComponent.getKoin
 import java.math.BigDecimal
 import java.time.OffsetDateTime
 
@@ -172,7 +172,7 @@ private fun openAccountForm(account: Account) {
 }
 
 private suspend fun fetchCreditCards(): List<Account> {
-    val useCase = getKoin().get<ListAccountsUseCase>()
+    val useCase = get<ListAccountsUseCase>()
     return fetchAllPages { useCase.listAccounts(it) }
         .filter { it.role == Account.Role.CREDIT_CARD }
 }

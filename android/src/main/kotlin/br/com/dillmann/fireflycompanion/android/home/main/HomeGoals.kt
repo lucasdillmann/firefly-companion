@@ -27,13 +27,13 @@ import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisib
 import br.com.dillmann.fireflycompanion.android.core.components.section.SectionCard
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
+import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.android.core.queue.ActionQueue
 import br.com.dillmann.fireflycompanion.android.core.refresh.OnRefreshEvent
 import br.com.dillmann.fireflycompanion.android.home.HomeTabs
 import br.com.dillmann.fireflycompanion.business.goal.Goal
 import br.com.dillmann.fireflycompanion.business.goal.usecase.ListGoalsUseCase
 import br.com.dillmann.fireflycompanion.core.pagination.fetchAllPages
-import org.koin.java.KoinJavaComponent.getKoin
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.format.DateTimeFormatter
@@ -149,8 +149,8 @@ private fun AmountProgress(goal: Goal) {
 @Composable
 private fun GoalText(
     text: String,
-    style: TextStyle = MaterialTheme.typography.bodyMedium,
     modifier: Modifier = Modifier,
+    style: TextStyle = MaterialTheme.typography.bodyMedium,
     icon: ImageVector? = null,
 ) {
     Row(
@@ -199,6 +199,6 @@ private fun completionPercentage(goal: Goal): BigDecimal {
 }
 
 private suspend fun fetchGoals(): List<Goal> {
-    val useCase = getKoin().get<ListGoalsUseCase>()
+    val useCase = get<ListGoalsUseCase>()
     return fetchAllPages { useCase.listGoals(it) }.filter { it.active }
 }
