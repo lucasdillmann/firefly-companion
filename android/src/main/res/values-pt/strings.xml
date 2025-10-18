@@ -148,4 +148,9 @@
     <string name="yet_to_be_paid">ainda pendente</string>
     <string name="nothing_paid_so_far">Nada pago até o momento</string>
     <string name="no_subscriptions_left_to_pay">Nenhuma assinatura pendente</string>
+    <string name="error_action_failed">Ação falhou</string>
+    <string name="error_unexpected">Ocorreu um erro inesperado</string>
+    <string name="show_details">Mostrar detalhes</string>
+    <string name="hide_details">Ocultar detalhes</string>
+    <string name="close">Fechar</string>
 </resources>

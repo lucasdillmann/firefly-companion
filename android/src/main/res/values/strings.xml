@@ -147,4 +147,9 @@
     <string name="yet_to_be_paid">yet to be paid</string>
     <string name="nothing_paid_so_far">Nothing paid so far</string>
     <string name="no_subscriptions_left_to_pay">No subscriptions left to pay</string>
+    <string name="error_action_failed">Action failed</string>
+    <string name="error_unexpected">An unexpected error occurred</string>
+    <string name="show_details">Show details</string>
+    <string name="hide_details">Hide details</string>
+    <string name="close">Close</string>
 </resources>

@@ -8,13 +8,14 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import br.com.dillmann.fireflycompanion.android.R
-import br.com.dillmann.fireflycompanion.android.core.compose.async
+import br.com.dillmann.fireflycompanion.android.core.components.action.AsyncAction
+import br.com.dillmann.fireflycompanion.android.core.components.action.AsyncActionSink
 import br.com.dillmann.fireflycompanion.android.core.compose.emptyVolatile
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
@@ -24,7 +25,6 @@ import br.com.dillmann.fireflycompanion.business.currency.usecase.GetDefaultCurr
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.DeleteTransactionUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.SaveTransactionUseCase
-import br.com.dillmann.fireflycompanion.core.validation.ConsistencyException
 import br.com.dillmann.fireflycompanion.core.validation.ValidationOutcome
 import java.math.BigDecimal
 import java.time.OffsetDateTime
@@ -35,10 +35,10 @@ fun TransactionDetails(
     transaction: Transaction?,
     finish: () -> Unit,
 ) {
+    val actionSink by volatile(AsyncActionSink())
     val editMode = transaction?.id != null
     val scrollState = rememberScrollState()
     val validationOutcome = volatile<ValidationOutcome?>(null)
-    val showLoading = volatile(false)
     val showDeleteConfirmation = volatile(false)
     val description = volatile(TextFieldValue(transaction?.description ?: ""))
     val amount = volatile(transaction?.amount ?: BigDecimal.ZERO)
@@ -55,30 +55,23 @@ fun TransactionDetails(
         val getCurrencyAction = get<GetDefaultCurrencyUseCase>()
 
         validationOutcome.value = null
-        showLoading.value = true
 
-        async {
-            try {
-                val updatedTransaction = Transaction(
-                    id = transaction?.id,
-                    description = description.value.text,
-                    category = category.value.text.takeIf { it.isNotBlank() },
-                    date = dateTime.value,
-                    amount = amount.value,
-                    currency = transaction?.currency ?: getCurrencyAction.getDefault(),
-                    type = transactionType.value,
-                    sourceAccountName = sourceAccount.value.text.takeIf { it.isNotBlank() },
-                    destinationAccountName = destinationAccount.value.text.takeIf { it.isNotBlank() },
-                    tags = setOfNotNull(tag.value.text.takeIf { it.isNotBlank() }),
-                )
+        actionSink.push {
+            val updatedTransaction = Transaction(
+                id = transaction?.id,
+                description = description.value.text,
+                category = category.value.text.takeIf { it.isNotBlank() },
+                date = dateTime.value,
+                amount = amount.value,
+                currency = transaction?.currency ?: getCurrencyAction.getDefault(),
+                type = transactionType.value,
+                sourceAccountName = sourceAccount.value.text.takeIf { it.isNotBlank() },
+                destinationAccountName = destinationAccount.value.text.takeIf { it.isNotBlank() },
+                tags = setOfNotNull(tag.value.text.takeIf { it.isNotBlank() }),
+            )
 
-                saveAction.save(updatedTransaction)
-                finish()
-            } catch (ex: ConsistencyException) {
-                validationOutcome.value = ex.outcome
-            } finally {
-                showLoading.value = false
-            }
+            saveAction.save(updatedTransaction)
+            finish()
         }
     }
 
@@ -86,23 +79,16 @@ fun TransactionDetails(
         val deleteAction = get<DeleteTransactionUseCase>()
         val id = transaction?.id ?: return
 
-        showLoading.value = true
 
-        async {
-            try {
-                deleteAction.delete(id)
-                finish()
-            } finally {
-                showLoading.value = false
-            }
+        actionSink.push {
+            deleteAction.delete(id)
+            finish()
         }
     }
 
     LaunchedEffect(Unit) {
-        async {
-            showLoading.value = true
+        actionSink.push {
             currency.value = get<GetDefaultCurrencyUseCase>().getDefault()
-            showLoading.value = false
         }
     }
 
@@ -165,21 +151,12 @@ fun TransactionDetails(
         }
     }
 
-    if (showLoading.value) {
-        Dialog(onDismissRequest = {}) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                CircularProgressIndicator()
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(text = i18n(R.string.loading))
-            }
-        }
-    }
+    AsyncAction(
+        sink = actionSink,
+        onViolation = {
+            validationOutcome.value = it.outcome
+        },
+    )
 
     if (showDeleteConfirmation.value) {
         AlertDialog(
