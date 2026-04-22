@@ -19,9 +19,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.mikepenz.markdown.m3.Markdown
+import com.mikepenz.markdown.m3.markdownColor
+import com.mikepenz.markdown.m3.markdownTypography
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
 import br.com.dillmann.fireflycompanion.android.core.components.textfield.AppTextField
@@ -216,9 +226,7 @@ private fun MessageBubble(message: AssistantMessage) {
                 .padding(horizontal = 12.dp, vertical = 8.dp)
                 .widthIn(max = 320.dp),
         ) {
-            ProvideTextStyle(MaterialTheme.typography.bodyMedium.copy(color = contentColor)) {
-                Text(text = message.content)
-            }
+            MessageMarkdown(content = message.content, contentColor = contentColor)
         }
         val timestamp = remember(message.timestamp) {
             DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).format(message.timestamp)
@@ -230,6 +238,47 @@ private fun MessageBubble(message: AssistantMessage) {
             modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
         )
     }
+}
+
+@Composable
+private fun MessageMarkdown(content: String, contentColor: Color) {
+    val bodyStyle = MaterialTheme.typography.bodyMedium.copy(color = contentColor)
+    Markdown(
+        content = content,
+        colors = markdownColor(
+            text = contentColor,
+            codeBackground = contentColor.copy(alpha = 0.12f),
+            inlineCodeBackground = contentColor.copy(alpha = 0.12f),
+            dividerColor = contentColor.copy(alpha = 0.35f),
+            tableBackground = contentColor.copy(alpha = 0.06f),
+        ),
+        typography = markdownTypography(
+            h1 = MaterialTheme.typography.titleLarge.copy(color = contentColor),
+            h2 = MaterialTheme.typography.titleMedium.copy(color = contentColor),
+            h3 = MaterialTheme.typography.titleSmall.copy(color = contentColor),
+            h4 = bodyStyle.copy(fontWeight = FontWeight.SemiBold),
+            h5 = bodyStyle.copy(fontWeight = FontWeight.SemiBold),
+            h6 = bodyStyle.copy(fontWeight = FontWeight.SemiBold),
+            text = bodyStyle,
+            paragraph = bodyStyle,
+            ordered = bodyStyle,
+            bullet = bodyStyle,
+            list = bodyStyle,
+            code = bodyStyle.copy(fontFamily = FontFamily.Monospace),
+            inlineCode = bodyStyle.copy(fontFamily = FontFamily.Monospace),
+            quote = bodyStyle.copy(fontStyle = FontStyle.Italic),
+            textLink = TextLinkStyles(
+                style = SpanStyle(
+                    color = contentColor,
+                    fontSize = bodyStyle.fontSize,
+                    fontFamily = bodyStyle.fontFamily,
+                    fontWeight = FontWeight.Bold,
+                    textDecoration = TextDecoration.Underline,
+                ),
+            ),
+        ),
+        modifier = Modifier.fillMaxWidth(),
+    )
 }
 
 @Composable

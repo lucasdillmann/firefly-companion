@@ -20,6 +20,7 @@ navigation3 = "1.1.1"
 googleGuava = "33.6.0-android"
 gson = "2.13.2"
 gsonJavatime = "1.1.2"
+mikepenzMarkdownRenderer = "0.40.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -49,6 +50,8 @@ androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", vers
 google-guava = { module = "com.google.guava:guava", version.ref = "googleGuava" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 gson-javatime = { module = "com.fatboyindustrial.gson-javatime-serialisers:gson-javatime-serialisers", version.ref = "gsonJavatime" }
+mikepenz-markdown-android = { module = "com.mikepenz:multiplatform-markdown-renderer-android", version.ref = "mikepenzMarkdownRenderer" }
+mikepenz-markdown-m3 = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "mikepenzMarkdownRenderer" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

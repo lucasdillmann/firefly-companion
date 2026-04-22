@@ -28,6 +28,8 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.google.guava)
+    implementation(libs.mikepenz.markdown.android)
+    implementation(libs.mikepenz.markdown.m3)
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
@@ -60,7 +62,7 @@ android {
 
         if (enableSigning) {
             register("release") {
-                storeFile = file(keystorePath!!)
+                storeFile = file(keystorePath)
                 storePassword = keystorePassword
                 this.keyAlias = keyAlias
                 this.keyPassword = keyPassword
