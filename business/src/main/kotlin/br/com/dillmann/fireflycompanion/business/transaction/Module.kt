@@ -4,6 +4,7 @@ import br.com.dillmann.fireflycompanion.business.transaction.usecase.DeleteTrans
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.ListTransactionsUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.SaveTransactionUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.SearchTransactionsUseCase
+import br.com.dillmann.fireflycompanion.business.transaction.usecase.SuggestTransactionCateogoryUseCase
 import org.koin.dsl.binds
 import org.koin.dsl.module
 
@@ -15,5 +16,6 @@ internal val TransactionModule =
             SearchTransactionsUseCase::class,
             SaveTransactionUseCase::class,
             DeleteTransactionUseCase::class,
+            SuggestTransactionCateogoryUseCase::class,
         )
     }

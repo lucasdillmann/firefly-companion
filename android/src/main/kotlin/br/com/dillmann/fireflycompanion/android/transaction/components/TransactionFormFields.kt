@@ -35,6 +35,7 @@ fun TransactionFormFields(
     validationOutcome: ValidationOutcome?,
     tag: MutableState<TextFieldValue>,
     currency: Currency,
+    onDescriptionSuggestionSelected: (String) -> Unit = {},
 ) {
     val autoComplete = get<AutoCompleteUseCase>()
     val supportedTypes = listOf(Type.DEPOSIT, Type.WITHDRAWAL, Type.TRANSFER)
@@ -57,6 +58,7 @@ fun TransactionFormFields(
         modifier = Modifier.fillMaxWidth(),
         disabled = disabled,
         errorMessage = validationOutcome?.messageFor("description"),
+        onSuggestionSelected = onDescriptionSuggestionSelected,
         suggestionsProvider = {
             autoComplete.getSuggestions(AutoCompleteType.DESCRIPTION, it)
         },

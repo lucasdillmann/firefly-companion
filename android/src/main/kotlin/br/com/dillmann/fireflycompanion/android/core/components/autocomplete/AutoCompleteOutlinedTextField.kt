@@ -22,6 +22,7 @@ fun AutoCompleteOutlinedTextField(
     modifier: Modifier = Modifier,
     disabled: Boolean = false,
     errorMessage: String? = null,
+    onSuggestionSelected: (String) -> Unit = {},
     suggestionsProvider: suspend (query: String) -> List<String>,
 ) {
     val queue by persistent(ActionQueue())
@@ -71,6 +72,7 @@ fun AutoCompleteOutlinedTextField(
                     onClick = {
                         value.value = TextFieldValue(it)
                         suggestions = emptyList()
+                        onSuggestionSelected(it)
                     }
                 )
             }

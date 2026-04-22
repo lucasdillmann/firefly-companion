@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.action.AsyncAction
 import br.com.dillmann.fireflycompanion.android.core.components.action.AsyncActionSink
+import br.com.dillmann.fireflycompanion.android.core.compose.async
 import br.com.dillmann.fireflycompanion.android.core.compose.emptyVolatile
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
@@ -25,6 +26,7 @@ import br.com.dillmann.fireflycompanion.business.currency.usecase.GetDefaultCurr
 import br.com.dillmann.fireflycompanion.business.transaction.Transaction
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.DeleteTransactionUseCase
 import br.com.dillmann.fireflycompanion.business.transaction.usecase.SaveTransactionUseCase
+import br.com.dillmann.fireflycompanion.business.transaction.usecase.SuggestTransactionCateogoryUseCase
 import br.com.dillmann.fireflycompanion.core.validation.ValidationOutcome
 import java.math.BigDecimal
 import java.time.OffsetDateTime
@@ -72,6 +74,17 @@ fun TransactionDetails(
 
             saveAction.save(updatedTransaction)
             finish()
+        }
+    }
+
+    fun handleDescriptionSuggestionSelected(selected: String) {
+        if (category.value.text.isNotBlank()) return
+        if (transactionType.value == Transaction.Type.RECONCILIATION) return
+
+        val suggestAction = get<SuggestTransactionCateogoryUseCase>()
+        async {
+            val suggestion = suggestAction.suggest(selected, transaction?.id)
+            if (suggestion != null) category.value = TextFieldValue(suggestion)
         }
     }
 
@@ -146,6 +159,7 @@ fun TransactionDetails(
                     validationOutcome = validationOutcome.value,
                     tag = tag,
                     currency = currency.value!!,
+                    onDescriptionSuggestionSelected = ::handleDescriptionSuggestionSelected,
                 )
             }
         }
