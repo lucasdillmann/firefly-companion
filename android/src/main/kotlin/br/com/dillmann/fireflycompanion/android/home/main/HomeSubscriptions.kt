@@ -36,6 +36,7 @@ import br.com.dillmann.fireflycompanion.business.subscription.Subscription
 import br.com.dillmann.fireflycompanion.business.subscription.usecase.SubscriptionOverviewUseCase
 import br.com.dillmann.fireflycompanion.core.pagination.fetchAllPages
 import ir.ehsannarmani.compose_charts.PieChart
+import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
 import ir.ehsannarmani.compose_charts.models.Pie
 import java.math.BigDecimal
 import java.time.format.DateTimeFormatter
@@ -222,6 +223,7 @@ private fun Overview(subscriptions: List<Subscription>, currency: Currency) {
         ) {
             PieChart(
                 modifier = Modifier.size(50.dp),
+                labelHelperProperties = LabelHelperProperties(enabled = false),
                 style = Pie.Style.Stroke(width = 10.dp),
                 data = listOf(
                     Pie(
