@@ -53,28 +53,28 @@ openApiGenerate {
     outputDir = "${projectDir.path}/build/generated"
     packageName = "br.com.dillmann.fireflycompanion.thirdparty.firefly"
     generatorName = "kotlin"
-    configOptions.putAll(
-        mapOf(
-            "serializationLibrary" to "gson",
-            "dateLibrary" to "java8",
-            "modelMutable" to "true",
-            "enumPropertyNaming" to "UPPERCASE",
-        )
-    )
-    additionalProperties.putAll(
-        mapOf(
+    configOptions.with(
         "serializationLibrary" to "gson",
-        )
+        "dateLibrary" to "java8",
+        "modelMutable" to "true",
+        "enumPropertyNaming" to "UPPERCASE",
     )
-    typeMappings.putAll(
-        mapOf(
-            "number" to BigDecimal::class.qualifiedName,
-            "double" to BigDecimal::class.qualifiedName,
-            "float" to BigDecimal::class.qualifiedName,
-            "amount" to BigDecimal::class.qualifiedName,
-            "date-time" to OffsetDateTime::class.qualifiedName,
-            "date" to LocalDate::class.qualifiedName,
-            "time" to LocalTime::class.qualifiedName,
-        )
+    additionalProperties.with(
+        "serializationLibrary" to "gson",
     )
+    typeMappings.with(
+        "number" to BigDecimal::class.qualifiedName!!,
+        "double" to BigDecimal::class.qualifiedName!!,
+        "float" to BigDecimal::class.qualifiedName!!,
+        "amount" to BigDecimal::class.qualifiedName!!,
+        "date-time" to OffsetDateTime::class.qualifiedName!!,
+        "date" to LocalDate::class.qualifiedName!!,
+        "time" to LocalTime::class.qualifiedName!!,
+    )
+}
+
+fun MapProperty<String, in String>.with(vararg items: Pair<String, String?>) {
+    for (item in items) {
+        put(item.first, item.second ?: "")
+    }
 }

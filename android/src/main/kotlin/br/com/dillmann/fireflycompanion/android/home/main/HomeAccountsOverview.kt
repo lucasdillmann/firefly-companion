@@ -114,7 +114,7 @@ private fun Graph(overview: List<AccountOverview>) {
             textStyle = MaterialTheme.typography.bodySmall.copy(
                 color = MaterialTheme.colorScheme.primary,
             ),
-            contentBuilder = { index, _, value ->
+            contentBuilder = { (index, _, value) ->
                 val item = overview[index]
                 val value = MoneyVisibility.format(value.toBigDecimal(), item.currency)
 
