@@ -8,9 +8,11 @@ import okhttp3.Response
 import okhttp3.Route
 
 internal class FireflyAuthenticator(private val commands: GetConfigUseCase) : Authenticator {
-    override fun authenticate(route: Route?, response: Response): Request {
+    override fun authenticate(route: Route?, response: Response): Request? {
+        if (response.request.header("Authorization") != null) return null
+
         val config = runBlocking { commands.getConfig() }
-        val authToken = config?.token ?: return response.request
+        val authToken = config?.token ?: return null
 
         return response
             .request
