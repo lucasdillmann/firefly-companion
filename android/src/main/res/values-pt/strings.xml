@@ -121,6 +121,7 @@
     <string name="assistant_provider_disabled">Desativado</string>
     <string name="assistant_provider_open_ai">ChatGPT</string>
     <string name="assistant_provider_open_ai_compatible">Personalizado (OpenAI compatível)</string>
+    <string name="assistant_provider_ollama">Ollama</string>
     <string name="general">Geral</string>
     <string name="assistant_model_fill_required_fields">Preencha todos os campos</string>
     <string name="assistant_initial_message">Olá 👋, sou seu assistente de finanças pessoas. Como posso te ajudar?

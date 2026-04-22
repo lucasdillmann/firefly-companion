@@ -17,33 +17,81 @@ internal class DefaultAssistantSession(
     private val userLanguage: String,
     private val functions: List<AssistantFunction>,
     private val converter: JsonConverter,
+    private val useStatefulResponses: Boolean,
 ) : AssistantSession {
     private var previousResponseId: String? = null
+    private val statelessTranscript = mutableListOf<LLMRequest.Input>()
 
     override suspend fun sendMessage(
         message: String,
         callback: Callback,
     ) {
-        val inputs = listOf(
+        val userInput =
             LLMRequest.Input(
                 type = LLMRequest.Type.USER_PROMPT,
                 content = message,
-            ),
-        )
-
-        executeRequest(inputs, callback)
+            )
+        if (useStatefulResponses) {
+            runModelRound(listOf(userInput), callback)
+        } else {
+            statelessTranscript.add(userInput)
+            runModelRound(null, callback)
+        }
     }
 
-    private suspend fun executeRequest(inputs: List<LLMRequest.Input>, callback: Callback) {
+    private suspend fun runModelRound(
+        statefulInputDelta: List<LLMRequest.Input>?,
+        callback: Callback,
+    ) {
         callback.state(State.THINKING)
 
-        val request = baseRequest().copy(inputs = inputs)
+        val request =
+            if (useStatefulResponses) {
+                val inputs = requireNotNull(statefulInputDelta) { "stateful round requires request inputs" }
+                baseRequest().copy(inputs = inputs)
+            } else {
+                require(statefulInputDelta == null) { "stateless round builds inputs from the transcript" }
+                baseRequest().copy(
+                    previousResponseId = null,
+                    inputs = statelessTranscript.toList(),
+                )
+            }
+
         val response = repository.getResponse(request)
-        previousResponseId = response.id
+        if (useStatefulResponses) {
+            previousResponseId = response.id
+        }
 
         if (response.messages.isEmpty()) {
             callback.state(State.IDLE)
             return
+        }
+
+        if (!useStatefulResponses) {
+            for (message in response.messages) {
+                when (message) {
+                    is LLMResponse.SimpleText ->
+                        statelessTranscript.add(
+                            LLMRequest.Input(
+                                type = LLMRequest.Type.ASSISTANT_TEXT,
+                                content = message.content,
+                            )
+                        )
+
+                    is LLMResponse.FunctionCall -> {
+                        val arguments =
+                            message.arguments?.let { converter.toJson(it) } ?: "{}"
+                        statelessTranscript.add(
+                            LLMRequest.Input(
+                                type = LLMRequest.Type.ASSISTANT_FUNCTION_CALL,
+                                content = arguments,
+                                callId = message.callId,
+                                name = message.name,
+                            )
+                        )
+                    }
+                }
+            }
         }
 
         response
@@ -58,7 +106,14 @@ internal class DefaultAssistantSession(
                 .mapNotNull { handleFunctionCall(it, callback) }
 
         if (functionOutputs.isNotEmpty()) {
-            executeRequest(functionOutputs, callback)
+            if (useStatefulResponses) {
+                runModelRound(functionOutputs, callback)
+            } else {
+                for (output in functionOutputs) {
+                    statelessTranscript.add(output)
+                }
+                runModelRound(null, callback)
+            }
         }
     }
 
@@ -100,7 +155,7 @@ internal class DefaultAssistantSession(
         LLMRequest(
             model = model,
             instructions = buildInstructions(),
-            previousResponseId = previousResponseId,
+            previousResponseId = if (useStatefulResponses) previousResponseId else null,
             functions = functions.map(AssistantFunction::metadata),
             inputs = emptyList(),
         )

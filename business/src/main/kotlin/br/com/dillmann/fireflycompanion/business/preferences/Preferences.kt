@@ -56,5 +56,6 @@ data class Preferences(
         DISABLED,
         OPEN_AI,
         OPEN_AI_COMPATIBLE,
+        OLLAMA,
     }
 }

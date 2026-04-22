@@ -35,7 +35,9 @@ fun PreferencesFormAssistantField(
 
     ProviderSelector(state, onChange)
 
-    if (assistant.provider == Preferences.AssistantProvider.OPEN_AI_COMPATIBLE) {
+    if (assistant.provider == Preferences.AssistantProvider.OPEN_AI_COMPATIBLE ||
+        assistant.provider == Preferences.AssistantProvider.OLLAMA
+    ) {
         PreferencesFormSpacer()
         ApiUrl(state, onChange)
     }
@@ -106,8 +108,15 @@ private fun ModelSelector(
     val preferences by state
     val assistant = preferences.assistant
 
-    val missingRequirements = assistant.accessToken.isNullOrBlank() ||
-        (assistant.provider == Preferences.AssistantProvider.OPEN_AI_COMPATIBLE && assistant.url.isNullOrBlank())
+    val missingAccessToken =
+        (assistant.provider == Preferences.AssistantProvider.OPEN_AI ||
+            assistant.provider == Preferences.AssistantProvider.OPEN_AI_COMPATIBLE) &&
+            assistant.accessToken.isNullOrBlank()
+    val missingUrl =
+        (assistant.provider == Preferences.AssistantProvider.OPEN_AI_COMPATIBLE ||
+            assistant.provider == Preferences.AssistantProvider.OLLAMA) &&
+            assistant.url.isNullOrBlank()
+    val missingRequirements = missingAccessToken || missingUrl
 
     var expanded by volatile(false)
     var models by volatile(emptyList<String>())

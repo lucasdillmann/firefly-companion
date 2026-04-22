@@ -34,4 +34,5 @@ fun Preferences.AssistantProvider.description(): String =
         Preferences.AssistantProvider.DISABLED -> i18n(R.string.assistant_provider_disabled)
         Preferences.AssistantProvider.OPEN_AI -> i18n(R.string.assistant_provider_open_ai)
         Preferences.AssistantProvider.OPEN_AI_COMPATIBLE -> i18n(R.string.assistant_provider_open_ai_compatible)
+        Preferences.AssistantProvider.OLLAMA -> i18n(R.string.assistant_provider_ollama)
     }

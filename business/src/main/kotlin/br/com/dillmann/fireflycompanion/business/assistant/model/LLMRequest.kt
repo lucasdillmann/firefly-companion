@@ -10,6 +10,8 @@ data class LLMRequest(
     enum class Type {
         FUNCTION_CALL_OUTPUT,
         USER_PROMPT,
+        ASSISTANT_TEXT,
+        ASSISTANT_FUNCTION_CALL,
     }
 
     data class Function(
@@ -29,5 +31,6 @@ data class LLMRequest(
         val type: Type,
         val content: String,
         val callId: String? = null,
+        val name: String? = null,
     )
 }

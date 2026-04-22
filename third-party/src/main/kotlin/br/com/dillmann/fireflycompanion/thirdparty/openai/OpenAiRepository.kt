@@ -7,6 +7,7 @@ import br.com.dillmann.fireflycompanion.core.json.JsonConverter
 import br.com.dillmann.fireflycompanion.core.json.parse
 import br.com.dillmann.fireflycompanion.thirdparty.openai.dto.MessageResponse
 import br.com.dillmann.fireflycompanion.thirdparty.openai.dto.ModelResponse
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -24,16 +25,24 @@ internal class OpenAiRepository(
         private const val WRITE_TIMEOUT_SECONDS = 600L
     }
 
+    private val authInterceptor =
+        Interceptor { chain ->
+            val token = accessToken?.takeIf { it.isNotBlank() }
+            val request =
+                if (token == null) chain.request()
+                else chain
+                    .request()
+                    .newBuilder()
+                    .header("Authorization", "Bearer $token")
+                    .build()
+
+            chain.proceed(request)
+        }
+
     private val delegate =
         OkHttpClient
             .Builder()
-            .authenticator { _, response ->
-                response
-                    .request
-                    .newBuilder()
-                    .header("Authorization", "Bearer $accessToken")
-                    .build()
-            }
+            .addInterceptor(authInterceptor)
             .readTimeout(READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .writeTimeout(WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .connectTimeout(CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)

@@ -120,6 +120,7 @@
     <string name="assistant_provider_disabled">Disabled</string>
     <string name="assistant_provider_open_ai">ChatGPT</string>
     <string name="assistant_provider_open_ai_compatible">Custom (OpenAI compatible)</string>
+    <string name="assistant_provider_ollama">Ollama</string>
     <string name="general">General</string>
     <string name="assistant_model_fill_required_fields">Fill required fields</string>
     <string name="assistant_initial_message">Hi 👋, I\'m your personal finances assistant. How can I help you?

@@ -20,6 +20,8 @@ internal data class MessageRequest(
         val output: String? = null,
         @SerializedName("call_id")
         val callId: String? = null,
+        val name: String? = null,
+        val arguments: String? = null,
     )
 
     data class InputContent(

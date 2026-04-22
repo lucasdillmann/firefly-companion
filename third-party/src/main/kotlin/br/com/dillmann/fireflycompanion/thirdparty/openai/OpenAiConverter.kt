@@ -64,6 +64,25 @@ internal class OpenAiConverter(
                             ),
                         )
 
+                    LLMRequest.Type.ASSISTANT_TEXT ->
+                        MessageRequest.Input(
+                            role = "assistant",
+                            content = listOf(
+                                MessageRequest.InputContent(
+                                    type = "output_text",
+                                    text = input.content,
+                                )
+                            ),
+                        )
+
+                    LLMRequest.Type.ASSISTANT_FUNCTION_CALL ->
+                        MessageRequest.Input(
+                            type = "function_call",
+                            callId = input.callId,
+                            name = input.name,
+                            arguments = input.content,
+                        )
+
                     LLMRequest.Type.FUNCTION_CALL_OUTPUT ->
                         MessageRequest.Input(
                             type = "function_call_output",

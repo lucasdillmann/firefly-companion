@@ -28,6 +28,7 @@ internal class AssistantService(
             model = preferences.model!!,
             functions = functions,
             converter = converter,
+            useStatefulResponses = preferences.provider != Preferences.AssistantProvider.OLLAMA,
         )
     }
 
@@ -41,9 +42,16 @@ internal class AssistantService(
 
     private suspend fun resolveRepository(preferences: Preferences.Assistant): AssistantRepository {
         val baseUrl =
-            if (preferences.provider == Preferences.AssistantProvider.OPEN_AI) "https://api.openai.com/v1"
-            else preferences.url!!
+            when (preferences.provider) {
+                Preferences.AssistantProvider.OPEN_AI -> "https://api.openai.com/v1"
+                Preferences.AssistantProvider.OLLAMA,
+                Preferences.AssistantProvider.OPEN_AI_COMPATIBLE -> preferences.url!!
+                Preferences.AssistantProvider.DISABLED -> error("Assistant is disabled")
+            }
 
-        return repositoryProvider.provide(baseUrl, preferences.accessToken)
+        return repositoryProvider.provide(
+            baseUrl = baseUrl,
+            accessToken = preferences.accessToken,
+        )
     }
 }
