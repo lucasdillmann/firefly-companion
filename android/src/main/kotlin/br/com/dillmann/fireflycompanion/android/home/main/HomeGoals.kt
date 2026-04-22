@@ -25,6 +25,7 @@ import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.loading.LoadingIndicator
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibility
 import br.com.dillmann.fireflycompanion.android.core.components.section.SectionCard
+import br.com.dillmann.fireflycompanion.android.core.compose.PersistentState
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.get
@@ -47,8 +48,12 @@ fun HomeGoals() {
 
     OnRefreshEvent("HomeGoals", HomeTabs.MAIN) {
         actionQueue.add {
-            goals = null
-            goals = fetchGoals()
+            goals = PersistentState.Loading
+            try {
+                goals = PersistentState.Ready(fetchGoals())
+            } catch (exception: Exception) {
+                goals = PersistentState.Failed(exception)
+            }
         }
     }
 
@@ -60,10 +65,16 @@ fun HomeGoals() {
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center,
         ) {
-            if (goals == null) {
-                LoadingIndicator()
-            } else {
-                GoalsList(goals!!)
+            when (val state = goals) {
+                is PersistentState.Loading, is PersistentState.Failed -> LoadingIndicator()
+                is PersistentState.Dismissed ->
+                    Text(
+                        text = i18n(R.string.no_data_yet),
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                is PersistentState.Ready -> GoalsList(state.value)
             }
         }
     }

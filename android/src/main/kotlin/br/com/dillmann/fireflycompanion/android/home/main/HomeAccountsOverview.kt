@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -13,12 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.colorpool.ColorPool
 import br.com.dillmann.fireflycompanion.android.core.components.loading.LoadingIndicator
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibility
 import br.com.dillmann.fireflycompanion.android.core.components.section.SectionCard
+import br.com.dillmann.fireflycompanion.android.core.compose.PersistentState
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
@@ -41,8 +44,12 @@ fun HomeAccountsOverview() {
 
     OnRefreshEvent("HomeAccountsOverview", HomeTabs.MAIN) {
         queue.add {
-            overview = null
-            overview = fetchOverview()
+            overview = PersistentState.Loading
+            try {
+                overview = PersistentState.Ready(fetchOverview())
+            } catch (exception: Exception) {
+                overview = PersistentState.Failed(exception)
+            }
         }
     }
 
@@ -57,10 +64,27 @@ fun HomeAccountsOverview() {
                 .padding(0.dp),
             contentAlignment = Alignment.Center
         ) {
-            if (overview == null) {
-                LoadingIndicator()
-            } else {
-                Graph(overview!!)
+            when (val state = overview) {
+                is PersistentState.Loading, is PersistentState.Failed -> LoadingIndicator()
+                is PersistentState.Dismissed ->
+                    Text(
+                        text = i18n(R.string.no_data_yet),
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                is PersistentState.Ready -> {
+                    if (state.value.isEmpty()) {
+                        Text(
+                            text = i18n(R.string.no_data_yet),
+                            style = MaterialTheme.typography.bodyLarge,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    } else {
+                        Graph(state.value)
+                    }
+                }
             }
         }
     }

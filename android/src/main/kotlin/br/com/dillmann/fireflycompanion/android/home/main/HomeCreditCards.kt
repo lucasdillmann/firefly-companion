@@ -23,6 +23,7 @@ import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.loading.LoadingIndicator
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.section.SectionCard
+import br.com.dillmann.fireflycompanion.android.core.compose.PersistentState
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.get
@@ -45,8 +46,12 @@ fun HomeCreditCards() {
 
     OnRefreshEvent("HomeCreditCards", HomeTabs.MAIN) {
         actionQueue.add {
-            creditCards = null
-            creditCards = fetchCreditCards()
+            creditCards = PersistentState.Loading
+            try {
+                creditCards = PersistentState.Ready(fetchCreditCards())
+            } catch (exception: Exception) {
+                creditCards = PersistentState.Failed(exception)
+            }
         }
     }
 
@@ -58,10 +63,16 @@ fun HomeCreditCards() {
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center,
         ) {
-            if (creditCards == null) {
-                LoadingIndicator()
-            } else {
-                CreditCardList(creditCards!!)
+            when (val state = creditCards) {
+                is PersistentState.Loading, is PersistentState.Failed -> LoadingIndicator()
+                is PersistentState.Dismissed ->
+                    Text(
+                        text = i18n(R.string.no_data_yet),
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                is PersistentState.Ready -> CreditCardList(state.value)
             }
         }
     }

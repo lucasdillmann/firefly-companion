@@ -20,6 +20,7 @@ import br.com.dillmann.fireflycompanion.android.core.components.colorpool.ColorP
 import br.com.dillmann.fireflycompanion.android.core.components.loading.LoadingIndicator
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyVisibility
 import br.com.dillmann.fireflycompanion.android.core.components.section.SectionCard
+import br.com.dillmann.fireflycompanion.android.core.compose.PersistentState
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.compose.volatile
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
@@ -44,8 +45,12 @@ fun HomeExpensesByCategory() {
 
     OnRefreshEvent("HomeExpensesByCategory", HomeTabs.MAIN) {
         queue.add {
-            overview = null
-            overview = fetchOverview()
+            overview = PersistentState.Loading
+            try {
+                overview = PersistentState.Ready(fetchOverview())
+            } catch (exception: Exception) {
+                overview = PersistentState.Failed(exception)
+            }
         }
     }
 
@@ -60,19 +65,36 @@ fun HomeExpensesByCategory() {
                 .padding(0.dp),
             contentAlignment = Alignment.Center
         ) {
-            if (overview == null || currency == null) {
-                LoadingIndicator()
-            } else if (overview!!.isEmpty()) {
-                Text(
-                    text = i18n(R.string.no_data_yet),
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier
-                        .padding(vertical = 16.dp)
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                )
-            } else {
-                Graph(overview!!, currency!!)
+            when {
+                currency is PersistentState.Loading ||
+                    currency is PersistentState.Failed ||
+                    overview is PersistentState.Loading ||
+                    overview is PersistentState.Failed -> LoadingIndicator()
+                currency is PersistentState.Dismissed || overview is PersistentState.Dismissed ->
+                    Text(
+                        text = i18n(R.string.no_data_yet),
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier
+                            .padding(vertical = 16.dp)
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                    )
+                else -> {
+                    val overviewList = (overview as PersistentState.Ready).value
+                    val currencyValue = (currency as PersistentState.Ready).value
+                    if (overviewList.isEmpty()) {
+                        Text(
+                            text = i18n(R.string.no_data_yet),
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier
+                                .padding(vertical = 16.dp)
+                                .fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                        )
+                    } else {
+                        Graph(overviewList, currencyValue)
+                    }
+                }
             }
         }
     }

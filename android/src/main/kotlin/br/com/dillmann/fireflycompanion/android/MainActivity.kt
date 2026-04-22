@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import br.com.dillmann.fireflycompanion.android.core.activity.PreconfiguredActivity
+import br.com.dillmann.fireflycompanion.android.core.compose.PersistentState
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.koin.get
 import br.com.dillmann.fireflycompanion.android.core.router.Route
@@ -21,8 +22,9 @@ class MainActivity : PreconfiguredActivity() {
                 Route.HOME_SCREEN
         }
 
-        if (initialRoute != null) {
-            Router(initialRoute!!)
+        when (val state = initialRoute) {
+            is PersistentState.Ready -> Router(state.value)
+            else -> Unit
         }
     }
 }

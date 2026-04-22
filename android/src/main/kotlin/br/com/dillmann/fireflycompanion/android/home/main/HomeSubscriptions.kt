@@ -21,6 +21,7 @@ import br.com.dillmann.fireflycompanion.android.core.components.animations.Trans
 import br.com.dillmann.fireflycompanion.android.core.components.loading.LoadingIndicator
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.section.SectionCard
+import br.com.dillmann.fireflycompanion.android.core.compose.PersistentState
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.get
@@ -48,8 +49,12 @@ fun HomeSubscriptions() {
 
     OnRefreshEvent("HomeSubscriptions", HomeTabs.MAIN) {
         actionQueue.add {
-            subscriptions = null
-            subscriptions = fetchSubscriptions()
+            subscriptions = PersistentState.Loading
+            try {
+                subscriptions = PersistentState.Ready(fetchSubscriptions())
+            } catch (exception: Exception) {
+                subscriptions = PersistentState.Failed(exception)
+            }
         }
     }
 
@@ -61,10 +66,16 @@ fun HomeSubscriptions() {
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center,
         ) {
-            if (subscriptions == null) {
-                LoadingIndicator()
-            } else {
-                SubscriptionList(subscriptions!!, expanded)
+            when (val state = subscriptions) {
+                is PersistentState.Loading, is PersistentState.Failed -> LoadingIndicator()
+                is PersistentState.Dismissed ->
+                    Text(
+                        text = i18n(R.string.no_data_yet),
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                is PersistentState.Ready -> SubscriptionList(state.value, expanded)
             }
         }
     }

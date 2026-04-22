@@ -20,11 +20,11 @@ fun HomeMainTab(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(bottom = 96.dp),
     ) {
-        item { HomeOverview() }
-        item { HomeCreditCards() }
-        item { HomeExpensesByCategory() }
-        item { HomeAccountsOverview() }
-        item { HomeSubscriptions() }
-        item { HomeGoals() }
+        HomeOverview()
+        HomeCreditCards()
+        HomeExpensesByCategory()
+        HomeAccountsOverview()
+        HomeSubscriptions()
+        HomeGoals()
     }
 }

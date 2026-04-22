@@ -19,6 +19,7 @@ import br.com.dillmann.fireflycompanion.android.R
 import br.com.dillmann.fireflycompanion.android.core.components.animations.TransitionContainer
 import br.com.dillmann.fireflycompanion.android.core.components.money.MoneyText
 import br.com.dillmann.fireflycompanion.android.core.components.section.Section
+import br.com.dillmann.fireflycompanion.android.core.compose.PersistentState
 import br.com.dillmann.fireflycompanion.android.core.compose.persistent
 import br.com.dillmann.fireflycompanion.android.core.i18n.i18n
 import br.com.dillmann.fireflycompanion.android.core.koin.get
@@ -41,10 +42,20 @@ fun HomeOverview() {
 
     OnRefreshEvent("HomeOverview", HomeTabs.MAIN) {
         queue.add {
-            summary = null
-            summary = fetchSummary()
+            summary = PersistentState.Loading
+            try {
+                summary = PersistentState.Ready(fetchSummary())
+            } catch (exception: Exception) {
+                summary = PersistentState.Failed(exception)
+            }
         }
     }
+
+    val summaryData =
+        when (val state = summary) {
+            is PersistentState.Ready -> state.value
+            else -> null
+        }
 
     Section(
         title = i18n(R.string.overview),
@@ -54,6 +65,12 @@ fun HomeOverview() {
     ) {
         HomePeriodSelector()
 
+        if (summary is PersistentState.Dismissed) {
+            Text(
+                text = i18n(R.string.no_data_yet),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        } else {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
@@ -67,7 +84,7 @@ fun HomeOverview() {
             ) {
                 SummaryDetailsCards(
                     title = i18n(R.string.net_worth),
-                    summary = summary,
+                    summary = summaryData,
                     colorSchema = MaterialTheme.colorScheme.onPrimaryContainer,
                     valueStyle = MaterialTheme.typography.displaySmall,
                     labelStyle = MaterialTheme.typography.titleMedium,
@@ -87,38 +104,39 @@ fun HomeOverview() {
         ) {
             DetailBlock(
                 title = i18n(R.string.earned),
-                summary = summary,
+                summary = summaryData,
                 tintColor = AppColors.Green,
                 valueProvider = { it.earned },
             )
             DetailBlock(
                 title = i18n(R.string.spent),
-                summary = summary,
+                summary = summaryData,
                 tintColor = AppColors.Red,
                 valueProvider = { it.spent?.abs() },
             )
             DetailBlock(
                 title = i18n(R.string.reconciliation),
-                summary = summary,
+                summary = summaryData,
                 tintColor = AppColors.Blue,
                 valueProvider = { it.reconciliations },
             )
             DetailBlock(
                 title = i18n(R.string.left_to_spend),
-                summary = summary,
+                summary = summaryData,
                 tintColor = AppColors.Yellow,
                 valueProvider = { it.leftToSpend },
             )
             DetailBlock(
                 title = i18n(R.string.gross_balance),
-                summary = summary,
+                summary = summaryData,
                 valueProvider = { it.balance },
             )
             DetailBlock(
                 title = i18n(R.string.net_balance),
-                summary = summary,
+                summary = summaryData,
                 valueProvider = { it.balance?.plus(it.reconciliations ?: BigDecimal.ZERO) },
             )
+        }
         }
     }
 }
